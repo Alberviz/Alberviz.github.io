@@ -1,32 +1,55 @@
 "use client";
 
-import React, { useState, useEffect, useRef, useMemo } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
-  MagnifyingGlass,
+  ArrowDown,
+  ArrowElbowDownLeft,
   ArrowRight,
   ArrowSquareOut,
-  Copy,
+  ArrowUp,
   Check,
-  Globe,
+  Copy,
   FilePdf,
   GithubLogo,
+  Globe,
   LinkedinLogo,
-  Command,
-  X,
+  MagnifyingGlass,
 } from "@phosphor-icons/react";
 import { useLocale } from "@/lib/i18n-context";
+import type { Locale } from "@/lib/i18n-context";
 import { PROFILE } from "@/content/portfolio-data";
+
+type Category = "navigate" | "links" | "actions";
 
 interface PaletteItem {
   id: string;
   title: string;
-  category: "Navigation" | "Demos & Links" | "Actions";
+  hint?: string;
+  category: Category;
   icon: React.ReactNode;
   keywords: string;
   action: () => void;
 }
 
+const CATEGORY_LABEL: Record<Category, Record<Locale, string>> = {
+  navigate: { en: "Navigate", es: "Navegar" },
+  links: { en: "Demos and links", es: "Demos y enlaces" },
+  actions: { en: "Actions", es: "Acciones" },
+};
+
+function scrollToSection(id: string) {
+  document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function openExternal(href: string) {
+  window.open(href, "_blank", "noopener,noreferrer");
+}
+
+/**
+ * Command menu. Opened by keyboard dozens of times a day, so it has zero
+ * open/close animation (Raycast principle): it mounts and unmounts instantly.
+ */
 export function CommandPalette() {
   const { locale, toggleLocale } = useLocale();
   const router = useRouter();
@@ -38,341 +61,307 @@ export function CommandPalette() {
 
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
+  const returnFocusRef = useRef<HTMLElement | null>(null);
 
-  // Global listeners for ⌘K / Ctrl+K and custom event
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
         e.preventDefault();
         setIsOpen((prev) => !prev);
-      } else if (e.key === "Escape" && isOpen) {
-        e.preventDefault();
+      } else if (e.key === "Escape") {
         setIsOpen(false);
       }
     };
-
-    const handleCustomOpen = () => {
-      setIsOpen(true);
-    };
+    const handleCustomOpen = () => setIsOpen(true);
 
     window.addEventListener("keydown", handleKeyDown);
     window.addEventListener("open-command-palette", handleCustomOpen);
-
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("open-command-palette", handleCustomOpen);
     };
-  }, [isOpen]);
+  }, []);
 
-  // Focus input when opened
   useEffect(() => {
     if (isOpen) {
+      returnFocusRef.current = document.activeElement as HTMLElement | null;
       setQuery("");
       setSelectedIndex(0);
       setCopied(false);
-      setTimeout(() => {
-        inputRef.current?.focus();
-      }, 0);
+      inputRef.current?.focus();
+      const previousOverflow = document.body.style.overflow;
+      document.body.style.overflow = "hidden";
+      return () => {
+        document.body.style.overflow = previousOverflow;
+        returnFocusRef.current?.focus?.();
+      };
     }
   }, [isOpen]);
 
-  const copyEmail = () => {
-    if (typeof navigator !== "undefined" && navigator.clipboard) {
-      navigator.clipboard.writeText(PROFILE.email);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    }
-  };
+  const close = () => setIsOpen(false);
 
-  const closePalette = () => {
-    setIsOpen(false);
-  };
+  const items: PaletteItem[] = useMemo(() => {
+    const es = locale === "es";
+    const nav = (id: string, title: string, keywords: string): PaletteItem => ({
+      id: `nav-${id}`,
+      title,
+      hint: `#${id}`,
+      category: "navigate",
+      icon: <ArrowRight size={15} aria-hidden="true" />,
+      keywords,
+      action: () => {
+        close();
+        scrollToSection(id);
+      },
+    });
 
-  const items: PaletteItem[] = useMemo(
-    () => [
-      // Navigation
+    return [
       {
-        id: "nav-krakount",
-        title: locale === "en" ? "Jump to Krakount Showcase (/krakount)" : "Ir a Krakount Showcase (/krakount)",
-        category: "Navigation",
-        icon: <ArrowRight size={16} className="text-[#F5A524]" weight="bold" />,
-        keywords: "krakount polish receipt travel ocr expense splitwise kazimierz",
+        id: "route-krakount",
+        title: es ? "Abrir la página de Krakount" : "Open the Krakount page",
+        hint: "/krakount",
+        category: "navigate",
+        icon: <ArrowRight size={15} className="text-[#F5A524]" aria-hidden="true" />,
+        keywords: "krakount receipt ocr expenses split trips kazimierz pwa",
         action: () => {
-          closePalette();
-          router.push("/krakount");
+          close();
+          router.push("/krakount/");
         },
       },
-      {
-        id: "nav-work",
-        title: locale === "en" ? "Jump to Krakount Spotlight (#work)" : "Ir a Krakount Spotlight (#work)",
-        category: "Navigation",
-        icon: <ArrowRight size={16} className="text-[#10B981]" weight="bold" />,
-        keywords: "work spotlight krakount projects",
-        action: () => {
-          closePalette();
-          const el = document.getElementById("work");
-          if (el) el.scrollIntoView({ behavior: "smooth" });
-        },
-      },
-      {
-        id: "nav-systems",
-        title: locale === "en" ? "Jump to Home Lab & Wealth (#systems)" : "Ir a Home Lab y Finanzas (#systems)",
-        category: "Navigation",
-        icon: <ArrowRight size={16} className="text-[#10B981]" weight="bold" />,
-        keywords: "systems homelab aurora ghostfolio wealth raspberry pi hermes",
-        action: () => {
-          closePalette();
-          const el = document.getElementById("systems");
-          if (el) el.scrollIntoView({ behavior: "smooth" });
-        },
-      },
-      {
-        id: "nav-studies",
-        title: locale === "en" ? "Jump to Systems & Work (#case-studies)" : "Ir a Sistemas y Proyectos (#case-studies)",
-        category: "Navigation",
-        icon: <ArrowRight size={16} className="text-[#10B981]" weight="bold" />,
-        keywords: "studies mycrohnie gargantua shader usb hid drivers hackyeah",
-        action: () => {
-          closePalette();
-          const el = document.getElementById("case-studies");
-          if (el) el.scrollIntoView({ behavior: "smooth" });
-        },
-      },
-      {
-        id: "nav-background",
-        title: locale === "en" ? "Jump to Background & Rigor (#background)" : "Ir a Trayectoria y Rigor (#background)",
-        category: "Navigation",
-        icon: <ArrowRight size={16} className="text-[#10B981]" weight="bold" />,
-        keywords: "background stel order education math olimpiada umu krakow",
-        action: () => {
-          closePalette();
-          const el = document.getElementById("background");
-          if (el) el.scrollIntoView({ behavior: "smooth" });
-        },
-      },
-      // Demos & External Links
+      nav("work", es ? "Krakount en resumen" : "Krakount spotlight", "work spotlight krakount flagship"),
+      nav("systems", es ? "Home Lab y finanzas" : "Home lab and wealth", "systems homelab aurora ghostfolio wealth raspberry pi"),
+      nav("desktop", es ? "Escritorio Linux con IA" : "AI Linux desktop", "desktop linux hyprland quickshell caelestia gargantua laura shader"),
+      nav("case-studies", es ? "Proyectos seleccionados" : "Selected work", "work mycrohnie hackyeah closhare barber applied ai"),
+      nav("background", es ? "Trayectoria" : "Background", "background stel order education olympiad umu agh"),
       {
         id: "link-mycrohnie",
-        title: locale === "en" ? "Open Live MyCrohnie App (HackYeah 2026)" : "Abrir App MyCrohnie en Vivo (HackYeah 2026)",
-        category: "Demos & Links",
-        icon: <ArrowSquareOut size={16} className="text-[#10B981]" weight="bold" />,
-        keywords: "mycrohnie crohn hackyeah live vercel app demo",
+        title: es ? "MyCrohnie en vivo" : "MyCrohnie live app",
+        category: "links",
+        icon: <ArrowSquareOut size={15} aria-hidden="true" />,
+        keywords: "mycrohnie crohn hackyeah live demo",
         action: () => {
-          closePalette();
-          window.open("https://mycrohnie.vercel.app", "_blank", "noopener,noreferrer");
+          close();
+          openExternal("https://mycrohnie.vercel.app");
         },
       },
       {
         id: "link-closhare",
-        title: locale === "en" ? "Open Live CloShare PWA (WebGPU AI)" : "Abrir PWA CloShare en Vivo (WebGPU IA)",
-        category: "Demos & Links",
-        icon: <ArrowSquareOut size={16} className="text-[#10B981]" weight="bold" />,
-        keywords: "closhare clothes tricount pwa webgpu live app",
+        title: es ? "CloShare en vivo" : "CloShare live app",
+        category: "links",
+        icon: <ArrowSquareOut size={15} aria-hidden="true" />,
+        keywords: "closhare wardrobe pwa webgpu live",
         action: () => {
-          closePalette();
-          window.open("https://closhare-indol.vercel.app", "_blank", "noopener,noreferrer");
+          close();
+          openExternal("https://closhare-indol.vercel.app");
         },
       },
       {
         id: "link-barber",
-        title: locale === "en" ? "Open Live Juan Barber Bot Panel" : "Abrir Panel de Juan Barber Bot",
-        category: "Demos & Links",
-        icon: <ArrowSquareOut size={16} className="text-[#10B981]" weight="bold" />,
-        keywords: "barber bot telegram groq whisper booking production",
+        title: es ? "Panel de Juan Barber Bot" : "Juan Barber Bot panel",
+        category: "links",
+        icon: <ArrowSquareOut size={15} aria-hidden="true" />,
+        keywords: "barber bot telegram booking production",
         action: () => {
-          closePalette();
-          window.open("https://barber-bot-zeta.vercel.app", "_blank", "noopener,noreferrer");
+          close();
+          openExternal("https://barber-bot-zeta.vercel.app");
         },
       },
       {
         id: "link-github",
-        title: "Open GitHub Profile (@Alberviz)",
-        category: "Demos & Links",
-        icon: <GithubLogo size={16} weight="bold" />,
-        keywords: "github alberviz code repos source open",
+        title: "GitHub",
+        hint: "@Alberviz",
+        category: "links",
+        icon: <GithubLogo size={15} aria-hidden="true" />,
+        keywords: "github code repos source",
         action: () => {
-          closePalette();
-          window.open(PROFILE.githubUrl, "_blank", "noopener,noreferrer");
+          close();
+          openExternal(PROFILE.githubUrl);
         },
       },
       {
         id: "link-linkedin",
-        title: "Open LinkedIn Profile",
-        category: "Demos & Links",
-        icon: <LinkedinLogo size={16} weight="bold" />,
-        keywords: "linkedin profile alberto vizcaino connect",
+        title: "LinkedIn",
+        category: "links",
+        icon: <LinkedinLogo size={15} aria-hidden="true" />,
+        keywords: "linkedin profile connect",
         action: () => {
-          closePalette();
-          window.open(PROFILE.linkedinUrl, "_blank", "noopener,noreferrer");
+          close();
+          openExternal(PROFILE.linkedinUrl);
         },
       },
       {
         id: "link-cv",
-        title: locale === "en" ? "Download CV (PDF)" : "Descargar CV (PDF)",
-        category: "Demos & Links",
-        icon: <FilePdf size={16} className="text-[#10B981]" weight="bold" />,
-        keywords: "cv resume pdf curriculum vitae download",
+        title: es ? "Descargar CV" : "Download CV",
+        hint: "PDF",
+        category: "links",
+        icon: <FilePdf size={15} aria-hidden="true" />,
+        keywords: "cv resume pdf curriculum",
         action: () => {
-          closePalette();
-          window.open(PROFILE.cvPath, "_blank", "noopener,noreferrer");
+          close();
+          openExternal(PROFILE.cvPath);
         },
       },
-      // Actions
       {
         id: "action-copy-email",
-        title: copied
-          ? (locale === "en" ? "Copied albvizpon@gmail.com!" : "¡Copiado albvizpon@gmail.com!")
-          : (locale === "en" ? "Copy Email (albvizpon@gmail.com)" : "Copiar Email (albvizpon@gmail.com)"),
-        category: "Actions",
+        title: copied ? (es ? "Email copiado" : "Email copied") : es ? "Copiar email" : "Copy email",
+        hint: PROFILE.email,
+        category: "actions",
         icon: copied ? (
-          <Check size={16} className="text-[#10B981]" weight="bold" />
+          <Check size={15} className="text-[#10B981]" aria-hidden="true" />
         ) : (
-          <Copy size={16} weight="bold" />
+          <Copy size={15} aria-hidden="true" />
         ),
-        keywords: "copy email mail contact albvizpon gmail",
+        keywords: "copy email mail contact",
         action: () => {
-          copyEmail();
+          navigator.clipboard?.writeText(PROFILE.email).then(() => {
+            setCopied(true);
+            window.setTimeout(() => setCopied(false), 1800);
+          });
         },
       },
       {
         id: "action-toggle-locale",
-        title: locale === "en" ? "Switch language to Spanish (ES)" : "Cambiar idioma a Inglés (EN)",
-        category: "Actions",
-        icon: <Globe size={16} className="text-[#10B981]" weight="bold" />,
-        keywords: "language idioma switch english spanish toggle",
+        title: es ? "Switch to English" : "Cambiar a español",
+        hint: es ? "EN" : "ES",
+        category: "actions",
+        icon: <Globe size={15} aria-hidden="true" />,
+        keywords: "language idioma english spanish",
         action: () => {
           toggleLocale();
-          closePalette();
+          close();
         },
       },
-    ],
-    [locale, router, copied, toggleLocale]
-  );
+    ];
+  }, [locale, router, copied, toggleLocale]);
 
   const filteredItems = useMemo(() => {
-    if (!query.trim()) return items;
-    const lower = query.toLowerCase().trim();
+    const q = query.toLowerCase().trim();
+    if (!q) return items;
     return items.filter(
       (item) =>
-        item.title.toLowerCase().includes(lower) ||
-        item.keywords.toLowerCase().includes(lower) ||
-        item.category.toLowerCase().includes(lower)
+        item.title.toLowerCase().includes(q) ||
+        item.keywords.includes(q) ||
+        (item.hint ?? "").toLowerCase().includes(q)
     );
   }, [query, items]);
 
-  // Adjust selection bounds
   useEffect(() => {
     setSelectedIndex(0);
-  }, [filteredItems.length]);
+  }, [query]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const el = listRef.current?.querySelector<HTMLElement>(`[data-index="${selectedIndex}"]`);
+    el?.scrollIntoView({ block: "nearest" });
+  }, [selectedIndex, isOpen]);
 
   const handleInputKeyDown = (e: React.KeyboardEvent) => {
+    const count = filteredItems.length;
     if (e.key === "ArrowDown") {
       e.preventDefault();
-      setSelectedIndex((prev) => (prev + 1) % Math.max(1, filteredItems.length));
+      setSelectedIndex((prev) => (count ? (prev + 1) % count : 0));
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
-      setSelectedIndex((prev) =>
-        prev <= 0 ? Math.max(0, filteredItems.length - 1) : prev - 1
-      );
-    } else if (e.key === "Enter" && filteredItems.length > 0) {
+      setSelectedIndex((prev) => (count ? (prev - 1 + count) % count : 0));
+    } else if (e.key === "Enter" && count > 0) {
       e.preventDefault();
       filteredItems[selectedIndex]?.action();
+    } else if (e.key === "Tab") {
+      e.preventDefault();
     }
   };
 
-  // 0ms Raycast Principle: Render nothing when closed, instant mount when open
   if (!isOpen) return null;
+
+  let runningIndex = -1;
+  const groups = (Object.keys(CATEGORY_LABEL) as Category[])
+    .map((category) => ({ category, entries: filteredItems.filter((i) => i.category === category) }))
+    .filter((g) => g.entries.length > 0);
 
   return (
     <div
-      className="fixed inset-0 z-50 bg-[#090A0D]/75 backdrop-blur-sm flex items-start justify-center pt-[12vh] sm:pt-[15vh] p-4"
-      onClick={closePalette}
-      role="dialog"
-      aria-modal="true"
-      aria-label="Command Palette"
+      className="fixed inset-0 z-50 flex items-start justify-center bg-[#090A0D]/70 p-4 pt-[14vh]"
+      onMouseDown={close}
+      role="presentation"
     >
       <div
-        className="w-full max-w-xl bg-[#111318] border border-[#232732] rounded-2xl shadow-2xl overflow-hidden flex flex-col"
-        onClick={(e) => e.stopPropagation()}
+        role="dialog"
+        aria-modal="true"
+        aria-label={locale === "es" ? "Paleta de comandos" : "Command palette"}
+        className="flex w-full max-w-[560px] flex-col overflow-hidden rounded-2xl border border-[#232732] bg-[#0F1115] shadow-[0_40px_100px_-30px_rgba(0,0,0,0.95)]"
+        onMouseDown={(e) => e.stopPropagation()}
       >
-        {/* Search Input Bar */}
-        <div className="flex items-center gap-3 px-4 py-3.5 border-b border-[#232732] bg-[#0E0F13]">
-          <MagnifyingGlass size={18} className="text-[#8E95A5] shrink-0" weight="bold" />
+        <div className="flex items-center gap-3 border-b border-[#232732] px-4">
+          <MagnifyingGlass size={16} className="shrink-0 text-[#5D6474]" aria-hidden="true" />
           <input
             ref={inputRef}
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={handleInputKeyDown}
-            placeholder={
-              locale === "en"
-                ? "Type a command, page, or search term..."
-                : "Escribe un comando, página o búsqueda..."
-            }
-            className="w-full bg-transparent text-sm text-[#ECEEF2] placeholder-[#8E95A5] focus:outline-none font-sans"
+            placeholder={locale === "es" ? "Busca una sección, demo o acción" : "Search a section, demo, or action"}
+            className="h-12 w-full bg-transparent text-[14px] text-[#ECEEF2] placeholder:text-[#5D6474] focus:outline-none focus-visible:outline-none"
+            role="combobox"
+            aria-expanded="true"
+            aria-controls="command-palette-list"
+            aria-activedescendant={filteredItems[selectedIndex] ? `cmd-${filteredItems[selectedIndex].id}` : undefined}
           />
-          {query && (
-            <button
-              type="button"
-              onClick={() => setQuery("")}
-              className="text-[#8E95A5] hover:text-[#ECEEF2] p-1"
-              aria-label="Clear query"
-            >
-              <X size={14} />
-            </button>
-          )}
-          <span className="hidden sm:inline-block px-1.5 py-0.5 rounded text-[10px] font-mono text-[#8E95A5] bg-[#171A21] border border-[#232732]">
-            ESC
-          </span>
+          <kbd className="rounded-md border border-[#232732] px-1.5 py-0.5 font-mono text-[10px] text-[#8E95A5]">Esc</kbd>
         </div>
 
-        {/* Results List */}
-        <div
-          ref={listRef}
-          className="max-h-80 overflow-y-auto p-2 space-y-1 divide-y-0"
-        >
-          {filteredItems.length === 0 ? (
-            <div className="py-8 text-center text-xs text-[#8E95A5] font-mono">
-              {locale === "en"
-                ? "No matching commands or destinations found."
-                : "No se encontraron comandos o destinos coincidentes."}
-            </div>
+        <div ref={listRef} id="command-palette-list" role="listbox" className="max-h-[360px] overflow-y-auto p-1.5">
+          {groups.length === 0 ? (
+            <p className="px-3 py-10 text-center text-[13px] text-[#8E95A5]">
+              {locale === "es" ? "Nada coincide con esa búsqueda." : "Nothing matches that search."}
+            </p>
           ) : (
-            filteredItems.map((item, idx) => {
-              const isSelected = idx === selectedIndex;
-              return (
-                <button
-                  key={item.id}
-                  type="button"
-                  onClick={item.action}
-                  onMouseEnter={() => setSelectedIndex(idx)}
-                  className={`w-full text-left px-3.5 py-2.5 rounded-xl flex items-center justify-between gap-3 text-xs sm:text-sm font-sans transition-colors ${
-                    isSelected
-                      ? "bg-[#171A21] text-[#ECEEF2] border border-[#232732]"
-                      : "text-[#8E95A5] hover:text-[#ECEEF2] border border-transparent"
-                  }`}
-                >
-                  <div className="flex items-center gap-3 truncate">
-                    <span className="shrink-0">{item.icon}</span>
-                    <span className="truncate font-medium">{item.title}</span>
-                  </div>
-                  <span className="text-[10px] font-mono text-[#8E95A5] bg-[#090A0D] px-2 py-0.5 rounded shrink-0 border border-[#232732]">
-                    {item.category}
-                  </span>
-                </button>
-              );
-            })
+            groups.map((group) => (
+              <div key={group.category} className="pb-1">
+                <p className="px-3 pb-1 pt-2.5 font-mono text-[10.5px] text-[#5D6474]">
+                  {CATEGORY_LABEL[group.category][locale]}
+                </p>
+                {group.entries.map((item) => {
+                  runningIndex += 1;
+                  const idx = runningIndex;
+                  const isSelected = idx === selectedIndex;
+                  return (
+                    <button
+                      key={item.id}
+                      id={`cmd-${item.id}`}
+                      data-index={idx}
+                      type="button"
+                      role="option"
+                      aria-selected={isSelected}
+                      onClick={item.action}
+                      onMouseMove={() => setSelectedIndex(idx)}
+                      className={`flex w-full items-center justify-between gap-3 rounded-lg px-3 py-2.5 text-left text-[13.5px] ${
+                        isSelected ? "bg-[#171A21] text-[#ECEEF2]" : "text-[#B4BAC6]"
+                      }`}
+                    >
+                      <span className="flex min-w-0 items-center gap-3">
+                        <span className={isSelected ? "text-[#ECEEF2]" : "text-[#5D6474]"}>{item.icon}</span>
+                        <span className="truncate">{item.title}</span>
+                      </span>
+                      {item.hint && <span className="shrink-0 font-mono text-[11px] text-[#5D6474]">{item.hint}</span>}
+                    </button>
+                  );
+                })}
+              </div>
+            ))
           )}
         </div>
 
-        {/* Footer Hints */}
-        <div className="border-t border-[#232732] px-4 py-2.5 bg-[#0E0F13] flex items-center justify-between text-[11px] font-mono text-[#8E95A5]">
-          <div className="flex items-center gap-3">
-            <span>↑↓ Navigate</span>
-            <span>↵ Select</span>
-            <span>Esc Close</span>
-          </div>
-          <span className="text-[#10B981]">0ms Instant Response</span>
+        <div className="flex items-center gap-4 border-t border-[#232732] px-4 py-2.5 font-mono text-[10.5px] text-[#5D6474]">
+          <span className="inline-flex items-center gap-1">
+            <ArrowUp size={11} aria-hidden="true" />
+            <ArrowDown size={11} aria-hidden="true" />
+            {locale === "es" ? "mover" : "move"}
+          </span>
+          <span className="inline-flex items-center gap-1">
+            <ArrowElbowDownLeft size={11} aria-hidden="true" />
+            {locale === "es" ? "abrir" : "open"}
+          </span>
+          <span className="ml-auto">Ctrl / Cmd K</span>
         </div>
       </div>
     </div>

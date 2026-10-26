@@ -29,8 +29,8 @@ export const ASSETS = {
     pdf: {
       src: "/cv/Alberto_Vizcaino_Ponte_CV.pdf",
       title: {
-        en: "Alberto Vizcaino Ponte - Curriculum Vitae",
-        es: "Alberto Vizcaino Ponte - Curriculum Vitae",
+        en: "Alberto Vizcaíno Ponte - Curriculum Vitae",
+        es: "Alberto Vizcaíno Ponte - Curriculum Vitae",
       },
       sizeBytes: 24436,
     } satisfies DocumentAsset,
@@ -41,8 +41,8 @@ export const ASSETS = {
     width: 64,
     height: 64,
     alt: {
-      en: "Alberto Vizcaino geometric monogram favicon",
-      es: "Favicon monograma geometrico de Alberto Vizcaino",
+      en: "Alberto Vizcaíno geometric monogram favicon",
+      es: "Favicon monograma geométrico de Alberto Vizcaíno",
     },
   } satisfies MediaAsset,
 
@@ -53,7 +53,7 @@ export const ASSETS = {
       height: 512,
       alt: {
         en: "Krakount app icon with amber Kazimierz neon",
-        es: "Icono de la app Krakount con neon ambar Kazimierz",
+        es: "Icono de la app Krakount con neón ámbar Kazimierz",
       },
     } satisfies MediaAsset,
 
@@ -62,8 +62,8 @@ export const ASSETS = {
       width: 512,
       height: 512,
       alt: {
-        en: "Krakount circular emblem with Krakow Erasmus typography",
-        es: "Emblema circular Krakount con tipografia Krakow Erasmus",
+        en: "Krakount circular emblem with Kraków Erasmus typography",
+        es: "Emblema circular Krakount con tipografía Kraków Erasmus",
       },
     } satisfies MediaAsset,
 
@@ -73,7 +73,7 @@ export const ASSETS = {
       height: 660,
       alt: {
         en: "Krakount high-resolution logo emblem",
-        es: "Emblema de logotipo Krakount en alta resolucion",
+        es: "Emblema de logotipo Krakount en alta resolución",
       },
     } satisfies MediaAsset,
 
@@ -84,7 +84,7 @@ export const ASSETS = {
       poster: "/media/krakount/reel-poster.webp",
       alt: {
         en: "Krakount 30-second mobile showcase video reel",
-        es: "Reel de video de 30 segundos mostrando la app Krakount",
+        es: "Reel de vídeo de 30 segundos mostrando la app Krakount",
       },
     } satisfies MediaAsset,
 
@@ -135,8 +135,8 @@ export const ASSETS = {
         width: 780,
         height: 1688,
         alt: {
-          en: "Krakount multicurrency selector synced with NBP Table A",
-          es: "Selector multidivisa de Krakount sincronizado con la Tabla A del NBP",
+          en: "Krakount dual EUR and PLN currency home screen with real-time conversion",
+          es: "Pantalla principal de Krakount con doble divisa EUR y PLN y conversión en tiempo real",
         },
       } satisfies MediaAsset,
 
@@ -156,7 +156,7 @@ export const ASSETS = {
         height: 1688,
         alt: {
           en: "Krakount flight detail screen with gate, terminal, and departure countdown",
-          es: "Pantalla de detalle de vuelo en Krakount con puerta, terminal y cuenta atras",
+          es: "Pantalla de detalle de vuelo en Krakount con puerta, terminal y cuenta atrás",
         },
       } satisfies MediaAsset,
 
@@ -166,7 +166,7 @@ export const ASSETS = {
         height: 1688,
         alt: {
           en: "Krakount offline boarding pass with high-contrast barcode and QR",
-          es: "Pase de embarque sin conexion en Krakount con codigo de barras y QR de alto contraste",
+          es: "Pase de embarque sin conexión en Krakount con código de barras y QR de alto contraste",
         },
       } satisfies MediaAsset,
 
@@ -176,7 +176,7 @@ export const ASSETS = {
         height: 1688,
         alt: {
           en: "Krakount split expense modal with per-person share calculation",
-          es: "Modal de division de gastos en Krakount con calculo por persona",
+          es: "Modal de división de gastos en Krakount con cálculo por persona",
         },
       } satisfies MediaAsset,
 
@@ -185,8 +185,8 @@ export const ASSETS = {
         width: 780,
         height: 1688,
         alt: {
-          en: "Krakount receipt scanner splitting supermarket items in Polish zloty",
-          es: "Escaner de tickets Krakount desglosando articulos en zlotys polacos",
+          en: "Krakount receipt scanner splitting supermarket items in Polish złoty",
+          es: "Escáner de tickets Krakount desglosando artículos en złotys polacos",
         },
       } satisfies MediaAsset,
 
@@ -196,7 +196,7 @@ export const ASSETS = {
         height: 1688,
         alt: {
           en: "Krakount debt minimization matrix settling balances with minimum transactions",
-          es: "Matriz de minimizacion de deuda en Krakount liquidando saldos con minimas transferencias",
+          es: "Matriz de minimización de deuda en Krakount liquidando saldos con mínimas transferencias",
         },
       } satisfies MediaAsset,
 
@@ -205,8 +205,8 @@ export const ASSETS = {
         width: 780,
         height: 1688,
         alt: {
-          en: "Krakount confirmed settlement screen with green checkmark and zero balance",
-          es: "Pantalla de liquidacion confirmada en Krakount con marca de verificacion y saldo cero",
+          en: "Krakount confirmed settlement screen with stamp and zero balance",
+          es: "Pantalla de liquidación confirmada en Krakount con sello de pagado y saldo cero",
         },
       } satisfies MediaAsset,
 
@@ -219,6 +219,26 @@ export const ASSETS = {
           es: "Tarjeta de resumen Krakount Wrapped del viaje con gasto total y mayor pagador",
         },
       } satisfies MediaAsset,
+
+      misGastos: {
+        src: "/media/krakount/shot-mis-gastos.webp",
+        width: 780,
+        height: 1688,
+        alt: {
+          en: "Krakount personal spending rhythm and monthly budget tracker in PLN",
+          es: "Control de ritmo de gasto personal y presupuesto mensual en Krakount en PLN",
+        },
+      } satisfies MediaAsset,
+
+      captura: {
+        src: "/media/krakount/shot-captura.webp",
+        width: 780,
+        height: 1688,
+        alt: {
+          en: "Krakount Captura pending payments screen with Revolut and Google Wallet notifications",
+          es: "Pantalla de pagos pendientes de revisión en Krakount Captura con notificaciones de Revolut y Google Wallet",
+        },
+      } satisfies MediaAsset,
     },
 
     pops: {
@@ -228,7 +248,7 @@ export const ASSETS = {
         height: 824,
         alt: {
           en: "Krakount balance popup card showing who owes whom",
-          es: "Tarjeta emergente de saldos de Krakount mostrando quien debe a quien",
+          es: "Tarjeta emergente de saldos de Krakount mostrando quién debe a quién",
         },
       } satisfies MediaAsset,
 
@@ -279,7 +299,7 @@ export const ASSETS = {
       src: "/media/mycrohnie/MyCrohnie-deck.pdf",
       title: {
         en: "MyCrohnie HackYeah 2026 Presentation Deck",
-        es: "Presentacion de MyCrohnie para HackYeah 2026",
+        es: "Presentación de MyCrohnie para HackYeah 2026",
       },
       sizeBytes: 2518221,
     } satisfies DocumentAsset,
@@ -291,7 +311,7 @@ export const ASSETS = {
       poster: "/media/mycrohnie/poster.webp",
       alt: {
         en: "MyCrohnie 18-second video demo showing daily check-in and doctor report",
-        es: "Demo en video de 18 segundos de MyCrohnie mostrando el registro diario y reporte medico",
+        es: "Demo en vídeo de 18 segundos de MyCrohnie mostrando el registro diario e informe médico",
       },
     } satisfies MediaAsset,
 
@@ -301,7 +321,7 @@ export const ASSETS = {
       height: 720,
       alt: {
         en: "Poster frame for MyCrohnie video demo",
-        es: "Fotograma de portada para la demo en video de MyCrohnie",
+        es: "Fotograma de portada para la demo en vídeo de MyCrohnie",
       },
     } satisfies MediaAsset,
 
@@ -312,7 +332,7 @@ export const ASSETS = {
         height: 1688,
         alt: {
           en: "MyCrohnie mobile home dashboard with daily streak and symptom log",
-          es: "Panel principal de MyCrohnie con racha diaria y registro de sintomas",
+          es: "Panel principal de MyCrohnie con racha diaria y registro de síntomas",
         },
       } satisfies MediaAsset,
 
@@ -322,7 +342,7 @@ export const ASSETS = {
         height: 1688,
         alt: {
           en: "MyCrohnie rapid daily check-in flow with medical symptom metrics",
-          es: "Flujo de registro diario rapido en MyCrohnie con metricas de sintomas medicos",
+          es: "Flujo de registro diario rápido en MyCrohnie con métricas de síntomas médicos",
         },
       } satisfies MediaAsset,
 
@@ -342,7 +362,7 @@ export const ASSETS = {
         height: 1688,
         alt: {
           en: "MyCrohnie flare correlation analysis and dietary trigger charts",
-          es: "Analisis de correlacion de brotes y graficos de detonantes dieteticos en MyCrohnie",
+          es: "Análisis de correlación de brotes y gráficos de detonantes dietéticos en MyCrohnie",
         },
       } satisfies MediaAsset,
 
@@ -352,7 +372,7 @@ export const ASSETS = {
         height: 1688,
         alt: {
           en: "MyCrohnie single-page clinical report export for gastroenterologist consultations",
-          es: "Exportacion de informe clinico en una pagina de MyCrohnie para consultas de gastroenterologia",
+          es: "Exportación de informe clínico en una página de MyCrohnie para consultas de gastroenterología",
         },
       } satisfies MediaAsset,
     },
@@ -361,46 +381,46 @@ export const ASSETS = {
   systems: {
     gargantua: {
       src: "/media/systems/gargantua-shader.webp",
-      width: 1600,
-      height: 900,
+      width: 1024,
+      height: 1024,
       alt: {
-        en: "Raymarched Gargantua black hole GLSL shader running in realtime on Linux Hyprland",
-        es: "Shader GLSL con raymarching del agujero negro Gargantua ejecutandose en tiempo real en Hyprland Linux",
+        en: "Raymarched Gargantua black hole GLSL shader running in realtime with ACES tonemapping",
+        es: "Shader GLSL con raymarching del agujero negro Gargantua ejecutándose en tiempo real con mapeo ACES",
       },
     } satisfies MediaAsset,
 
     celestial: {
       src: "/media/systems/celestial-desktop.webp",
-      width: 1600,
-      height: 900,
+      width: 1920,
+      height: 1080,
       alt: {
-        en: "Hyprland desktop with Quickshell solar system widgets and live orbital telemetry",
-        es: "Escritorio Hyprland con widgets Quickshell del sistema solar y telemetria orbital en vivo",
+        en: "Hyprland desktop with Quickshell celestial orbital canvas, Laura binary star, and audio-reactive Gargantua",
+        es: "Escritorio Hyprland con lienzo orbital Quickshell, estrella binaria Laura y Gargantua audio-reactivo",
       },
     } satisfies MediaAsset,
 
-    qmlTelemetry: {
-      src: "/media/systems/qml-telemetry.webp",
-      width: 1560,
-      height: 1240,
+    desktopIcy: {
+      src: "/media/systems/desktop-icy.webp",
+      width: 1920,
+      height: 1080,
       alt: {
-        en: "Quickshell QML system health monitoring widgets with real-time CPU and GPU telemetry",
-        es: "Widgets QML de Quickshell para monitorizacion del sistema con telemetria de CPU y GPU en tiempo real",
+        en: "Linux desktop in icy-blue Matugen palette playing 120 by Bad Bunny inside Gargantua",
+        es: "Escritorio Linux con paleta fría Matugen reproduciendo 120 de Bad Bunny en Gargantua",
+      },
+    } satisfies MediaAsset,
+
+    lauraDrawer: {
+      src: "/media/systems/laura-drawer.webp",
+      width: 1280,
+      height: 720,
+      alt: {
+        en: "Wayland multi-agent drawer showing Laura, Gemini, Claude, and Aurora background tasks",
+        es: "Cajón multi-agente en Wayland con tareas en segundo plano de Laura, Gemini, Claude y Aurora",
       },
     } satisfies MediaAsset,
   },
 
   closhare: {
-    mockups: {
-      src: "/media/closhare/mockups.webp",
-      width: 1100,
-      height: 939,
-      alt: {
-        en: "CloShare peer-to-peer wardrobe sharing design mockup and wireframes",
-        es: "Diseno y wireframes de CloShare para compartir armario entre particulares",
-      },
-    } satisfies MediaAsset,
-
     wardrobe: {
       src: "/media/closhare/wardrobe.webp",
       width: 780,

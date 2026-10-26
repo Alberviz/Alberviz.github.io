@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import { GithubLogo, LinkedinLogo, MapPin } from "@phosphor-icons/react";
 import { useLocale } from "@/lib/i18n-context";
 import { PROFILE } from "@/content/portfolio-data";
 
@@ -9,57 +8,27 @@ export function ProofStrip() {
   const { locale } = useLocale();
 
   return (
-    <div
-      data-scene="proof"
-      className="border-y border-[#232732] bg-[#111318]/60 backdrop-blur-sm"
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* 4-Column Proof Metrics Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-[#232732]">
-          {PROFILE.proofMetrics.map((item, idx) => (
-            <div
-              key={idx}
-              className="py-5 px-4 sm:px-6 flex flex-col justify-center hover:bg-[#171A21]/40 transition-colors"
-            >
-              <span className="font-display text-2xl lg:text-3xl font-semibold tabular-nums text-[#ECEEF2]">
-                {item.value}
-              </span>
-              <span className="text-xs sm:text-sm text-[#8E95A5] mt-1.5 leading-relaxed">
-                {item.label[locale]}
-              </span>
-            </div>
-          ))}
-        </div>
-
-        {/* Verification Sub-bar: Location & Social Links */}
-        <div className="border-t border-[#232732]/70 py-3 flex flex-wrap items-center justify-between gap-4 text-xs font-mono text-[#8E95A5]">
-          <div className="flex items-center gap-2">
-            <MapPin size={14} className="text-[#10B981]" weight="fill" />
-            <span>{PROFILE.currentLocation[locale]}</span>
+    <div data-scene="proof" className="border-y border-[#232732] bg-[#090A0D]">
+      <dl className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-2 lg:grid-cols-4 lg:divide-x lg:divide-[#232732]/70">
+        {PROFILE.proofMetrics.map((item, idx) => (
+          <div
+            key={item.value}
+            className={[
+              "flex flex-col-reverse justify-end gap-1.5 py-6 lg:py-7",
+              idx % 2 === 1 ? "border-l border-[#232732]/70 pl-4 sm:pl-6" : "pr-4 sm:pr-6",
+              idx >= 2 ? "border-t border-[#232732]/70 lg:border-t-0" : "",
+              idx === 0 ? "lg:pr-6" : "lg:px-6",
+            ].join(" ")}
+          >
+            <dt className="text-xs sm:text-[13px] leading-snug text-[#8E95A5]">
+              {item.label[locale]}
+            </dt>
+            <dd className="font-display text-xl sm:text-2xl lg:text-[1.75rem] font-semibold tracking-[-0.02em] tabular-nums text-[#ECEEF2]">
+              {item.value}
+            </dd>
           </div>
-          <div className="flex items-center gap-4">
-            <a
-              href={PROFILE.githubUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-1.5 hover:text-[#ECEEF2] transition-colors"
-            >
-              <GithubLogo size={14} weight="bold" />
-              <span>@Alberviz</span>
-            </a>
-            <span className="text-[#232732]">/</span>
-            <a
-              href={PROFILE.linkedinUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-1.5 hover:text-[#ECEEF2] transition-colors"
-            >
-              <LinkedinLogo size={14} weight="bold" />
-              <span>LinkedIn</span>
-            </a>
-          </div>
-        </div>
-      </div>
+        ))}
+      </dl>
     </div>
   );
 }

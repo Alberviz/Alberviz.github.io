@@ -40,9 +40,39 @@ export interface ProjectCaseStudy {
     | "mycrohnie"
     | "gargantua"
     | "celestial"
+    | "desktopIcy"
+    | "lauraDrawer"
     | "closhare"
     | "barber"
     | "gts2";
+}
+
+export interface WealthFlowItem {
+  id: string;
+  title: LocalizedText;
+  source: string;
+  protocol?: string;
+  detail: LocalizedText;
+}
+
+export interface WealthFlowArchitecture {
+  inputs: WealthFlowItem[];
+  core: {
+    title: LocalizedText;
+    platform: string;
+    specs: LocalizedText[];
+  };
+  outputs: WealthFlowItem[];
+}
+
+export interface LinuxDesktopShowcaseItem {
+  id: string;
+  title: string;
+  badge: LocalizedText;
+  tech: string;
+  summary: LocalizedText;
+  details: LocalizedText[];
+  mediaKey: "gargantua" | "celestial" | "desktopIcy" | "lauraDrawer";
 }
 
 export interface SubProject {

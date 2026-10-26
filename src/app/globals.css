@@ -28,6 +28,10 @@
   --color-kk-on-amber: var(--kk-on-amber);
   --color-kk-owed: var(--kk-owed);
   --color-kk-owe: var(--kk-owe);
+
+  --ease-out-strong: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out-strong: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
 }
 
 :root,
@@ -47,6 +51,9 @@
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
   --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
   --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+
+  /* Focus ring follows the active surface accent */
+  --focus-ring: #10B981;
 }
 
 /* Surface 2: Krakount Scoped Surface - Kazimierz de noche */
@@ -62,6 +69,8 @@
   --kk-on-amber: #16130A;
   --kk-owed: #3DD68C;
   --kk-owe: #FF6B5B;
+
+  --focus-ring: #F5A524;
 }
 
 /* Base Body Styles */
@@ -69,6 +78,9 @@ html {
   background-color: var(--bg-canvas);
   color: var(--text-primary);
   color-scheme: dark;
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+  -webkit-tap-highlight-color: transparent;
 }
 
 body {
@@ -81,10 +93,63 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Browser surfaces themed from the palette */
+::selection {
+  background-color: rgb(16 185 129 / 0.22);
+  color: #ECEEF2;
+}
+
+[data-surface="krakount"] ::selection {
+  background-color: rgb(245 165 36 / 0.25);
+  color: #EDEDEF;
+}
+
+:focus-visible {
+  outline: 1.5px solid var(--focus-ring);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+html {
+  scrollbar-color: #232732 transparent;
+  scrollbar-width: thin;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #232732;
+  border-radius: 999px;
+  border: 3px solid var(--bg-canvas);
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Display type: balanced headings, tight but legible tracking */
+.text-balance {
+  text-wrap: balance;
+}
+
+.text-pretty {
+  text-wrap: pretty;
+}
+
 /* Tactile press utility per Emil Kowalski interaction guidelines */
 .press-scale {
   transition: transform 140ms var(--ease-out);
-  will-change: transform;
 }
 
 .press-scale:active {
@@ -99,6 +164,86 @@ body {
   .hover-elevate:hover {
     transform: translateY(-2px);
   }
+}
+
+/*
+ * Animated underline for inline text links: a 1px rule that wipes in from the
+ * left on hover (transform only), and is always visible on touch devices.
+ */
+.link-rule {
+  position: relative;
+  text-decoration: none;
+}
+
+.link-rule::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.45;
+  transform-origin: left center;
+  transform: scaleX(1);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .link-rule::after {
+    transform: scaleX(0);
+    transition: transform 240ms var(--ease-out);
+  }
+  .link-rule:hover::after {
+    transform: scaleX(1);
+  }
+}
+
+/* Arrow nudge inside CTAs (fine pointers only) */
+@media (hover: hover) and (pointer: fine) {
+  .cta-arrow {
+    transition: transform 200ms var(--ease-out);
+  }
+  .group:hover .cta-arrow {
+    transform: translateX(3px);
+  }
+  .group:hover .cta-arrow-diag {
+    transform: translate(2px, -2px);
+  }
+  .group:hover .cta-arrow-down {
+    transform: translateY(2px);
+  }
+}
+
+/* Hotspot pin pulse: a ring that breathes outward. Transform + opacity only. */
+@keyframes pinPulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.55;
+  }
+  70%,
+  100% {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+}
+
+.pin-pulse {
+  animation: pinPulse 2.4s var(--ease-out) infinite;
+}
+
+/* Live status dot: soft opacity breathing, used sparingly */
+@keyframes statusBreath {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+.status-breath {
+  animation: statusBreath 2.8s ease-in-out infinite;
 }
 
 @keyframes floatSlow {
@@ -116,20 +261,20 @@ body {
   font-variant-numeric: tabular-nums;
 }
 
-/* Fixed noise overlay (never nested in scrollable elements to prevent repaint thrashing) */
+/*
+ * Legacy grain overlay hook kept for layout compatibility. Disabled: a fixed
+ * full-viewport turbulence layer costs a compositing layer on every frame and
+ * reads as decoration on an architectural surface.
+ */
 .bg-noise {
-  position: fixed;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 99;
-  opacity: 0.025;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  display: none;
 }
 
-/* Respect user motion preferences */
+/* Respect user motion preferences: keep fades, drop movement and loops */
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
   *,
   *::before,
   *::after {
@@ -140,5 +285,9 @@ body {
   }
   .press-scale:active {
     transform: none !important;
+  }
+  .pin-pulse,
+  .status-breath {
+    animation: none !important;
   }
 }

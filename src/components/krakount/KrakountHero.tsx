@@ -1,161 +1,254 @@
 "use client";
 
-import React from "react";
-import Image from "next/image";
-import { ArrowUpRight, ArrowsLeftRight, Play } from "@phosphor-icons/react";
+import React, { useState } from "react";
+import { AnimatePresence, LayoutGroup, motion, useReducedMotion } from "motion/react";
+import { ArrowDown, ArrowUpRight, Play } from "@phosphor-icons/react";
 import { useLocale } from "@/lib/i18n-context";
+import type { Locale } from "@/lib/i18n-context";
 import { KRAKOUNT_PAGE } from "@/content/krakount-data";
 import { ASSETS } from "@/content/assets";
+import type { MediaAsset } from "@/content/assets";
+import { DURATION, EASE_OUT, SPRING_LAYOUT, usePointerDepth } from "@/lib/motion";
+
+type ScreenId = "reel" | "receipt" | "balances" | "pass";
+
+const SCREENS: { id: ScreenId; label: Record<Locale, string>; shot?: MediaAsset; pop?: MediaAsset }[] = [
+  { id: "reel", label: { en: "30s reel", es: "Reel 30s" } },
+  {
+    id: "receipt",
+    label: { en: "Receipt", es: "Ticket" },
+    shot: ASSETS.krakount.shots.receipt,
+    pop: ASSETS.krakount.pops.share,
+  },
+  {
+    id: "balances",
+    label: { en: "Balances", es: "Saldos" },
+    shot: ASSETS.krakount.shots.balances,
+    pop: ASSETS.krakount.pops.transfer,
+  },
+  {
+    id: "pass",
+    label: { en: "Boarding pass", es: "Pase QR" },
+    shot: ASSETS.krakount.shots.pass,
+    pop: ASSETS.krakount.pops.flight,
+  },
+];
+
+const TRUST: { k: Record<Locale, string>; v: Record<Locale, string> }[] = [
+  { k: { en: "32 currencies", es: "32 divisas" }, v: { en: "Market and Revolut rates", es: "Tipos de mercado y Revolut" } },
+  { k: { en: "Offline PWA", es: "PWA offline" }, v: { en: "Passes work without signal", es: "Pases sin cobertura" } },
+  { k: { en: "Private OCR", es: "OCR privado" }, v: { en: "Receipt photos never stored", es: "Fotos nunca guardadas" } },
+];
 
 export function KrakountHero() {
   const { locale } = useLocale();
+  const reduce = useReducedMotion();
+  const [screen, setScreen] = useState<ScreenId>("reel");
+  const depth = usePointerDepth(2);
+  const words = KRAKOUNT_PAGE.hero.headline[locale].split(" ");
+  const current = SCREENS.find((s) => s.id === screen) ?? SCREENS[0];
+
+  const rise = (delay: number) => ({
+    initial: { opacity: 0, transform: reduce ? "none" : "translateY(10px)" },
+    animate: { opacity: 1, transform: "translateY(0px)" },
+    transition: { duration: DURATION.reveal, ease: EASE_OUT, delay },
+  });
 
   return (
-    <section className="relative min-h-[calc(100dvh-4rem)] pt-12 md:pt-16 pb-16 flex items-center overflow-hidden">
-      {/* Kazimierz Amber atmospheric backdrop radial glow */}
-      <div
-        className="pointer-events-none absolute -top-24 right-1/4 w-[540px] h-[540px] rounded-full bg-[#F5A524]/6 blur-[120px]"
-        aria-hidden="true"
-      />
+    <div className="relative overflow-hidden">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="grid min-h-[calc(100dvh-3.5rem)] grid-cols-1 items-center gap-14 py-14 lg:grid-cols-12 lg:gap-8 lg:py-16">
+          {/* Copy */}
+          <div className="lg:col-span-6">
+            <motion.p {...rise(0)} className="mb-6 text-[11px] font-bold uppercase tracking-[0.14em] text-[#F5A524]">
+              {KRAKOUNT_PAGE.hero.eyebrow[locale]}
+            </motion.p>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
-          {/* Left Column: Asymmetric 6-col copy stack */}
-          <div className="lg:col-span-6 flex flex-col items-start">
-            {/* Eyebrow 1 of 2 across /krakount */}
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#1F2027] border border-[#26272F] text-[11px] font-bold uppercase tracking-widest text-[#F5A524] mb-5">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#F5A524] animate-pulse" aria-hidden="true" />
-              <span>{KRAKOUNT_PAGE.hero.eyebrow[locale]}</span>
-            </div>
-
-            <h1 className="text-4xl sm:text-5xl lg:text-[3.4rem] font-extrabold tracking-[-0.03em] leading-[1.06] text-[#EDEDEF]">
-              {KRAKOUNT_PAGE.hero.headline[locale]}
+            <h1 className="text-balance text-[clamp(2.5rem,5.2vw,4.1rem)] font-extrabold leading-[1.02] tracking-[-0.035em] text-[#EDEDEF]">
+              {words.map((word, i) => (
+                <React.Fragment key={i}>
+                  <span className="inline-block overflow-hidden pb-[0.1em] -mb-[0.1em] align-bottom">
+                    <motion.span
+                      className="inline-block"
+                      initial={{ transform: reduce ? "translateY(0%)" : "translateY(105%)", opacity: reduce ? 0 : 1 }}
+                      animate={{ transform: "translateY(0%)", opacity: 1 }}
+                      transition={{ duration: 0.85, ease: EASE_OUT, delay: 0.05 + i * 0.04 }}
+                    >
+                      {word}
+                    </motion.span>
+                  </span>
+                  {i < words.length - 1 ? " " : null}
+                </React.Fragment>
+              ))}
             </h1>
 
-            <p className="mt-5 text-[#8B8D98] text-base sm:text-lg max-w-[50ch] leading-relaxed">
+            <motion.p {...rise(0.3)} className="mt-6 max-w-[52ch] text-pretty text-[16.5px] leading-relaxed text-[#8B8D98]">
               {KRAKOUNT_PAGE.hero.subtext[locale]}
-            </p>
+            </motion.p>
 
-            {/* CTAs */}
-            <div className="mt-8 flex flex-wrap items-center gap-3.5">
+            <motion.div {...rise(0.4)} className="mt-9 flex flex-wrap items-center gap-3">
               <a
                 href={KRAKOUNT_PAGE.liveDemoUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 bg-[#F5A524] hover:bg-[#E0951A] text-[#16130A] font-bold rounded-full px-5 py-3 press-scale text-sm sm:text-base shadow-lg shadow-[#F5A524]/20 transition-colors"
+                className="group inline-flex items-center gap-2 rounded-full bg-[#F5A524] px-5 py-2.5 text-[15px] font-bold text-[#16130A] transition-colors duration-150 hover:bg-[#E0951A] press-scale"
               >
-                <span>{KRAKOUNT_PAGE.hero.primaryCta[locale]}</span>
-                <ArrowUpRight size={18} weight="bold" />
+                {KRAKOUNT_PAGE.hero.primaryCta[locale]}
+                <ArrowUpRight size={16} weight="bold" className="cta-arrow cta-arrow-diag" aria-hidden="true" />
               </a>
-
               <a
                 href="#simulator"
-                className="inline-flex items-center gap-2 bg-[#17181E] hover:bg-[#1F2027] text-[#EDEDEF] border border-[#26272F] hover:border-[#F5A524]/40 font-semibold rounded-full px-5 py-3 press-scale text-sm sm:text-base transition-colors"
+                className="group inline-flex items-center gap-2 rounded-full border border-[#26272F] px-5 py-2.5 text-[15px] font-semibold text-[#EDEDEF] transition-colors duration-150 hover:border-[#3A3B45] hover:bg-[#17181E] press-scale"
               >
-                <span>{KRAKOUNT_PAGE.hero.secondaryCta[locale]}</span>
-                <ArrowsLeftRight size={18} weight="bold" />
+                {KRAKOUNT_PAGE.hero.secondaryCta[locale]}
+                <ArrowDown size={15} weight="bold" className="cta-arrow cta-arrow-down" aria-hidden="true" />
               </a>
-            </div>
-
-            {/* Subtle YouTube Short link */}
-            <div className="mt-5">
               <a
                 href={KRAKOUNT_PAGE.youtubeShortUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2.5 text-xs sm:text-sm text-[#8B8D98] hover:text-[#EDEDEF] transition-colors py-1 group"
+                className="inline-flex items-center gap-2 px-2 py-2.5 text-[13.5px] text-[#8B8D98] transition-colors duration-150 hover:text-[#EDEDEF]"
               >
-                <span className="w-6 h-6 rounded-full bg-[#1F2027] border border-[#26272F] flex items-center justify-center text-[#F5A524] group-hover:bg-[#F5A524] group-hover:text-[#16130A] transition-colors shadow-sm">
-                  <Play size={11} weight="fill" />
-                </span>
-                <span>
-                  {locale === "es"
-                    ? "Ver reel de 30s en YouTube Shorts"
-                    : "Watch 30s reel on YouTube Shorts"}
-                </span>
+                <Play size={12} weight="fill" className="text-[#F5A524]" aria-hidden="true" />
+                <span className="link-rule">YouTube Shorts</span>
               </a>
-            </div>
+            </motion.div>
 
-            {/* Architectural trust markers */}
-            <div className="mt-8 pt-6 border-t border-[#26272F] w-full max-w-[50ch] grid grid-cols-3 gap-4 text-xs text-[#8B8D98]">
-              <div>
-                <span className="text-[#EDEDEF] font-semibold block">Serwist PWA</span>
-                <span>{locale === "es" ? "Funciona 100% offline" : "100% offline ready"}</span>
-              </div>
-              <div>
-                <span className="text-[#EDEDEF] font-semibold block">NBP Table A</span>
-                <span>{locale === "es" ? "32 divisas al día" : "32 live currencies"}</span>
-              </div>
-              <div>
-                <span className="text-[#EDEDEF] font-semibold block">0% Cloud OCR</span>
-                <span>{locale === "es" ? "Sin fotos en servidor" : "Zero server photo storage"}</span>
-              </div>
-            </div>
+            <motion.dl
+              {...rise(0.5)}
+              className="mt-12 grid max-w-[560px] grid-cols-3 divide-x divide-[#26272F] border-t border-[#26272F] pt-5"
+            >
+              {TRUST.map((t) => (
+                <div key={t.k.en} className="px-4 first:pl-0">
+                  <dt className="text-[13px] font-semibold text-[#EDEDEF]">{t.k[locale]}</dt>
+                  <dd className="mt-1 text-[12px] leading-snug text-[#8B8D98]">{t.v[locale]}</dd>
+                </div>
+              ))}
+            </motion.dl>
           </div>
 
-          {/* Right Column: Real Kazimierz Night Mobile Stage */}
-          <div className="lg:col-span-6 relative flex items-center justify-center">
-            {/* Phone hardware frame */}
-            <div className="relative bg-[#17181E] border border-[#26272F] rounded-[2.5rem] p-2.5 shadow-[0_24px_64px_-16px_rgba(0,0,0,0.85)] max-w-[290px] sm:max-w-[310px] w-full mx-auto z-10 hover-elevate">
-              {/* Top speaker slit */}
-              <div className="w-24 h-4 bg-[#0E0F13] rounded-full mx-auto mb-2 flex items-center justify-center gap-1.5" aria-hidden="true">
-                <span className="w-2 h-2 rounded-full bg-[#26272F]" />
-                <span className="w-8 h-1 bg-[#26272F] rounded-full" />
-              </div>
-
-              {/* Real 30-second mobile reel */}
-              <div className="rounded-[2rem] overflow-hidden bg-[#0E0F13] border border-[#26272F]">
-                <video
-                  src={ASSETS.krakount.reel30s.src}
-                  poster={ASSETS.krakount.reel30s.poster}
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                  className="w-full h-auto aspect-[608/1080] object-cover"
-                  aria-label={ASSETS.krakount.reel30s.alt[locale]}
-                />
-              </div>
-            </div>
-
-            {/* Floating Pop Card 1: Balance breakdown popup */}
+          {/* Device stage */}
+          <div className="relative flex flex-col items-center lg:col-span-6">
+            {/* Streetlamp pool: a single warm light under the device */}
             <div
-              className="hidden sm:block absolute -left-4 lg:-left-10 top-16 z-20 w-48 lg:w-56 rounded-2xl border border-[#26272F] bg-[#17181E]/95 p-1.5 shadow-[0_16px_36px_rgba(0,0,0,0.7)] backdrop-blur-md hover-elevate press-scale"
-              style={{ animation: "floatSlow 6s ease-in-out infinite" }}
-            >
-              <div className="text-[10px] font-semibold text-[#8B8D98] px-2 py-1 flex items-center justify-between">
-                <span>{locale === "es" ? "Saldos Minimizados" : "Minimized Debts"}</span>
-                <span className="text-[#3DD68C] font-mono tabular-nums">+42.50 zł</span>
-              </div>
-              <Image
-                src={ASSETS.krakount.pops.balance.src}
-                alt={ASSETS.krakount.pops.balance.alt[locale]}
-                width={ASSETS.krakount.pops.balance.width}
-                height={ASSETS.krakount.pops.balance.height}
-                className="rounded-xl w-full h-auto object-contain border border-[#26272F]/50"
-              />
-            </div>
+              aria-hidden="true"
+              className="pointer-events-none absolute left-1/2 top-[45%] h-[120%] w-[120%] -translate-x-1/2 -translate-y-1/2 bg-[radial-gradient(closest-side,rgba(245,165,36,0.09),transparent)]"
+            />
 
-            {/* Floating Pop Card 2: Flight card popup */}
-            <div
-              className="hidden sm:block absolute -right-4 lg:-right-8 bottom-12 z-20 w-44 lg:w-52 rounded-2xl border border-[#26272F] bg-[#17181E]/95 p-1.5 shadow-[0_16px_36px_rgba(0,0,0,0.7)] backdrop-blur-md hover-elevate press-scale"
-              style={{ animation: "floatSlow 7s ease-in-out 1s infinite" }}
+            <motion.div
+              initial={{ opacity: 0, transform: reduce ? "none" : "translateY(48px)" }}
+              animate={{ opacity: 1, transform: "translateY(0px)" }}
+              transition={{ duration: 1.1, ease: EASE_OUT, delay: 0.15 }}
+              className="relative"
+              style={{ perspective: 1400 }}
             >
-              <div className="text-[10px] font-semibold text-[#8B8D98] px-2 py-1 flex items-center justify-between">
-                <span>{locale === "es" ? "Vuelo KRK - MAD" : "Flight KRK - MAD"}</span>
-                <span className="text-[#F5A524] font-mono">KRK · T1</span>
-              </div>
-              <Image
-                src={ASSETS.krakount.pops.flight.src}
-                alt={ASSETS.krakount.pops.flight.alt[locale]}
-                width={ASSETS.krakount.pops.flight.width}
-                height={ASSETS.krakount.pops.flight.height}
-                className="rounded-xl w-full h-auto object-contain border border-[#26272F]/50"
-              />
-            </div>
+              <motion.div
+                {...depth.handlers}
+                style={{ transform: depth.transform }}
+                className="relative w-[272px] rounded-[42px] border border-[#26272F] bg-[#17181E] p-[7px] shadow-[0_60px_100px_-40px_rgba(0,0,0,0.95)] sm:w-[292px]"
+              >
+                <div className="relative aspect-[780/1688] overflow-hidden rounded-[35px] bg-[#0E0F13]">
+                  <AnimatePresence initial={false}>
+                    {current.shot ? (
+                      <motion.img
+                        key={current.id}
+                        src={current.shot.src}
+                        alt={current.shot.alt[locale]}
+                        width={current.shot.width}
+                        height={current.shot.height}
+                        draggable={false}
+                        className="absolute inset-0 h-full w-full object-cover object-top"
+                        initial={{ opacity: 0, transform: reduce ? "none" : "scale(1.03)" }}
+                        animate={{ opacity: 1, transform: "scale(1)" }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.35, ease: EASE_OUT }}
+                      />
+                    ) : (
+                      <motion.video
+                        key="reel"
+                        src={ASSETS.krakount.reel30s.src}
+                        poster={ASSETS.krakount.reel30s.poster}
+                        width={ASSETS.krakount.reel30s.width}
+                        height={ASSETS.krakount.reel30s.height}
+                        autoPlay
+                        muted
+                        loop
+                        playsInline
+                        aria-label={ASSETS.krakount.reel30s.alt[locale]}
+                        className="absolute inset-0 h-full w-full object-cover"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.35, ease: EASE_OUT }}
+                      />
+                    )}
+                  </AnimatePresence>
+                </div>
+              </motion.div>
+
+              {/* Context card for the current screen, floating on a nearer plane */}
+              <AnimatePresence initial={false}>
+                {current.pop && (
+                  <motion.div
+                    key={current.id}
+                    className="absolute -right-10 bottom-24 hidden w-[210px] sm:block lg:-right-24"
+                    initial={{ opacity: 0, transform: reduce ? "none" : "translateY(14px) scale(0.96)" }}
+                    animate={{ opacity: 1, transform: "translateY(0px) scale(1)", transition: { duration: 0.5, ease: EASE_OUT, delay: 0.08 } }}
+                    exit={{ opacity: 0, transition: { duration: 0.15, ease: EASE_OUT } }}
+                  >
+                    <motion.img
+                      src={current.pop.src}
+                      alt={current.pop.alt[locale]}
+                      width={current.pop.width}
+                      height={current.pop.height}
+                      draggable={false}
+                      style={{ transform: depth.parallaxTransform }}
+                      className="h-auto w-full rounded-2xl border border-[#26272F] shadow-[0_30px_60px_-24px_rgba(0,0,0,0.95)]"
+                    />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.div>
+
+            {/* Screen switcher */}
+            <motion.div {...rise(0.55)} className="relative mt-8">
+              <LayoutGroup id="krakount-hero-screens">
+                <div
+                  role="tablist"
+                  aria-label={locale === "es" ? "Pantallas" : "Screens"}
+                  className="flex items-center gap-0.5 rounded-full border border-[#26272F] bg-[#17181E]/80 p-1"
+                >
+                  {SCREENS.map((s) => {
+                    const selected = s.id === screen;
+                    return (
+                      <button
+                        key={s.id}
+                        type="button"
+                        role="tab"
+                        aria-selected={selected}
+                        onClick={() => setScreen(s.id)}
+                        className={`relative isolate rounded-full px-3 py-1.5 text-[12.5px] font-semibold transition-colors duration-150 press-scale ${
+                          selected ? "text-[#16130A]" : "text-[#8B8D98] hover:text-[#EDEDEF]"
+                        }`}
+                      >
+                        {selected && (
+                          <motion.span
+                            layoutId="krakount-hero-screen-pill"
+                            aria-hidden="true"
+                            className="absolute inset-0 -z-10 rounded-full bg-[#F5A524]"
+                            transition={reduce ? { duration: 0 } : SPRING_LAYOUT}
+                          />
+                        )}
+                        {s.label[locale]}
+                      </button>
+                    );
+                  })}
+                </div>
+              </LayoutGroup>
+            </motion.div>
           </div>
         </div>
       </div>
-    </section>
+    </div>
   );
 }

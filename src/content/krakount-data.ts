@@ -23,8 +23,8 @@ export const KRAKOUNT_PAGE = {
       es: "Gastos compartidos y viajes en grupo, diseñados a una mano.",
     } satisfies LocalizedText,
     subtext: {
-      en: "Split Polish supermarket receipts item by item, settle 32 currencies at official NBP rates, and carry every flight and boarding pass offline.",
-      es: "Divide tickets del súper ítem por ítem, liquida 32 divisas a cambio oficial NBP y lleva tus vuelos y pases QR sin conexión.",
+      en: "Split Polish supermarket receipts item by item, settle 32 currencies at live market and Revolut rates with optional +1% bank fee (NBP fallback), and carry every flight and boarding pass offline.",
+      es: "Divide tickets del súper ítem por ítem, liquida 32 divisas a cambio de mercado y Revolut con +1% bancario opcional (respaldo NBP) y lleva tus vuelos y pases QR sin conexión.",
     } satisfies LocalizedText,
     primaryCta: {
       en: "Open Live App",
@@ -39,8 +39,8 @@ export const KRAKOUNT_PAGE = {
     {
       value: "32",
       label: {
-        en: "Currencies synced with National Bank of Poland (NBP) Table A",
-        es: "Divisas sincronizadas con la Tabla A del Banco Nacional de Polonia (NBP)",
+        en: "Currencies at live market and Revolut rates with optional +1% bank fee (NBP Table A fallback)",
+        es: "Divisas a tipos de mercado y Revolut con +1% bancario opcional (respaldo Tabla A NBP)",
       },
     },
     {
@@ -152,8 +152,8 @@ export const KRAKOUNT_PAGE = {
         es: "Saldos Honestos y Liquidación en Un Toque",
       },
       body: {
-        en: "Every balance displays exact minor units, live 32-currency NBP conversion, bank FX fee adjustments, and inline Revolut, Bizum, BLIK, or IBAN copy actions right where the debt lives.",
-        es: "Cada saldo muestra céntimos exactos, cambio oficial en 32 monedas, ajuste de comisión bancaria y copia directa de Revolut, Bizum, BLIK o IBAN donde aparece la deuda.",
+        en: "Every balance displays exact minor units, live 32-currency market and Revolut conversion with optional +1% bank fee (NBP fallback), and inline Revolut, Bizum, BLIK, or IBAN copy actions right where the debt lives.",
+        es: "Cada saldo muestra céntimos exactos, conversión en 32 divisas a tipos de mercado y Revolut con +1% bancario opcional (respaldo NBP) y copia directa de Revolut, Bizum, BLIK o IBAN donde aparece la deuda.",
       },
       shotKey: "shotBalances",
       popKey: "popBalance",
@@ -174,14 +174,14 @@ export const KRAKOUNT_PAGE = {
     {
       id: "android-capture",
       title: {
-        en: "Krakount Captura (Kotlin) & MCP Server",
-        es: "Krakount Captura (Kotlin) y Servidor MCP",
+        en: "Krakount Captura (Kotlin), Price Camera & Capital API",
+        es: "Krakount Captura (Kotlin), Cámara de Precios y API de Capital",
       },
       body: {
-        en: "Zero-dependency Kotlin companion app pairs via deep link to capture tap-to-pay notifications automatically, backed by a native Model Context Protocol server for AI agents.",
-        es: "App nativa en Kotlin sin dependencias que captura pagos móviles al vuelo tras emparejarse por deep link, junto a un servidor nativo MCP para agentes de IA.",
+        en: "Kotlin companion app auto-settling incoming Bizum and Revolut debts from notifications, paired with the /camara shelf price converter, personal Mis gastos and Ingresos budgeting, and the /api/v1/me/capital feed.",
+        es: "App complementaria en Kotlin que liquida deudas con notificaciones de Bizum y Revolut, junto al conversor /camara en tienda, control de Mis gastos e Ingresos y sincronización /api/v1/me/capital.",
       },
-      shotKey: "shotItinerary",
+      shotKey: "shotCaptura",
       popKey: "popPass",
     },
   ],
