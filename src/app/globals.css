@@ -1,0 +1,144 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: var(--font-display), "Space Grotesk", sans-serif;
+  --font-sans: var(--font-sans), "Plus Jakarta Sans", sans-serif;
+  --font-mono: var(--font-mono), "JetBrains Mono", monospace;
+  --font-krakount-ui: var(--font-krakount-ui), "Schibsted Grotesk", sans-serif;
+  --font-krakount-brand: var(--font-krakount-brand), "Archivo", sans-serif;
+
+  --color-canvas: var(--bg-canvas);
+  --color-surface: var(--bg-surface);
+  --color-elevated: var(--bg-elevated);
+  --color-hairline: var(--border-hairline);
+  --color-primary: var(--text-primary);
+  --color-muted: var(--text-muted);
+  --color-accent: var(--accent);
+  --color-accent-pressed: var(--accent-pressed);
+  --color-on-accent: var(--on-accent);
+
+  --color-kk-paper: var(--kk-paper);
+  --color-kk-sheet: var(--kk-sheet);
+  --color-kk-sheet-alt: var(--kk-sheet-alt);
+  --color-kk-rule: var(--kk-rule);
+  --color-kk-ink: var(--kk-ink);
+  --color-kk-ink-muted: var(--kk-ink-muted);
+  --color-kk-amber: var(--kk-amber);
+  --color-kk-amber-press: var(--kk-amber-press);
+  --color-kk-on-amber: var(--kk-on-amber);
+  --color-kk-owed: var(--kk-owed);
+  --color-kk-owe: var(--kk-owe);
+}
+
+:root,
+.dark {
+  /* Surface 1: Obsidian Precision + Emerald Signal */
+  --bg-canvas: #090A0D;
+  --bg-surface: #111318;
+  --bg-elevated: #171A21;
+  --border-hairline: #232732;
+  --text-primary: #ECEEF2;
+  --text-muted: #8E95A5;
+  --accent: #10B981;
+  --accent-pressed: #059669;
+  --on-accent: #04130D;
+
+  /* Emil Kowalski Motion Curves */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+/* Surface 2: Krakount Scoped Surface - Kazimierz de noche */
+[data-surface="krakount"] {
+  --kk-paper: #0E0F13;
+  --kk-sheet: #17181E;
+  --kk-sheet-alt: #1F2027;
+  --kk-rule: #26272F;
+  --kk-ink: #EDEDEF;
+  --kk-ink-muted: #8B8D98;
+  --kk-amber: #F5A524;
+  --kk-amber-press: #E0951A;
+  --kk-on-amber: #16130A;
+  --kk-owed: #3DD68C;
+  --kk-owe: #FF6B5B;
+}
+
+/* Base Body Styles */
+html {
+  background-color: var(--bg-canvas);
+  color: var(--text-primary);
+  color-scheme: dark;
+}
+
+body {
+  min-height: 100vh;
+  background-color: var(--bg-canvas);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Tactile press utility per Emil Kowalski interaction guidelines */
+.press-scale {
+  transition: transform 140ms var(--ease-out);
+  will-change: transform;
+}
+
+.press-scale:active {
+  transform: scale(0.97);
+}
+
+/* Gated hover micro-elevations for fine pointer devices */
+@media (hover: hover) and (pointer: fine) {
+  .hover-elevate {
+    transition: transform 180ms var(--ease-out), border-color 180ms var(--ease-out);
+  }
+  .hover-elevate:hover {
+    transform: translateY(-2px);
+  }
+}
+
+@keyframes floatSlow {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+/* Tabular numbers for financial and metric displays */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Fixed noise overlay (never nested in scrollable elements to prevent repaint thrashing) */
+.bg-noise {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 99;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+/* Respect user motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .press-scale:active {
+    transform: none !important;
+  }
+}
