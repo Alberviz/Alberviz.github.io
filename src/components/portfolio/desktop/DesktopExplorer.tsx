@@ -1,67 +1,53 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { AnimatePresence, LayoutGroup, motion, useReducedMotion } from "motion/react";
-import { ArrowUpRight, CornersOut, GithubLogo, X } from "@phosphor-icons/react";
+import { ArrowDown, ArrowUpRight, CornersIn, CornersOut, GithubLogo } from "@phosphor-icons/react";
 import { useLocale } from "@/lib/i18n-context";
 import type { Locale } from "@/lib/i18n-context";
 import { LINUX_DESKTOP_SHOWCASE, SELECTED_CASE_STUDIES } from "@/content/portfolio-data";
 import { ASSETS } from "@/content/assets";
-import type { MediaAsset } from "@/content/assets";
 import type { LinuxDesktopShowcaseItem } from "@/content/types";
 import { EASE_OUT, SPRING_CAMERA, SPRING_LAYOUT, revealProps } from "@/lib/motion";
+import { BODY, CONFIG, LAURA, LiveDesktop } from "./live/LiveDesktop";
+import { RgbRig } from "./live/RgbRig";
 
 /* -------------------------------------------------------------------------- */
-/* Scene geometry: every coordinate below was measured on the real captures.  */
+/* Scene geometry: desktop pixels (1920 x 1080) shared with the live scene.   */
 /* -------------------------------------------------------------------------- */
 
-type SceneId = "celestial" | "icy" | "drawer";
-
-const SCENES: Record<SceneId, { asset: MediaAsset; file: string }> = {
-  celestial: { asset: ASSETS.systems.celestial, file: "celestial-desktop.webp" },
-  icy: { asset: ASSETS.systems.desktopIcy, file: "desktop-icy.webp" },
-  drawer: { asset: ASSETS.systems.lauraDrawer, file: "laura-drawer.webp" },
-};
+type SceneId = "live" | "rig" | "drawer";
 
 type Focus = { scene: SceneId; x: number; y: number; zoom: number };
 
+const pct = (x: number, y: number) => ({ x: (x / 1920) * 100, y: (y / 1080) * 100 });
+
 /** Where the camera travels for each subsystem (percent of frame, zoom factor). */
 const FOCUS: Record<string, Focus> = {
-  "gargantua-shader": { scene: "celestial", x: 85, y: 20, zoom: 1.6 },
-  "celestial-desktop": { scene: "celestial", x: 36, y: 60, zoom: 1.32 },
-  "laura-voice": { scene: "icy", x: 24, y: 56, zoom: 1.55 },
+  "gargantua-shader": { scene: "live", x: 84, y: 14, zoom: 1.55 },
+  "celestial-desktop": { scene: "live", x: 50, y: 50, zoom: 1 },
+  "health-planet": { scene: "live", ...pct(BODY.x + 60, BODY.y + 20), zoom: 2 },
+  "rgb-sync": { scene: "rig", x: 50, y: 50, zoom: 1 },
+  "laura-voice": { scene: "live", ...pct(LAURA.x, LAURA.y - 20), zoom: 1.6 },
   "laura-drawer": { scene: "drawer", x: 50, y: 50, zoom: 1 },
-  "tasks-and-drivers": { scene: "celestial", x: 15, y: 16, zoom: 1.85 },
 };
 
-const MEDIA_SCENE: Record<LinuxDesktopShowcaseItem["mediaKey"], SceneId> = {
-  gargantua: "celestial",
-  celestial: "celestial",
-  desktopIcy: "icy",
-  lauraDrawer: "drawer",
-};
-
-/** Numbered hotspot pins, placed on the exact UI element in each capture. */
+/** Numbered hotspot pins, placed next to the element they describe. */
 const PINS: Record<SceneId, { id: string; x: number; y: number }[]> = {
-  celestial: [
-    { id: "gargantua-shader", x: 85.9, y: 16.5 },
-    { id: "celestial-desktop", x: 45.8, y: 65.7 },
-    { id: "laura-voice", x: 25.4, y: 52.3 },
-    { id: "laura-drawer", x: 1.6, y: 22.9 },
-    { id: "tasks-and-drivers", x: 11.5, y: 19.2 },
+  live: [
+    { id: "gargantua-shader", ...pct(1470, 330) },
+    { id: "celestial-desktop", ...pct(1010, 700) },
+    { id: "health-planet", ...pct(BODY.x - 60, BODY.y - 56) },
+    { id: "rgb-sync", ...pct(CONFIG.x - 46, CONFIG.y - 50) },
+    { id: "laura-voice", ...pct(LAURA.x + 52, LAURA.y - 56) },
+    { id: "laura-drawer", ...pct(30, 435) },
   ],
-  icy: [
-    { id: "gargantua-shader", x: 85.9, y: 10.6 },
-    { id: "celestial-desktop", x: 47.3, y: 63.5 },
-    { id: "laura-voice", x: 23.4, y: 55.5 },
-    { id: "laura-drawer", x: 1.6, y: 18.4 },
-    { id: "tasks-and-drivers", x: 14, y: 10.4 },
-  ],
+  rig: [],
   drawer: [{ id: "laura-drawer", x: 73.4, y: 21.5 }],
 };
 
 function focusFor(item: LinuxDesktopShowcaseItem): Focus {
-  return FOCUS[item.id] ?? { scene: MEDIA_SCENE[item.mediaKey] ?? "celestial", x: 50, y: 50, zoom: 1 };
+  return FOCUS[item.id] ?? { scene: "live", x: 50, y: 50, zoom: 1 };
 }
 
 /**
@@ -86,15 +72,24 @@ const UI = {
     es: "El escritorio en el que trabajo de verdad.",
   },
   lead: {
-    en: "Hyprland and my own Quickshell Caelestia 2.5 build: a raymarched black hole that listens to the music, a voice AI running fully on the laptop GPU, and a drawer where every agent waits for my OK.",
-    es: "Hyprland y mi propia build de Quickshell Caelestia 2.5: un agujero negro con raymarching que escucha la música, una IA de voz que corre entera en la GPU del portátil y un cajón donde cada agente espera mi OK.",
+    en: "Hyprland and my own Quickshell Caelestia 2.5 build, where every service is a celestial body: a raymarched black hole that listens to the music, agents orbiting a local voice AI, my watch as a planet, and peripherals whose protocols I reverse-engineered.",
+    es: "Hyprland y mi propia build de Quickshell Caelestia 2.5, donde cada servicio es un cuerpo celeste: un agujero negro con raymarching que escucha la música, agentes orbitando una IA de voz local, mi reloj convertido en planeta y periféricos cuyos protocolos saqué por ingeniería inversa.",
   },
   hint: {
     en: "Click a numbered pin or a subsystem",
     es: "Pulsa un pin numerado o un subsistema",
   },
-  inspect: { en: "Inspect shader render", es: "Ver render del shader" },
-  close: { en: "Close shader render", es: "Cerrar render del shader" },
+  caption: {
+    en: "Live in your browser: the real Gargantua shader ported to WebGL2 · sample data",
+    es: "En vivo en tu navegador: el shader real de Gargantua portado a WebGL2 · datos de ejemplo",
+  },
+  rigCaption: {
+    en: "Animated diagram · packet bytes as written by sync-rgb.py",
+    es: "Diagrama animado · bytes de los paquetes tal como los escribe sync-rgb.py",
+  },
+  fullscreen: { en: "Full screen", es: "Pantalla completa" },
+  exitFullscreen: { en: "Exit full screen", es: "Salir de pantalla completa" },
+  healthLink: { en: "See the full health system", es: "Ver el sistema de salud completo" },
 } satisfies Record<string, Record<Locale, string>>;
 
 export function DesktopExplorer() {
@@ -102,23 +97,74 @@ export function DesktopExplorer() {
   const reduce = useReducedMotion();
   const items = LINUX_DESKTOP_SHOWCASE;
   const [activeId, setActiveId] = useState<string>(items[0]?.id ?? "");
-  const [inspecting, setInspecting] = useState(false);
+  const [fullscreen, setFullscreen] = useState(false);
+  const [canFullscreen, setCanFullscreen] = useState(false);
+  const shellRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setCanFullscreen(Boolean(document.fullscreenEnabled));
+    const onChange = () => setFullscreen(document.fullscreenElement === shellRef.current);
+    document.addEventListener("fullscreenchange", onChange);
+    return () => document.removeEventListener("fullscreenchange", onChange);
+  }, []);
 
   const activeIndex = Math.max(0, items.findIndex((item) => item.id === activeId));
   const active = items[activeIndex];
   if (!active) return null;
 
   const focus = focusFor(active);
-  const camera = cameraTransform(focus);
-  const scene = SCENES[focus.scene];
+  const liveFocus = focus.scene === "live" && !fullscreen ? focus : { ...focus, zoom: 1 };
+  const camera = cameraTransform(liveFocus);
+  const drawer = ASSETS.systems.lauraDrawer;
 
-  const select = (id: string) => {
-    setActiveId(id);
-    setInspecting(false);
+  const toggleFullscreen = () => {
+    if (document.fullscreenElement) void document.exitFullscreen();
+    else void shellRef.current?.requestFullscreen();
   };
 
   const systemsStudy = SELECTED_CASE_STUDIES.find((study) => study.category === "systems");
-  const repoLinks = systemsStudy?.links.filter((link) => link.kind === "github") ?? [];
+  const repoLinks = active.links ?? systemsStudy?.links.filter((link) => link.kind === "github") ?? [];
+
+  const pinButton = (pin: { id: string; x: number; y: number }, pinTransform: string) => {
+    const index = items.findIndex((item) => item.id === pin.id);
+    const item = items[index];
+    if (!item) return null;
+    const isActive = pin.id === active.id;
+    return (
+      <motion.button
+        key={pin.id}
+        type="button"
+        onClick={() => setActiveId(pin.id)}
+        aria-label={`${index + 1}. ${item.title}`}
+        aria-pressed={isActive}
+        className="group absolute z-10 grid h-7 w-7 place-items-center rounded-full"
+        style={{ left: `${pin.x}%`, top: `${pin.y}%` }}
+        initial={{ transform: "translate(-50%, -50%) scale(1)" }}
+        animate={{ transform: reduce ? "translate(-50%, -50%) scale(1)" : pinTransform }}
+        transition={SPRING_CAMERA}
+      >
+        {!isActive && <span aria-hidden="true" className="pin-pulse absolute inset-0 rounded-full border border-[#10B981]/70" />}
+        <span
+          aria-hidden="true"
+          className={`relative grid h-7 w-7 place-items-center rounded-full border font-mono text-[11px] font-semibold transition-colors duration-200 ${
+            isActive
+              ? "border-[#10B981] bg-[#10B981] text-[#04130D]"
+              : "border-[#10B981]/60 bg-[#090A0D]/85 text-[#ECEEF2] group-hover:border-[#10B981]"
+          }`}
+        >
+          {index + 1}
+        </span>
+        <span
+          aria-hidden="true"
+          className={`pointer-events-none absolute top-1/2 hidden -translate-y-1/2 whitespace-nowrap rounded-full border border-[#232732] bg-[#090A0D]/90 px-2.5 py-1 font-mono text-[10.5px] text-[#ECEEF2] opacity-0 transition-opacity duration-150 md:block group-hover:opacity-100 group-focus-visible:opacity-100 ${
+            pin.x > 60 ? "right-9" : "left-9"
+          }`}
+        >
+          {item.title}
+        </span>
+      </motion.button>
+    );
+  };
 
   return (
     <div id="desktop" className="scroll-mt-20">
@@ -139,132 +185,94 @@ export function DesktopExplorer() {
         viewport={{ once: true, margin: "-120px" }}
         transition={{ duration: 1.1, ease: EASE_OUT }}
       >
-        <div className="relative aspect-video w-full overflow-hidden rounded-2xl border border-[#232732] bg-[#050608]">
-          <AnimatePresence initial={false}>
+        <div ref={shellRef} className={fullscreen ? "flex h-full w-full items-center justify-center bg-[#030304]" : ""}>
+          <div
+            className={`relative aspect-video w-full overflow-hidden bg-[#030304] ${
+              fullscreen ? "max-h-full max-w-[calc(100vh*16/9)]" : "rounded-2xl border border-[#232732]"
+            }`}
+          >
+            {/* Live scene stays mounted so the shader cache is baked only once */}
             <motion.div
-              key={focus.scene}
-              className="absolute inset-0"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.55, ease: EASE_OUT }}
+              className="absolute inset-0 origin-center will-change-transform"
+              initial={{ transform: "translate(0%, 0%) scale(1)" }}
+              animate={{ transform: reduce ? "translate(0%, 0%) scale(1)" : camera.frame }}
+              transition={SPRING_CAMERA}
             >
-              <motion.div
-                className="absolute inset-0 origin-center will-change-transform"
-                initial={{ transform: "translate(0%, 0%) scale(1)" }}
-                animate={{ transform: reduce ? "translate(0%, 0%) scale(1)" : camera.frame }}
-                transition={SPRING_CAMERA}
-              >
-                <img
-                  src={scene.asset.src}
-                  alt={scene.asset.alt[locale]}
-                  width={scene.asset.width}
-                  height={scene.asset.height}
-                  draggable={false}
-                  className="h-full w-full select-none object-cover"
-                />
-
-                {PINS[focus.scene].map((pin) => {
-                  const index = items.findIndex((item) => item.id === pin.id);
-                  const item = items[index];
-                  if (!item) return null;
-                  const isActive = pin.id === active.id;
-                  return (
-                    <motion.button
-                      key={pin.id}
-                      type="button"
-                      onClick={() => select(pin.id)}
-                      aria-label={`${index + 1}. ${item.title}`}
-                      aria-pressed={isActive}
-                      className="group absolute z-10 grid h-7 w-7 place-items-center rounded-full"
-                      style={{ left: `${pin.x}%`, top: `${pin.y}%` }}
-                      initial={{ transform: "translate(-50%, -50%) scale(1)" }}
-                      animate={{ transform: reduce ? "translate(-50%, -50%) scale(1)" : camera.pin }}
-                      transition={SPRING_CAMERA}
-                    >
-                      {!isActive && (
-                        <span aria-hidden="true" className="pin-pulse absolute inset-0 rounded-full border border-[#10B981]/70" />
-                      )}
-                      <span
-                        aria-hidden="true"
-                        className={`relative grid h-7 w-7 place-items-center rounded-full border font-mono text-[11px] font-semibold transition-colors duration-200 ${
-                          isActive
-                            ? "border-[#10B981] bg-[#10B981] text-[#04130D]"
-                            : "border-[#10B981]/60 bg-[#090A0D]/85 text-[#ECEEF2] group-hover:border-[#10B981]"
-                        }`}
-                      >
-                        {index + 1}
-                      </span>
-                      <span
-                        aria-hidden="true"
-                        className={`pointer-events-none absolute top-1/2 hidden -translate-y-1/2 whitespace-nowrap rounded-full border border-[#232732] bg-[#090A0D]/90 px-2.5 py-1 font-mono text-[10.5px] text-[#ECEEF2] opacity-0 transition-opacity duration-150 md:block group-hover:opacity-100 group-focus-visible:opacity-100 ${
-                          pin.x > 60 ? "right-9" : "left-9"
-                        }`}
-                      >
-                        {item.title}
-                      </span>
-                    </motion.button>
-                  );
-                })}
-              </motion.div>
+              <LiveDesktop paused={focus.scene !== "live"} />
+              {PINS.live.map((pin) => pinButton(pin, camera.pin))}
             </motion.div>
-          </AnimatePresence>
 
-          {/* Shader inspection: the pure 1024x1024 render, revealed with a clip wipe */}
-          <AnimatePresence>
-            {active.id === "gargantua-shader" && !inspecting && (
-              <motion.button
-                key="inspect"
-                type="button"
-                onClick={() => setInspecting(true)}
-                className="absolute bottom-3 right-3 z-20 inline-flex items-center gap-1.5 rounded-full border border-[#232732] bg-[#090A0D]/85 px-3 py-1.5 text-[12px] font-medium text-[#ECEEF2] backdrop-blur-md press-scale"
-                initial={{ opacity: 0, transform: "translateY(6px)" }}
-                animate={{ opacity: 1, transform: "translateY(0px)", transition: { duration: 0.24, ease: EASE_OUT, delay: 0.4 } }}
-                exit={{ opacity: 0, transition: { duration: 0.12 } }}
-              >
-                <CornersOut size={13} aria-hidden="true" />
-                {UI.inspect[locale]}
-              </motion.button>
-            )}
-          </AnimatePresence>
-          <AnimatePresence>
-            {inspecting && (
-              <motion.div
-                key="shader"
-                className="absolute inset-y-0 right-0 z-30 flex aspect-square max-w-full items-center justify-center border-l border-[#232732] bg-[#050608]"
-                initial={{ clipPath: "inset(0% 0% 0% 100%)" }}
-                animate={{ clipPath: "inset(0% 0% 0% 0%)", transition: { duration: 0.6, ease: EASE_OUT } }}
-                exit={{ clipPath: "inset(0% 0% 0% 100%)", transition: { duration: 0.28, ease: EASE_OUT } }}
-              >
-                <img
-                  src={ASSETS.systems.gargantua.src}
-                  alt={ASSETS.systems.gargantua.alt[locale]}
-                  width={ASSETS.systems.gargantua.width}
-                  height={ASSETS.systems.gargantua.height}
-                  draggable={false}
-                  className="h-full w-full object-cover"
-                />
-                <span className="absolute bottom-3 left-3 rounded-full border border-[#232732] bg-[#090A0D]/85 px-2.5 py-1 font-mono text-[10.5px] text-[#8E95A5]">
-                  Gargantua GLSL · 1024 x 1024 · ACES
-                </span>
-                <button
-                  type="button"
-                  onClick={() => setInspecting(false)}
-                  aria-label={UI.close[locale]}
-                  className="absolute right-3 top-3 grid h-8 w-8 place-items-center rounded-full border border-[#232732] bg-[#090A0D]/85 text-[#ECEEF2] press-scale"
+            <AnimatePresence initial={false}>
+              {focus.scene === "rig" && (
+                <motion.div
+                  key="rig"
+                  className="absolute inset-0 z-20"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.45, ease: EASE_OUT }}
                 >
-                  <X size={14} />
-                </button>
-              </motion.div>
+                  <RgbRig />
+                </motion.div>
+              )}
+              {focus.scene === "drawer" && (
+                <motion.div
+                  key="drawer"
+                  className="absolute inset-0 z-20 bg-[#050608]"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.45, ease: EASE_OUT }}
+                >
+                  <img
+                    src={drawer.src}
+                    alt={drawer.alt[locale]}
+                    width={drawer.width}
+                    height={drawer.height}
+                    draggable={false}
+                    className="h-full w-full select-none object-cover"
+                  />
+                  {PINS.drawer.map((pin) => pinButton(pin, "translate(-50%, -50%) scale(1)"))}
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {canFullscreen && (
+              <button
+                type="button"
+                onClick={toggleFullscreen}
+                aria-label={fullscreen ? UI.exitFullscreen[locale] : UI.fullscreen[locale]}
+                className="absolute right-3 top-3 z-30 inline-flex items-center gap-1.5 rounded-full border border-[#232732] bg-[#090A0D]/85 px-3 py-1.5 text-[12px] font-medium text-[#ECEEF2] backdrop-blur-md press-scale"
+              >
+                {fullscreen ? <CornersIn size={13} aria-hidden="true" /> : <CornersOut size={13} aria-hidden="true" />}
+                <span className="hidden sm:inline">{fullscreen ? UI.exitFullscreen[locale] : UI.fullscreen[locale]}</span>
+              </button>
             )}
-          </AnimatePresence>
+
+            {fullscreen && (
+              <ol className="absolute bottom-3 left-1/2 z-30 flex -translate-x-1/2 gap-1 rounded-full border border-[#232732] bg-[#090A0D]/85 p-1 backdrop-blur-md">
+                {items.map((item, index) => (
+                  <li key={item.id}>
+                    <button
+                      type="button"
+                      onClick={() => setActiveId(item.id)}
+                      aria-pressed={item.id === active.id}
+                      className={`rounded-full px-3 py-1 font-mono text-[11px] transition-colors duration-150 ${
+                        item.id === active.id ? "bg-[#10B981] text-[#04130D]" : "text-[#B4BAC6] hover:text-[#ECEEF2]"
+                      }`}
+                    >
+                      {String(index + 1).padStart(2, "0")} {item.title}
+                    </button>
+                  </li>
+                ))}
+              </ol>
+            )}
+          </div>
         </div>
 
         <div className="mt-3 flex items-center justify-between gap-4 font-mono text-[11px] text-[#5D6474]">
-          <span>
-            {scene.file} · {scene.asset.width} x {scene.asset.height}
-          </span>
-          <span className="hidden sm:block">{UI.hint[locale]}</span>
+          <span>{focus.scene === "rig" ? UI.rigCaption[locale] : UI.caption[locale]}</span>
+          <span className="hidden shrink-0 sm:block">{UI.hint[locale]}</span>
         </div>
       </motion.div>
 
@@ -278,7 +286,7 @@ export function DesktopExplorer() {
                 <li key={item.id} className="border-b border-[#232732]">
                   <button
                     type="button"
-                    onClick={() => select(item.id)}
+                    onClick={() => setActiveId(item.id)}
                     aria-pressed={isActive}
                     className="relative isolate grid w-full grid-cols-[2rem_1fr] items-baseline gap-x-3 px-3 py-4 text-left"
                   >
@@ -333,13 +341,22 @@ export function DesktopExplorer() {
                 {active.summary[locale]}
               </p>
               <ul className="mt-6 space-y-3">
-                {active.details.slice(0, 2).map((detail, i) => (
+                {active.details.map((detail, i) => (
                   <li key={i} className="grid grid-cols-[1.25rem_1fr] gap-x-2 text-[14px] leading-relaxed text-[#8E95A5]">
                     <span aria-hidden="true" className="mt-[0.7em] h-px w-3 bg-[#10B981]" />
                     <span className="max-w-[60ch]">{detail[locale]}</span>
                   </li>
                 ))}
               </ul>
+              {active.id === "health-planet" && (
+                <a
+                  href="#health"
+                  className="group mt-6 inline-flex items-center gap-1.5 text-[13.5px] font-medium text-[#10B981] hover:text-[#34D399]"
+                >
+                  {UI.healthLink[locale]}
+                  <ArrowDown size={13} className="cta-arrow cta-arrow-down" aria-hidden="true" />
+                </a>
+              )}
             </motion.div>
           </AnimatePresence>
 

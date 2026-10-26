@@ -23,7 +23,7 @@ export const PROFILE = {
   } satisfies LocalizedText,
   nav: {
     work: { en: "Work", es: "Proyectos" },
-    systems: { en: "Home Lab & Wealth", es: "Home Lab y Finanzas" },
+    systems: { en: "Wealth & Health", es: "Patrimonio y Salud" },
     krakount: { en: "Krakount", es: "Krakount" },
     experience: { en: "Background", es: "Trayectoria" },
     cta: { en: "Get in touch", es: "Contactar" },
@@ -85,38 +85,38 @@ export const PROFILE = {
 
 export const KRAKOUNT_SPOTLIGHT = {
   badge: {
-    en: "Flagship Product · Active Beta (~20 users in Kraków)",
-    es: "Producto Insignia · Beta activa (~20 usuarios en Cracovia)",
+    en: "Flagship product · In daily use by our Erasmus group",
+    es: "Producto insignia · En uso diario en nuestro grupo Erasmus",
   } satisfies LocalizedText,
   title: "Krakount",
   headline: {
-    en: "Shared expenses, Polish receipt OCR, and group trips in one thumb-driven app.",
-    es: "Gastos compartidos, OCR de tickets polacos y viajes en grupo a una sola mano.",
+    en: "All your money and your group trips, in one app you use with one hand.",
+    es: "Todo tu dinero y los viajes del grupo, en una app que se usa a una mano.",
   } satisfies LocalizedText,
   description: {
-    en: "Built for our Erasmus group in Kraków. Krakount unifies integer-cent ledgers across 32 currencies at live market and Revolut rates with optional +1% bank fee (NBP fallback), Polish receipt OCR, the /camara shelf price scanner, personal Mis gastos and income budgeting, offline QR passes, and Krakount Captura (Kotlin) with automatic Bizum debt settlement.",
-    es: "Creada para nuestro grupo Erasmus en Cracovia. Krakount une contabilidad exacta en céntimos enteros en 32 divisas a tipos de mercado y Revolut con +1% bancario opcional (respaldo NBP), OCR de tickets polacos, lector de estantería /camara, control personal de Mis gastos e ingresos, pases QR offline y Krakount Captura (Kotlin) con liquidación automática por Bizum.",
+    en: "Built for our Erasmus group in Kraków because Tricount only covers money and trip apps only cover trips. Krakount puts both in one installable PWA: exact cents in 32 currencies, receipts split item by item, and the whole trip, from the vote on where to sleep to the boarding pass at the gate.",
+    es: "Creada para nuestro grupo Erasmus en Cracovia porque Tricount solo cubre el dinero y las apps de viajes solo los viajes. Krakount junta las dos cosas en una PWA instalable: céntimos exactos en 32 monedas, tickets repartidos producto a producto y el viaje entero, desde votar dónde dormir hasta el billete en la puerta de embarque.",
   } satisfies LocalizedText,
   pillars: [
     {
-      title: { en: "Integer-Exact Multi-Currency", es: "Multidivisa Exacta en Enteros" },
+      title: { en: "Every euro in one place", es: "Todos tus gastos en un mismo sitio" },
       detail: {
-        en: "32 currencies at live market and Revolut rates with +1% bank fee offset, minimal debt graph, and plain audit proofs.",
-        es: "32 divisas a tipos de mercado y Revolut con ajuste de +1% bancario, grafo de deuda mínima y justificación clara.",
+        en: "Mis gastos adds your share of every group to what you spend alone, against a monthly budget, fixed or a share of your income. On Android, Krakount Captura reads Revolut and Wallet payments and a received Bizum settles the debt by itself.",
+        es: "Mis gastos suma tu parte de cada grupo a lo que gastas tú solo, frente a un presupuesto mensual, fijo o un porcentaje de lo que ingresas. En Android, Krakount Captura lee los pagos de Revolut y Wallet, y un Bizum recibido salda la deuda solo.",
       },
     },
     {
-      title: { en: "Receipt OCR & Price Camera", es: "OCR de Tickets y Cámara" },
+      title: { en: "Receipts split live", es: "Tickets repartidos en vivo" },
       detail: {
-        en: "Parses Polish Paragon Fiskalny receipts with Gemini + Tesseract fallback, plus the live /camara shelf price converter.",
-        es: "Lee tickets polacos Paragon Fiskalny con Gemini y Tesseract, más el conversor /camara para precios en estantería.",
+        en: "Snap the supermarket receipt, Gemini reads every Polish line (Tesseract as fallback), and each friend ticks what is theirs from their own phone, in real time. The photo is never stored.",
+        es: "Foto al ticket del súper, Gemini lee cada línea en polaco (con Tesseract de respaldo) y cada amigo marca lo suyo desde su móvil, en tiempo real. La foto nunca se guarda.",
       },
     },
     {
-      title: { en: "Krakount Captura (Kotlin)", es: "Krakount Captura (Kotlin)" },
+      title: { en: "The whole trip, not just the bill", es: "El viaje entero, no solo la cuenta" },
       detail: {
-        en: "Android service auto-settling incoming Bizum debts from notifications, logging tap-to-pay, and feeding /api/v1/me/capital.",
-        es: "Servicio Android que liquida deudas con notificaciones Bizum, registra pagos contactless y nutre /api/v1/me/capital.",
+        en: "Proposals the group votes on, live flight status, an itinerary with a drawn map, and a wallet of boarding passes whose QR codes are redrawn offline. When it ends, a Wrapped story.",
+        es: "Propuestas que vota el grupo, vuelos en vivo, un itinerario con mapa dibujado y una cartera de billetes cuyos QR se redibujan sin conexión. Al terminar, una historia Wrapped.",
       },
     },
   ],
@@ -132,12 +132,12 @@ export const KRAKOUNT_SPOTLIGHT = {
 
 export const HOMELAB_WEALTH_SYSTEM = {
   heading: {
-    en: "Self-Hosted AI & Interconnected Wealth Infrastructure",
-    es: "Infraestructura Propia de IA y Patrimonio Interconectado",
+    en: "Two personal systems, one Raspberry Pi",
+    es: "Dos sistemas personales, una Raspberry Pi",
   } satisfies LocalizedText,
   subheading: {
-    en: "One Raspberry Pi 5, running 24/7: a wealth engine fed by my brokers, my personal product-selling business and Krakount, plus Aurora, my autonomous agent.",
-    es: "Una Raspberry Pi 5 activa 24/7: un motor patrimonial que une mis brókers, mi negocio personal de venta de productos y Krakount, y Aurora, mi agente autónomo.",
+    en: "Running 24/7 at home: a wealth engine fed by my brokers, my personal product-selling business and Krakount, a health hub fed by my watch, my meals and my gym log, and Aurora, my autonomous agent.",
+    es: "Activa 24/7 en casa: un motor patrimonial que une mis brókers, mi negocio personal de venta de productos y Krakount, un hub de salud que une mi reloj, mis comidas y mi registro del gimnasio, y Aurora, mi agente autónomo.",
   } satisfies LocalizedText,
   auroraHighlight: {
     title: "Aurora (Hermes Autonomous Agent)",
@@ -508,45 +508,214 @@ export const SELECTED_CASE_STUDIES: ProjectCaseStudy[] = [
   },
 ];
 
+export const HEALTH_SYSTEM = {
+  title: {
+    en: "Personal Health Hub",
+    es: "Hub Personal de Salud",
+  } satisfies LocalizedText,
+  summary: {
+    en: "My watch, my meals, my gym log, and the buttons on my wrist all land in one service on the Pi. Gemini reads it, a Telegram coach talks back, and my desktop shows the result as a planet. No subscription app in the middle, every piece is mine.",
+    es: "Mi reloj, mis comidas, mi registro del gimnasio y los botones de la muñeca acaban en un único servicio en la Pi. Gemini lo analiza, un coach en Telegram me responde y mi escritorio enseña el resultado como un planeta. Sin apps de suscripción en medio: cada pieza es mía.",
+  } satisfies LocalizedText,
+  flow: {
+    inputs: [
+      {
+        id: "watch",
+        title: { en: "Amazfit GTS 2", es: "Amazfit GTS 2" },
+        source: "Google Health API · OAuth",
+        protocol: "via Zepp + Health Connect",
+        detail: {
+          en: "Steps, sleep stages, and heart rate travel from the watch through Zepp and Health Connect into the Google Health API. The hub pulls them with OAuth, merges duplicate sources, and only trusts workouts the watch itself recorded, because Google Fit invents phantom walks.",
+          es: "Pasos, fases de sueño y pulso viajan del reloj a Zepp, Health Connect y la Google Health API. El hub los recoge con OAuth, une fuentes duplicadas y solo se fía de los entrenos que grabó el propio reloj, porque Google Fit se inventa paseos fantasma.",
+        },
+      },
+      {
+        id: "meals",
+        title: { en: "Meals by voice", es: "Comidas por voz" },
+        source: "Telegram · Gemini Flash Lite",
+        protocol: "voice or text",
+        detail: {
+          en: "I tell the Telegram bot what I ate, by voice note or text. Gemini turns it into foods and calories, and the hub balances it against what I burned that day.",
+          es: "Le cuento al bot de Telegram lo que he comido, por nota de voz o texto. Gemini lo convierte en alimentos y calorías y el hub lo compara con lo que gasté ese día.",
+        },
+      },
+      {
+        id: "mando",
+        title: { en: "Wrist buttons", es: "Botones del reloj" },
+        source: "gts2-mando · Kotlin",
+        protocol: "MediaSession -> HTTP",
+        detail: {
+          en: "The GTS 2 has no SDK, so gts2-mando fakes a silent music session on Android. Play logs my creatine, and previous opens a Bluetooth SCO call to record a meal with the watch microphone.",
+          es: "El GTS 2 no tiene SDK, así que gts2-mando simula una sesión de música silenciosa en Android. Play apunta la creatina y anterior abre una llamada Bluetooth SCO para grabar una comida con el micrófono del reloj.",
+        },
+      },
+      {
+        id: "opengym",
+        title: { en: "openGym fork", es: "Fork de openGym" },
+        source: "Self-hosted PWA · Docker",
+        protocol: "SQLite mirror",
+        detail: {
+          en: "Workouts, sets, and body weight live in my own openGym instance. I forked it to add daily habits, and the hub mirrors its database to compute volume, estimated 1RM, PRs, and adherence.",
+          es: "Entrenos, series y peso corporal viven en mi propia instancia de openGym. Le hice un fork para añadir hábitos diarios y el hub replica su base de datos para calcular volumen, 1RM estimado, PRs y adherencia.",
+        },
+      },
+    ],
+    core: {
+      title: { en: "gym-hub", es: "gym-hub" },
+      platform: "Python · Docker · SQLite · Gemini",
+      specs: [
+        {
+          en: "One Python service on the Raspberry Pi joins all four feeds per day, classifies activities (strength, volleyball, running, yoga), and estimates calorie burn with Mifflin plus steps plus watch workouts.",
+          es: "Un único servicio Python en la Raspberry Pi une las cuatro fuentes por día, clasifica actividades (fuerza, vóley, carrera, yoga) y estima el gasto calórico con Mifflin más pasos más entrenos del reloj.",
+        },
+        {
+          en: "It also tracks habit streaks, sleep against training performance, and vertical jump height measured from the frames of a slow-motion video.",
+          es: "También sigue rachas de hábitos, sueño frente a rendimiento y la altura del salto vertical medida con los fotogramas de un vídeo a cámara lenta.",
+        },
+      ],
+    },
+    outputs: [
+      {
+        id: "coach",
+        title: { en: "Telegram coach", es: "Coach en Telegram" },
+        source: "/hoy · /semana · /salto · /habitos",
+        protocol: "multi-user",
+        detail: {
+          en: "Reminders per habit, today and week views, and a weekly summary written by Gemini that reads training, sleep, food, and steps together.",
+          es: "Recordatorios por hábito, vistas de hoy y de la semana y un resumen semanal redactado por Gemini que lee juntos entreno, sueño, comida y pasos.",
+        },
+      },
+      {
+        id: "report",
+        title: { en: "Weekly web report", es: "Informe web semanal" },
+        source: "gym-hub web · LAN + VPN",
+        detail: {
+          en: "A full weekly report served by the hub itself, reachable only inside my private network.",
+          es: "Un informe semanal completo servido por el propio hub, accesible solo dentro de mi red privada.",
+        },
+      },
+      {
+        id: "planet",
+        title: { en: "Planeta Cuerpo", es: "Planeta Cuerpo" },
+        source: "read-only summary API",
+        protocol: "every 20 min",
+        detail: {
+          en: "The desktop planet polls a read-only summary API backed by a database mounted read-only. Ten failed logins in fifteen minutes lock it, so the client never retries a rejected password.",
+          es: "El planeta del escritorio consulta una API de resumen de solo lectura sobre una base de datos montada en solo lectura. Diez fallos de login en quince minutos la bloquean, así que el cliente nunca reintenta una contraseña rechazada.",
+        },
+      },
+    ],
+  } satisfies WealthFlowArchitecture,
+};
+
 export const LINUX_DESKTOP_SHOWCASE: LinuxDesktopShowcaseItem[] = [
   {
     id: "gargantua-shader",
     title: "Audio-Reactive Gargantua",
     badge: { en: "GLSL Raymarching · PipeWire Spectrum", es: "Raymarching GLSL · Espectro PipeWire" },
-    tech: "GLSL · ACES Tonemapping · PipeWire C API · Hyprland",
+    tech: "GLSL · ACES Tonemapping · PipeWire · Hyprland",
     summary: {
-      en: "Real-time Schwarzschild raymarched black hole shader with Doppler beaming, reacting live to audio spectrum with track readout inside the event horizon.",
-      es: "Shader de agujero negro de Schwarzschild con raymarching y efecto Doppler en tiempo real, reactivo al espectro de audio y con título en el horizonte de sucesos.",
+      en: "A Schwarzschild black hole raymarched in real time as the wallpaper. The accretion disk breathes with whatever is playing, and the current track is written inside the event horizon.",
+      es: "Un agujero negro de Schwarzschild calculado con raymarching en tiempo real como fondo. El disco de acreción respira con lo que suena y la canción actual aparece escrita dentro del horizonte de sucesos.",
     },
     details: [
       {
-        en: "Analytic geodesic ray-deflection equations rendered in real time with ACES filmic tone-mapping.",
-        es: "Ecuaciones geodésicas de deflexión de rayos calculadas en tiempo real con mapeo tonal fílmico ACES.",
+        en: "Analytic geodesic ray deflection with Doppler beaming and ACES filmic tone mapping, tuned against reference frames from Interstellar.",
+        es: "Deflexión geodésica analítica con efecto Doppler y mapeo tonal fílmico ACES, ajustada contra fotogramas de referencia de Interstellar.",
       },
       {
-        en: "PipeWire spectrum FFT frequency bands drive accretion disk luminosity and pulse rate to active music.",
-        es: "Bandas FFT de PipeWire modulan la luminosidad y pulso del disco de acreción según la música activa.",
+        en: "PipeWire FFT bands drive disk luminosity and pulse, while MPRIS feeds title, artist, and progress into the horizon readout.",
+        es: "Las bandas FFT de PipeWire mueven el brillo y el pulso del disco, y MPRIS manda título, artista y progreso al texto del horizonte.",
       },
     ],
-    mediaKey: "gargantua",
+    mediaKey: "celestial",
   },
   {
     id: "celestial-desktop",
-    title: "Orbital Desktop & Health Planet",
-    badge: { en: "Binary Star Canvas · Live Hardware Rings", es: "Lienzo de Estrella Binaria · Batería en Vivo" },
-    tech: "Quickshell Caelestia 2.5 · QML · /dev/hidraw · BLE",
+    title: "Orbital Desktop",
+    badge: { en: "Every service is a celestial body", es: "Cada servicio es un cuerpo celeste" },
+    tech: "Quickshell Caelestia 2.5 · QML · Sim.js · GLSL",
     summary: {
-      en: "Desktop orbital canvas where the Laura binary star is orbited by Claude Code and Antigravity moons, wireless peripherals show battery rings, and Planeta Cuerpo displays health metrics.",
-      es: "Lienzo orbital de escritorio donde la estrella Laura es orbitada por lunas de Claude Code y Antigravity, los periféricos muestran anillos de batería y Planeta Cuerpo refleja métricas de salud.",
+      en: "The wallpaper is a live map of my machine: Laura is the star, every running agent is a planet, every wireless device is a satellite, and my tasks are a comet. Nothing is decoration, everything is real state.",
+      es: "El fondo es un mapa vivo de mi máquina: Laura es la estrella, cada agente en marcha es un planeta, cada dispositivo inalámbrico es un satélite y mis tareas son un cometa. Nada es decoración, todo es estado real.",
     },
     details: [
       {
-        en: "Active agent moons orbit Laura while MCHOSE wireless gear displays battery percentage via reverse-engineered /dev/hidraw rings.",
-        es: "Lunas de agentes activos orbitan Laura mientras los periféricos MCHOSE muestran batería mediante anillos /dev/hidraw propios.",
+        en: "Claude Code and Antigravity sessions spawn and retire planets around Laura as they start and finish, positioned by a deterministic orbit simulator.",
+        es: "Las sesiones de Claude Code y Antigravity crean y retiran planetas alrededor de Laura al empezar y terminar, colocados por un simulador de órbitas determinista.",
       },
       {
-        en: "Tasks Comet tracks sprint progress, and Planeta Cuerpo ingests Amazfit GTS 2 sleep stages, step counts, and gym sessions.",
-        es: "El cometa de tareas refleja el ritmo de sprints y Planeta Cuerpo sincroniza sueño, pasos y entrenamientos del Amazfit GTS 2.",
+        en: "Mouse and headset satellites draw their battery as a ring, read straight from reverse-engineered HID reports (see 04).",
+        es: "Los satélites del ratón y los cascos dibujan su batería como un anillo, leída directamente de informes HID obtenidos por ingeniería inversa (ver 04).",
+      },
+      {
+        en: "The tasks comet and the TAREAS widget merge local git repos and Obsidian checklists into one live count.",
+        es: "El cometa de tareas y el widget TAREAS unifican repos git locales y listas de Obsidian en un único recuento en vivo.",
+      },
+      {
+        en: "The full background was profiled down from 15.1% to 4.7% of one CPU core.",
+        es: "Todo el fondo se perfiló hasta bajar del 15,1% al 4,7% de un núcleo de CPU.",
+      },
+    ],
+    mediaKey: "celestial",
+  },
+  {
+    id: "health-planet",
+    title: "Planeta Cuerpo: Health Tracking",
+    badge: { en: "Amazfit GTS 2 -> Raspberry Pi -> desktop", es: "Amazfit GTS 2 -> Raspberry Pi -> escritorio" },
+    tech: "Google Health API · Python · Docker · QML · Kotlin",
+    summary: {
+      en: "My watch data lands on the desktop as one more planet. A steps arc closes around it toward 10,000, the day and night terminator is last night's sleep, its moons are this week's gym sessions, and seven beads underneath show the streak.",
+      es: "Los datos de mi reloj llegan al escritorio como un planeta más. Un arco de pasos se cierra a su alrededor hacia los 10.000, el terminador día y noche es el sueño de anoche, sus lunas son los entrenos de la semana y siete cuentas debajo muestran la racha.",
+    },
+    details: [
+      {
+        en: "The Amazfit GTS 2 syncs through Zepp and Health Connect into the Google Health API, which a gym-hub service on my Raspberry Pi ingests with OAuth and deduplicates against phantom walks.",
+        es: "El Amazfit GTS 2 sincroniza por Zepp y Health Connect hasta la Google Health API, que un servicio gym-hub en mi Raspberry Pi ingiere con OAuth y depura de paseos fantasma.",
+      },
+      {
+        en: "gym-hub mirrors my self-hosted openGym into SQLite and exposes a read-only summary API. The desktop polls it every 20 min, caches offline, and never retries a 401 so a bad password cannot lock everyone out.",
+        es: "gym-hub replica mi openGym autoalojado en SQLite y expone una API de resumen de solo lectura. El escritorio la consulta cada 20 min, guarda caché offline y nunca reintenta un 401 para que una contraseña mala no bloquee a nadie.",
+      },
+      {
+        en: "Missing data degrades with dignity: hollow beads, a grey arc, a ghost planet. Fragmented nights are labelled partial instead of faking a number.",
+        es: "Los datos que faltan se degradan con dignidad: cuentas huecas, arco gris, planeta fantasma. Las noches fragmentadas se marcan como parciales en vez de inventar un número.",
+      },
+      {
+        en: "The watch is also an input: gts2-mando plays a silent Android MediaSession so the three music buttons log creatine or record a meal through the watch microphone over Bluetooth SCO.",
+        es: "El reloj también es entrada: gts2-mando reproduce una MediaSession silenciosa en Android para que los tres botones de música apunten la creatina o graben una comida con el micrófono del reloj por Bluetooth SCO.",
+      },
+    ],
+    mediaKey: "celestial",
+    links: [
+      { label: { en: "gts2-mando Repo", es: "Repo gts2-mando" }, href: "https://github.com/Alberviz/gts2-mando", kind: "github" },
+    ],
+  },
+  {
+    id: "rgb-sync",
+    title: "Reverse-Engineered RGB & Telemetry",
+    badge: { en: "USB sniffing · raw /dev/hidraw", es: "Sniffing USB · /dev/hidraw directo" },
+    tech: "tshark usbmon · Python HID · OpenRGB SDK · Matugen",
+    summary: {
+      en: "Change the wallpaper and the whole room follows. Matugen extracts a Material 3 palette and one script pushes it to keyboard, mouse base, RAM, case fans, and the LED strip. Most of those devices had no Linux support, so I wrote the protocols myself.",
+      es: "Cambio el fondo y toda la habitación le sigue. Matugen extrae una paleta Material 3 y un único script la manda al teclado, la base del ratón, la RAM, los ventiladores y la tira LED. Casi ninguno tenía soporte en Linux, así que escribí los protocolos yo.",
+    },
+    details: [
+      {
+        en: "Captured the vendor WebHID configurator with tshark on usbmon and isolated the real SET_REPORT control transfers from the battery polling noise.",
+        es: "Capturé el configurador WebHID del fabricante con tshark sobre usbmon y aislé las transferencias SET_REPORT reales del ruido de sondeo de batería.",
+      },
+      {
+        en: "MCHOSE K7 Ultra base: Feature report 0x11 on interface 2 with a 20 byte payload XOR 0xFF, verified byte by byte against a real capture.",
+        es: "Base del MCHOSE K7 Ultra: Feature report 0x11 en la interfaz 2 con carga de 20 bytes cifrada con XOR 0xFF, verificada byte a byte contra una captura real.",
+      },
+      {
+        en: "Akko 5075B Plus over 2.4 GHz: Feature reports 0x07 and 0x08 for colour, opcode 0x83 for battery. The MCHOSE V9 Pro headset battery comes from its receiver reports.",
+        es: "Akko 5075B Plus por 2,4 GHz: Feature reports 0x07 y 0x08 para el color y opcode 0x83 para la batería. La batería de los cascos MCHOSE V9 Pro sale de los informes de su receptor.",
+      },
+      {
+        en: "OpenRGB drives RAM and 2 x 60 LED ARGB fan headers with palette gradients, and the Magic Home strip takes raw TCP on port 5577.",
+        es: "OpenRGB lleva la RAM y dos cabezales ARGB de 60 LEDs con degradados de la paleta, y la tira Magic Home recibe TCP directo en el puerto 5577.",
       },
     ],
     mediaKey: "celestial",
@@ -557,8 +726,8 @@ export const LINUX_DESKTOP_SHOWCASE: LinuxDesktopShowcaseItem[] = [
     badge: { en: "100% Local RTX 4050 · Zero Cloud", es: "100% Local en RTX 4050 · Cero Nube" },
     tech: "Faster-Whisper · Qwen3 4B Ollama · Kokoro TTS · Python",
     summary: {
-      en: "Voice executive assistant running entirely on the laptop RTX 4050 GPU: voice input, tool-calling, Kokoro TTS, GLSL glowing screen edge, and a 20-min vigia daemon.",
-      es: "Asistente ejecutivo por voz 100% local en la GPU RTX 4050: entrada de voz, tool-calling, voz Kokoro, borde de pantalla resplandeciente y monitor vigía cada 20 minutos.",
+      en: "Voice executive assistant running entirely on the laptop RTX 4050 GPU: voice input, tool calling, Kokoro TTS, GLSL glowing screen edge, and a 20 min vigia daemon.",
+      es: "Asistente ejecutivo por voz 100% local en la GPU RTX 4050: entrada de voz, tool calling, voz Kokoro, borde de pantalla resplandeciente y monitor vigía cada 20 minutos.",
     },
     details: [
       {
@@ -592,27 +761,6 @@ export const LINUX_DESKTOP_SHOWCASE: LinuxDesktopShowcaseItem[] = [
       },
     ],
     mediaKey: "lauraDrawer",
-  },
-  {
-    id: "tasks-and-drivers",
-    title: "Tasks Widget & Hardware Drivers",
-    badge: { en: "Multi-Repo Tasks · 144Hz Streaming", es: "Tareas Multi-Repo · Streaming 144Hz" },
-    tech: "Python · Obsidian · Wayland · Kotlin · Bluetooth SCO",
-    summary: {
-      en: "Desktop TAREAS widget aggregating local git repos and Obsidian tasks, 1-click Honor MagicPad 2 144Hz screen streaming, and gts2-mando voice meal logging for gym-bot.",
-      es: "Widget de escritorio TAREAS que unifica repos git locales y notas de Obsidian, streaming a 144Hz hacia Honor MagicPad 2 y registro por voz en gym-bot vía gts2-mando.",
-    },
-    details: [
-      {
-        en: "TAREAS widget parses markdown tasks and active branches into a real-time desktop overview.",
-        es: "Widget TAREAS procesa tareas markdown y ramas activas en un panel de escritorio en tiempo real.",
-      },
-      {
-        en: "gts2-mando hijacks Amazfit GTS 2 physical buttons and Bluetooth SCO microphone for meal logging directly to gym-bot.",
-        es: "gts2-mando aprovecha los botones del Amazfit GTS 2 y micrófono Bluetooth SCO para registrar comidas en gym-bot.",
-      },
-    ],
-    mediaKey: "celestial",
   },
 ];
 
@@ -659,28 +807,6 @@ export const APPLIED_AI_PROJECTS: SubProject[] = [
     stack: ["Next.js 15", "React 19", "WebGPU / WASM", "Tailwind v4", "Supabase Realtime"],
     links: [
       { label: { en: "Live App", es: "Abrir App" }, href: "https://closhare-indol.vercel.app", kind: "live" },
-    ],
-  },
-  {
-    id: "zloty-euro",
-    title: "Zloty-Euro & Erasmus Flights",
-    badge: {
-      en: "Native Android + Multimodal Scraper",
-      es: "Android Nativo + Scraper Multimodal",
-    },
-    summary: {
-      en: "Kotlin ML Kit live price lens converting Polish store prices, paired with a 5-airport flight and rail optimizer.",
-      es: "Lente de precios en Kotlin con ML Kit en vivo para tiendas polacas, junto a un optimizador de vuelos y trenes desde 5 aeropuertos.",
-    },
-    highlights: [
-      {
-        en: "Jetpack Compose + ML Kit live camera OCR, Glance home widget, and ACTION_PROCESS_TEXT integration.",
-        es: "Jetpack Compose con OCR en cámara con ML Kit, widget Glance e integración en el menú ACTION_PROCESS_TEXT.",
-      },
-    ],
-    stack: ["Kotlin", "Jetpack Compose", "ML Kit OCR", "Python", "Flight APIs"],
-    links: [
-      { label: { en: "Competitive C++ Repo", es: "Repo C++ Competitiva" }, href: "https://github.com/Alberviz/competitiva", kind: "github" },
     ],
   },
 ];
@@ -738,8 +864,8 @@ export const EDUCATION_AND_HONORS: {
     es: "Curso completo Erasmus+ en AGH University of Kraków, Polonia (2026-2027)",
   },
   communityNote: {
-    en: "Built UmuCollab, a Git + Obsidian + LaTeX pipeline that turns Polish coursework into typeset Spanish PDFs for fellow exchange students.",
-    es: "Creé UmuCollab, un pipeline con Git, Obsidian y LaTeX que convierte apuntes en polaco en PDFs maquetados en español para compañeros de intercambio.",
+    en: "All my coursework lives in one GitHub repository as an interconnected Obsidian vault. My personal AI assistants can read it, and since classes at AGH are taught in Polish, they translate every lecture into Spanish and link it to the rest of my notes.",
+    es: "Todos mis apuntes viven en un repositorio de GitHub como un vault de Obsidian interconectado. Mis asistentes de IA personales pueden consultarlo y, como en AGH las clases son en polaco, traducen cada clase al español y la enlazan con el resto de mis notas.",
   },
   awards: [
     {

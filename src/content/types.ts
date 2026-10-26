@@ -73,6 +73,7 @@ export interface LinuxDesktopShowcaseItem {
   summary: LocalizedText;
   details: LocalizedText[];
   mediaKey: "gargantua" | "celestial" | "desktopIcy" | "lauraDrawer";
+  links?: ExternalLink[];
 }
 
 export interface SubProject {

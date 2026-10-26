@@ -125,8 +125,8 @@ export const ASSETS = {
         width: 780,
         height: 1688,
         alt: {
-          en: "Krakount home screen with group expenses in PLN and EUR",
-          es: "Pantalla principal de Krakount con gastos de grupo en PLN y EUR",
+          en: "Krakount home: 267 EUR owed to you, payments captured on Android to review, and your groups with live trips",
+          es: "Inicio de Krakount: te deben 267 €, pagos capturados en Android por revisar y tus grupos con viajes en marcha",
         },
       } satisfies MediaAsset,
 
@@ -135,8 +135,8 @@ export const ASSETS = {
         width: 780,
         height: 1688,
         alt: {
-          en: "Krakount dual EUR and PLN currency home screen with real-time conversion",
-          es: "Pantalla principal de Krakount con doble divisa EUR y PLN y conversión en tiempo real",
+          en: "Your currencies: euro as main, Polish złoty one tap away, 32 currencies to add",
+          es: "Tus monedas: euro como principal, złoty a un toque y 32 monedas para añadir",
         },
       } satisfies MediaAsset,
 
@@ -145,8 +145,8 @@ export const ASSETS = {
         width: 780,
         height: 1688,
         alt: {
-          en: "Krakount group trip timeline with flights, lodging, and activities",
-          es: "Cronograma de viaje grupal en Krakount con vuelos, alojamiento y actividades",
+          en: "Wrocław trip itinerary: day tabs, a drawn map and timed stops with your boarding pass",
+          es: "Itinerario del viaje a Wrocław: días en pestañas, mapa dibujado y paradas con hora junto a tu billete",
         },
       } satisfies MediaAsset,
 
@@ -155,8 +155,8 @@ export const ASSETS = {
         width: 780,
         height: 1688,
         alt: {
-          en: "Krakount flight detail screen with gate, terminal, and departure countdown",
-          es: "Pantalla de detalle de vuelo en Krakount con puerta, terminal y cuenta atrás",
+          en: "Wrocław trip in progress: what is next today, the itinerary map and your boarding pass",
+          es: "Viaje a Wrocław en marcha: lo que toca hoy, el mapa del itinerario y tu billete",
         },
       } satisfies MediaAsset,
 
@@ -165,8 +165,8 @@ export const ASSETS = {
         width: 780,
         height: 1688,
         alt: {
-          en: "Krakount offline boarding pass with high-contrast barcode and QR",
-          es: "Pase de embarque sin conexión en Krakount con código de barras y QR de alto contraste",
+          en: "Trip wallet with stacked boarding passes, offline QR codes and who still needs a ticket",
+          es: "Cartera del viaje con billetes apilados, QR sin conexión y quién aún no tiene billete",
         },
       } satisfies MediaAsset,
 
@@ -175,8 +175,8 @@ export const ASSETS = {
         width: 780,
         height: 1688,
         alt: {
-          en: "Krakount split expense modal with per-person share calculation",
-          es: "Modal de división de gastos en Krakount con cálculo por persona",
+          en: "Expense detail: weekly Biedronka shop of 187.34 PLN split equally between 5",
+          es: "Detalle de gasto: compra semanal de Biedronka de 187,34 PLN repartida a partes iguales entre 5",
         },
       } satisfies MediaAsset,
 
@@ -185,8 +185,8 @@ export const ASSETS = {
         width: 780,
         height: 1688,
         alt: {
-          en: "Krakount receipt scanner splitting supermarket items in Polish złoty",
-          es: "Escáner de tickets Krakount desglosando artículos en złotys polacos",
+          en: "Live Biedronka receipt where each friend ticks the items that are theirs",
+          es: "Ticket de Biedronka en vivo donde cada amigo marca los productos que son suyos",
         },
       } satisfies MediaAsset,
 
@@ -195,8 +195,8 @@ export const ASSETS = {
         width: 780,
         height: 1688,
         alt: {
-          en: "Krakount debt minimization matrix settling balances with minimum transactions",
-          es: "Matriz de minimización de deuda en Krakount liquidando saldos con mínimas transferencias",
+          en: "Zakopane balances: who owes you and how much, with one tap reminders",
+          es: "Saldos de Zakopane: quién te debe y cuánto, con recordatorios de un toque",
         },
       } satisfies MediaAsset,
 
@@ -205,8 +205,8 @@ export const ASSETS = {
         width: 780,
         height: 1688,
         alt: {
-          en: "Krakount confirmed settlement screen with stamp and zero balance",
-          es: "Pantalla de liquidación confirmada en Krakount con sello de pagado y saldo cero",
+          en: "All debts: the simplified plan as a constellation and a why button for every debt",
+          es: "Todas las deudas: el plan simplificado como constelación y un porqué para cada deuda",
         },
       } satisfies MediaAsset,
 
@@ -215,8 +215,8 @@ export const ASSETS = {
         width: 780,
         height: 1688,
         alt: {
-          en: "Krakount trip wrapped summary card with total spending and top spender",
-          es: "Tarjeta de resumen Krakount Wrapped del viaje con gasto total y mayor pagador",
+          en: "Zakopane Wrapped story: 2295 PLN spent together, about 85 PLN per person per day",
+          es: "Historia Wrapped de Zakopane: 2295 PLN gastados entre todos, unos 85 PLN por persona y día",
         },
       } satisfies MediaAsset,
 
@@ -225,8 +225,8 @@ export const ASSETS = {
         width: 780,
         height: 1688,
         alt: {
-          en: "Krakount personal spending rhythm and monthly budget tracker in PLN",
-          es: "Control de ritmo de gasto personal y presupuesto mensual en Krakount en PLN",
+          en: "Mis gastos: 437.04 EUR this month across every group plus personal spending, against a 600 EUR budget",
+          es: "Mis gastos: 437,04 € este mes entre todos los grupos y lo personal, frente a un presupuesto de 600 €",
         },
       } satisfies MediaAsset,
 
@@ -235,8 +235,8 @@ export const ASSETS = {
         width: 780,
         height: 1688,
         alt: {
-          en: "Krakount Captura pending payments screen with Revolut and Google Wallet notifications",
-          es: "Pantalla de pagos pendientes de revisión en Krakount Captura con notificaciones de Revolut y Google Wallet",
+          en: "Payments to review: Revolut and Wallet notifications captured on Android, waiting to be filed",
+          es: "Pagos por revisar: avisos de Revolut y Wallet capturados en Android, esperando a colocarse",
         },
       } satisfies MediaAsset,
     },
@@ -245,50 +245,50 @@ export const ASSETS = {
       balance: {
         src: "/media/krakount/pop-balance.webp",
         width: 700,
-        height: 824,
+        height: 526,
         alt: {
-          en: "Krakount balance popup card showing who owes whom",
-          es: "Tarjeta emergente de saldos de Krakount mostrando quién debe a quién",
+          en: "Krakount home card: 267 EUR owed to you overall, this month's spending and the breakdown by person",
+          es: "Tarjeta de inicio de Krakount: en total te deben 267 €, lo que llevas este mes y el desglose por persona",
         },
       } satisfies MediaAsset,
 
       share: {
         src: "/media/krakount/pop-share.webp",
         width: 700,
-        height: 304,
+        height: 338,
         alt: {
-          en: "Krakount individual share popup preview",
-          es: "Vista previa emergente de parte individual en Krakount",
+          en: "Your share of an open Biedronka receipt so far: 2 of 5 items ticked",
+          es: "Tu parte de un ticket abierto de Biedronka, de momento: 2 de 5 productos marcados",
         },
       } satisfies MediaAsset,
 
       flight: {
         src: "/media/krakount/pop-flight.webp",
-        width: 484,
-        height: 502,
+        width: 700,
+        height: 282,
         alt: {
-          en: "Krakount flight card popup preview",
-          es: "Vista previa emergente de tarjeta de vuelo en Krakount",
+          en: "Trip wallet card with your Wrocław to Madrid boarding pass ready to show",
+          es: "Tarjeta de la cartera del viaje con tu billete Wrocław a Madrid listo para enseñar",
         },
       } satisfies MediaAsset,
 
       pass: {
         src: "/media/krakount/pop-pass.webp",
         width: 700,
-        height: 496,
+        height: 792,
         alt: {
-          en: "Krakount boarding pass ticket popup preview",
-          es: "Vista previa emergente de billete de embarque en Krakount",
+          en: "Offline boarding pass MAD to WRO with a QR code redrawn without network",
+          es: "Billete de embarque MAD a WRO sin conexión, con el QR redibujado sin red",
         },
       } satisfies MediaAsset,
 
       transfer: {
         src: "/media/krakount/pop-transfer.webp",
         width: 700,
-        height: 424,
+        height: 506,
         alt: {
-          en: "Krakount bank transfer instructions popup card",
-          es: "Tarjeta emergente de instrucciones de transferencia en Krakount",
+          en: "Debt card: Marco owes you 1.14 EUR, with remind, invite and swipe to mark paid",
+          es: "Tarjeta de deuda: Marco te debe 1,14 €, con recordar, invitar y deslizar para marcar pagado",
         },
       } satisfies MediaAsset,
     },
@@ -394,8 +394,8 @@ export const ASSETS = {
       width: 1920,
       height: 1080,
       alt: {
-        en: "Hyprland desktop with Quickshell celestial orbital canvas, Laura binary star, and audio-reactive Gargantua",
-        es: "Escritorio Hyprland con lienzo orbital Quickshell, estrella binaria Laura y Gargantua audio-reactivo",
+        en: "Hyprland desktop with the Quickshell solar system: Laura star, agent planets, device satellites, the Cuerpo health planet, and Gargantua playing CONTIGO by Lucho RK",
+        es: "Escritorio Hyprland con el sistema solar de Quickshell: estrella Laura, planetas de agentes, satélites de dispositivos, el planeta Cuerpo y Gargantua reproduciendo CONTIGO de Lucho RK",
       },
     } satisfies MediaAsset,
 

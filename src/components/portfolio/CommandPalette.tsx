@@ -129,8 +129,9 @@ export function CommandPalette() {
         },
       },
       nav("work", es ? "Krakount en resumen" : "Krakount spotlight", "work spotlight krakount flagship"),
-      nav("systems", es ? "Home Lab y finanzas" : "Home lab and wealth", "systems homelab aurora ghostfolio wealth raspberry pi"),
-      nav("desktop", es ? "Escritorio Linux con IA" : "AI Linux desktop", "desktop linux hyprland quickshell caelestia gargantua laura shader"),
+      nav("systems", es ? "Patrimonio en la Raspberry Pi" : "Wealth on the Raspberry Pi", "systems homelab aurora ghostfolio wealth raspberry pi"),
+      nav("health", es ? "Hub de salud" : "Health hub", "health salud gym opengym amazfit gts2 watch reloj telegram comidas creatina"),
+      nav("desktop", es ? "Escritorio Linux con IA" : "AI Linux desktop", "desktop linux hyprland quickshell caelestia gargantua laura shader webgl rgb hidraw reverse engineering cuerpo"),
       nav("case-studies", es ? "Proyectos seleccionados" : "Selected work", "work mycrohnie hackyeah closhare barber applied ai"),
       nav("background", es ? "Trayectoria" : "Background", "background stel order education olympiad umu agh"),
       {

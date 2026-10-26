@@ -127,7 +127,7 @@ function Segmented({
 function FeatureStage({ featureId, shotKey, locale }: { featureId: string; shotKey: string; locale: Locale }) {
   const reduce = useReducedMotion();
   const [variant, setVariant] = useState(0);
-  const [captureFront, setCaptureFront] = useState<"captura" | "misGastos">("captura");
+  const [captureFront, setCaptureFront] = useState<"captura" | "misGastos">("misGastos");
 
   const rise = {
     initial: { opacity: 0, transform: reduce ? "none" : "translateY(48px)" },
@@ -161,8 +161,8 @@ function FeatureStage({ featureId, shotKey, locale }: { featureId: string; shotK
 
   if (featureId === "android-capture") {
     const phones: { id: "captura" | "misGastos"; shot: MediaAsset; label: Record<Locale, string> }[] = [
-      { id: "captura", shot: SHOTS.captura, label: { en: "Captura", es: "Captura" } },
       { id: "misGastos", shot: SHOTS.misGastos, label: { en: "Mis gastos", es: "Mis gastos" } },
+      { id: "captura", shot: SHOTS.captura, label: { en: "Captura", es: "Captura" } },
     ];
     return (
       <div className="relative h-[340px] overflow-hidden pt-2">

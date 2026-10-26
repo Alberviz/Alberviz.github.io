@@ -2,8 +2,9 @@
 
 import React from "react";
 import { useLocale } from "@/lib/i18n-context";
-import { HOMELAB_WEALTH_SYSTEM } from "@/content/portfolio-data";
+import { HEALTH_SYSTEM, HOMELAB_WEALTH_SYSTEM } from "@/content/portfolio-data";
 import { WealthTopology } from "./diagrams/WealthTopology";
+import { HealthTopology } from "./diagrams/HealthTopology";
 import { AuroraPipeline } from "./diagrams/AuroraPipeline";
 
 export function HomeLabWealthSection() {
@@ -36,6 +37,21 @@ export function HomeLabWealthSection() {
             </p>
           </div>
           <WealthTopology />
+        </div>
+
+        <div className="my-16 sm:my-20 border-t border-[#232732]" />
+
+        {/* Health hub: the second personal system */}
+        <div id="health" className="scroll-mt-24">
+          <div className="mb-8 max-w-[68ch]">
+            <h3 className="font-display text-2xl sm:text-3xl font-semibold tracking-[-0.02em] text-[#ECEEF2]">
+              {HEALTH_SYSTEM.title[locale]}
+            </h3>
+            <p className="text-sm sm:text-base text-[#8E95A5] mt-2 leading-relaxed">
+              {HEALTH_SYSTEM.summary[locale]}
+            </p>
+          </div>
+          <HealthTopology />
         </div>
 
         <div className="my-16 sm:my-20 border-t border-[#232732]" />

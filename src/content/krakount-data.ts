@@ -51,10 +51,10 @@ export const KRAKOUNT_PAGE = {
       },
     },
     {
-      value: "~20",
+      value: "0",
       label: {
-        en: "Active Erasmus beta users splitting rent, bars, and trips in Kraków",
-        es: "Usuarios reales de Erasmus repartiendo piso, bares y viajes en Cracovia",
+        en: "Receipt photos stored: read in the moment, never uploaded",
+        es: "Fotos de tickets guardadas: se leen al momento y nunca se suben",
       },
     },
     {
@@ -71,7 +71,7 @@ export const KRAKOUNT_PAGE = {
       es: "Toca el motor: Ticket Polaco en Vivo y Simplificación de Deudas",
     } satisfies LocalizedText,
     subheading: {
-      en: "Tap friends on any Biedronka receipt line below. Krakount computes exact integer shares in grosze (PLN) and converts to EUR at live NBP reference rates without rounding drift.",
+      en: "Tap friends on any Biedronka receipt line below. Krakount computes exact integer shares in grosze (PLN) and converts to EUR without rounding drift. The app uses the market rate of the day; this demo uses a fixed one.",
       es: "Pulsa los amigos en cada línea de este ticket real de Biedronka. Krakount reparte cada céntimo exacto en grosze (PLN) y calcula la liquidación mínima en EUR sin errores de redondeo.",
     } satisfies LocalizedText,
     receiptHeader: "BIEDRONKA · UL. KRAKOWSKA 41 · PARAGON FISKALNY",
@@ -80,8 +80,8 @@ export const KRAKOUNT_PAGE = {
       es: "Pagado en caja por Alberto",
     } satisfies LocalizedText,
     currencyToggleLabel: {
-      en: "Flip PLN / EUR (1 EUR = 4.28 PLN NBP)",
-      es: "Cambiar PLN / EUR (1 EUR = 4,28 PLN NBP)",
+      en: "Flip PLN / EUR (demo rate 1 EUR = 4.28 PLN)",
+      es: "Cambiar PLN / EUR (tipo de demo 1 EUR = 4,28 PLN)",
     } satisfies LocalizedText,
     whyLabel: {
       en: "Why do I owe this? Integer cent breakdown:",
@@ -174,12 +174,12 @@ export const KRAKOUNT_PAGE = {
     {
       id: "android-capture",
       title: {
-        en: "Krakount Captura (Kotlin), Price Camera & Capital API",
-        es: "Krakount Captura (Kotlin), Cámara de Precios y API de Capital",
+        en: "Everything You Spend, in One Place",
+        es: "Todos tus Gastos en un Mismo Sitio",
       },
       body: {
-        en: "Kotlin companion app auto-settling incoming Bizum and Revolut debts from notifications, paired with the /camara shelf price converter, personal Mis gastos and Ingresos budgeting, and the /api/v1/me/capital feed.",
-        es: "App complementaria en Kotlin que liquida deudas con notificaciones de Bizum y Revolut, junto al conversor /camara en tienda, control de Mis gastos e Ingresos y sincronización /api/v1/me/capital.",
+        en: "Mis gastos adds your share of every group to what you spend alone, with income, savings, and a monthly budget. Krakount Captura (Kotlin) reads Revolut and Wallet payments on Android and proposes the expense, and a received Bizum settles the debt by itself.",
+        es: "Mis gastos suma tu parte de cada grupo a lo que gastas tú solo, con ingresos, ahorro y presupuesto mensual. Krakount Captura (Kotlin) lee los pagos de Revolut y Wallet en Android y propone el gasto, y un Bizum recibido salda la deuda solo.",
       },
       shotKey: "shotCaptura",
       popKey: "popPass",

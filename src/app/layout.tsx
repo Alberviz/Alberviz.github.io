@@ -48,7 +48,7 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://alberviz.github.io"),
   title: "Alberto Vizcaíno Ponte | Mathematics & CS Engineer | Builder",
   description:
-    "Portfolio of Alberto Vizcaíno Ponte. Double degree in Mathematics and Computer Science. Engineering high-resilience systems and refined digital products.",
+    "Alberto Vizcaíno Ponte, Mathematics and Computer Science student. Krakount, a self-hosted wealth and health hub on a Raspberry Pi, and an AI-native Linux desktop with reverse-engineered hardware.",
   keywords: [
     "Alberto Vizcaíno Ponte",
     "Software Engineer",
@@ -69,7 +69,7 @@ export const metadata: Metadata = {
     url: "https://alberviz.github.io",
     title: "Alberto Vizcaíno Ponte | Mathematics & CS Engineer | Builder",
     description:
-      "Portfolio of Alberto Vizcaíno Ponte. Double degree in Mathematics and Computer Science. Engineering high-resilience systems and refined digital products.",
+      "Alberto Vizcaíno Ponte, Mathematics and Computer Science student. Krakount, a self-hosted wealth and health hub on a Raspberry Pi, and an AI-native Linux desktop with reverse-engineered hardware.",
     siteName: "Alberto Vizcaíno Ponte Portfolio",
     images: [
       {
@@ -84,7 +84,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Alberto Vizcaíno Ponte | Mathematics & CS Engineer | Builder",
     description:
-      "Portfolio of Alberto Vizcaíno Ponte. Double degree in Mathematics and Computer Science. Engineering high-resilience systems and refined digital products.",
+      "Alberto Vizcaíno Ponte, Mathematics and Computer Science student. Krakount, a self-hosted wealth and health hub on a Raspberry Pi, and an AI-native Linux desktop with reverse-engineered hardware.",
     images: ["/media/systems/gargantua-shader.webp"],
   },
   robots: {

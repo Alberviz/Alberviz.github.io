@@ -256,6 +256,30 @@ html {
   }
 }
 
+/* RGB rig: fan LED rings spin, packet bytes land after their device delay */
+@keyframes rigSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.rig-spin {
+  animation: rigSpin 8s linear infinite;
+}
+
+@keyframes rigBytes {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.rig-bytes {
+  animation: rigBytes 360ms var(--ease-out) both;
+}
+
 /* Tabular numbers for financial and metric displays */
 .tabular-nums {
   font-variant-numeric: tabular-nums;
@@ -287,7 +311,8 @@ html {
     transform: none !important;
   }
   .pin-pulse,
-  .status-breath {
+  .status-breath,
+  .rig-spin {
     animation: none !important;
   }
 }

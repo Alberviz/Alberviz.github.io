@@ -298,7 +298,7 @@ function DesktopScene({ locale }: { locale: Locale }) {
   const facts: { k: string; v: Record<Locale, string> }[] = [
     { k: "Gargantua", v: { en: "GLSL shader reacting to PipeWire", es: "Shader GLSL reactivo a PipeWire" } },
     { k: "Laura", v: { en: "Local voice AI on RTX 4050", es: "IA de voz local en RTX 4050" } },
-    { k: "SUPER+I", v: { en: "Multi-agent approval drawer", es: "Cajón multi-agente de aprobaciones" } },
+    { k: "Cuerpo", v: { en: "My watch data as a planet", es: "Los datos de mi reloj como planeta" } },
   ];
 
   return (

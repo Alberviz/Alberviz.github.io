@@ -27,9 +27,9 @@ type PillarScene = {
 
 const PILLAR_SCENES: PillarScene[] = [
   {
-    screen: ASSETS.krakount.shots.settled,
-    pop: { asset: ASSETS.krakount.pops.balance, placement: "top" },
-    caption: { en: "Settled to the grosz", es: "Liquidado al grosz" },
+    screen: ASSETS.krakount.shots.misGastos,
+    pop: { asset: ASSETS.krakount.pops.balance, placement: "bottom" },
+    caption: { en: "Shared and personal, one total", es: "Lo compartido y lo tuyo, un total" },
   },
   {
     screen: ASSETS.krakount.shots.receipt,
@@ -37,8 +37,9 @@ const PILLAR_SCENES: PillarScene[] = [
     caption: { en: "Receipt lines claimed live", es: "Líneas del ticket reclamadas en vivo" },
   },
   {
-    screen: ASSETS.krakount.shots.captura,
-    caption: { en: "Captura: payments to review", es: "Captura: pagos por revisar" },
+    screen: ASSETS.krakount.shots.itinerary,
+    pop: { asset: ASSETS.krakount.pops.pass, placement: "bottom" },
+    caption: { en: "Itinerary and offline passes", es: "Itinerario y billetes sin conexión" },
   },
 ];
 
