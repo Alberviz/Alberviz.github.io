@@ -362,6 +362,211 @@ export function LauraVoiceScene() {
       {/* Subtle vignette */}
       <div className="pointer-events-none absolute inset-0 bg-radial-[at_50%_50%] from-transparent via-[#07060B]/30 to-[#07060B]/70" />
 
+      {/* Laura Celestial Star & Agent Orbit (Modo foco-Laura / D-12) */}
+      <svg
+        viewBox="0 0 1920 1080"
+        className="pointer-events-none absolute inset-0 h-full w-full select-none"
+        aria-hidden="true"
+      >
+        <defs>
+          <style>{`
+            @keyframes laura-stellar-breathe {
+              0% { transform: scale(0.95); opacity: 0.72; }
+              100% { transform: scale(1.08); opacity: 1; }
+            }
+            @keyframes laura-ticks-spin {
+              from { transform: rotate(0deg); }
+              to { transform: rotate(-360deg); }
+            }
+            @keyframes laura-beacon-wave {
+              0% { r: 52px; opacity: 0.85; stroke-width: 2px; }
+              100% { r: 145px; opacity: 0; stroke-width: 0.5px; }
+            }
+            .laura-beacon-1 {
+              animation: laura-beacon-wave 3s cubic-bezier(0.2, 0.8, 0.2, 1) infinite;
+              transform-origin: center;
+            }
+            .laura-beacon-2 {
+              animation: laura-beacon-wave 3s cubic-bezier(0.2, 0.8, 0.2, 1) infinite 1.5s;
+              transform-origin: center;
+            }
+          `}</style>
+
+          {/* Corona Bloom Gradient */}
+          <radialGradient id="laura-scene-corona" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor={pillColor} stopOpacity={step === "speak" ? "0.85" : "0.65"} />
+            <stop offset="32%" stopColor={pillColor} stopOpacity={step === "speak" ? "0.48" : "0.34"} />
+            <stop offset="68%" stopColor={pillColor} stopOpacity="0.12" />
+            <stop offset="100%" stopColor={pillColor} stopOpacity="0" />
+          </radialGradient>
+
+          {/* Photosphere Radiant Core */}
+          <radialGradient id="laura-scene-photosphere" cx="38%" cy="36%" r="65%">
+            <stop offset="0%" stopColor="#FFFFFF" />
+            <stop offset="42%" stopColor={step === "deleg" ? "#FCE4D6" : "#F4F0FF"} />
+            <stop offset="78%" stopColor={pillColor} />
+            <stop offset="100%" stopColor={step === "deleg" ? "#C86230" : "#6E5B8E"} />
+          </radialGradient>
+
+          {/* Claude Satellite Glow */}
+          <radialGradient id="claude-sat-glow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="#EE9A6E" stopOpacity={step === "deleg" ? "0.8" : "0.35"} />
+            <stop offset="55%" stopColor="#EE9A6E" stopOpacity={step === "deleg" ? "0.35" : "0.1"} />
+            <stop offset="100%" stopColor="#EE9A6E" stopOpacity="0" />
+          </radialGradient>
+
+          {/* Starlight Beam Gradient to Claude */}
+          <linearGradient id="laura-claude-beam" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor="#F6C58A" stopOpacity="0.85" />
+            <stop offset="100%" stopColor="#EE9A6E" stopOpacity="0.85" />
+          </linearGradient>
+
+          {/* Energy Beam down to Subtitle Pill */}
+          <linearGradient id="laura-pill-tether" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor={pillColor} stopOpacity="0.35" />
+            <stop offset="100%" stopColor={pillColor} stopOpacity="0" />
+          </linearGradient>
+
+          {/* Spotlight filter */}
+          <radialGradient id="laura-focal-mask" cx="451" cy="600" r="720" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stopColor="#000000" stopOpacity="0" />
+            <stop offset="30%" stopColor="#000000" stopOpacity="0.08" />
+            <stop offset="70%" stopColor="#000000" stopOpacity="0.32" />
+            <stop offset="100%" stopColor="#000000" stopOpacity="0.5" />
+          </radialGradient>
+        </defs>
+
+        {/* Backdrop Spotlight (Modo foco-Laura / D-12: atenua suavemente el resto del fondo) */}
+        <rect width="1920" height="1080" fill="url(#laura-focal-mask)" />
+
+        {/* Starlight tether from Laura toward the Subtitle Pill */}
+        <path
+          d="M 451.5 645 Q 520 850 680 940"
+          fill="none"
+          stroke="url(#laura-pill-tether)"
+          strokeWidth="1.5"
+          strokeDasharray="4 6"
+          className="opacity-70"
+        />
+
+        {/* When delegating, luminous energy stream to Claude satellite */}
+        {step === "deleg" && (
+          <g>
+            <line
+              x1="451.5"
+              y1="600"
+              x2="586"
+              y2="680"
+              stroke="url(#laura-claude-beam)"
+              strokeWidth="2.5"
+              strokeDasharray="5 3"
+              className="animate-pulse"
+            />
+            <circle cx="586" cy="680" r="55" fill="url(#claude-sat-glow)" />
+          </g>
+        )}
+
+        {/* Laura Stellar Body (cx=451.4, cy=599.6, r=45) */}
+        <g transform="translate(451.4 599.6)">
+          {/* Broad Outer Radiant Corona */}
+          <circle
+            r={step === "speak" ? 175 : 145}
+            fill="url(#laura-scene-corona)"
+            className="transition-all duration-300"
+            style={{
+              animation: "laura-stellar-breathe 2.4s ease-in-out infinite alternate",
+            }}
+          />
+
+          {/* Secondary Corona Glow */}
+          <circle
+            r={step === "speak" ? 115 : 95}
+            fill="url(#laura-scene-corona)"
+            opacity="0.8"
+          />
+
+          {/* Concentric Energy Pulse Waves (expanding beacon ripples) */}
+          <circle
+            r="60"
+            fill="none"
+            stroke={pillColor}
+            strokeWidth="1.8"
+            className="laura-beacon-1"
+          />
+          <circle
+            r="80"
+            fill="none"
+            stroke={pillColor}
+            strokeWidth="1.2"
+            className="laura-beacon-2"
+          />
+
+          {/* Outer Luminous Orbit Ring (r = 75) */}
+          <circle
+            r="75"
+            fill="none"
+            stroke={pillColor}
+            strokeOpacity="0.45"
+            strokeWidth="1.5"
+          />
+
+          {/* Spinning Tech Ticks Ring (r = 59, 1.5 4.5 dash) */}
+          <circle
+            r="59"
+            fill="none"
+            stroke={pillColor}
+            strokeOpacity="0.85"
+            strokeWidth="2.5"
+            strokeDasharray="1.5 4.5"
+            style={{
+              transformOrigin: "center",
+              animation: "laura-ticks-spin 18s linear infinite",
+            }}
+          />
+
+          {/* Prominence Plasma Arc (top-left loop from solarfield.frag) */}
+          <path
+            d="M -30 -33 C -42 -52 -18 -62 -12 -44"
+            fill="none"
+            stroke="#FFFFFF"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeOpacity="0.9"
+            className="animate-pulse"
+            style={{ animationDuration: "2s" }}
+          />
+
+          {/* Radiant Photosphere Core (r = 45) */}
+          <circle
+            r="45"
+            fill="url(#laura-scene-photosphere)"
+            style={{
+              filter: `drop-shadow(0 0 16px ${pillColor}) drop-shadow(0 0 32px ${pillColor}88)`,
+            }}
+          />
+
+          {/* Solar Center Glint / Star Flare */}
+          <circle r="16" fill="#FFFFFF" opacity="0.95" />
+          <ellipse rx="28" ry="4" fill="#FFFFFF" opacity="0.65" />
+          <ellipse rx="4" ry="28" fill="#FFFFFF" opacity="0.65" />
+
+          {/* Luminous Text: LAURA */}
+          <text
+            x="72"
+            y="6"
+            className="font-mono font-bold"
+            fontSize="14.5"
+            letterSpacing="3"
+            fill="#FFFFFF"
+            style={{
+              filter: `drop-shadow(0 0 8px ${pillColor})`,
+            }}
+          >
+            LAURA
+          </text>
+        </g>
+      </svg>
+
       {/* Screen Edge Glow Canvas (Borde Gemini) */}
       <canvas
         ref={canvasRef}

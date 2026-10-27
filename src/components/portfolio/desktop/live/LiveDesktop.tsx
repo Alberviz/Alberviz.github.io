@@ -248,10 +248,11 @@ export function LiveDesktop({ paused = false }: { paused?: boolean }) {
               <stop offset="45%" stopColor="#A497B2" />
               <stop offset="100%" stopColor="#2A2530" />
             </radialGradient>
-            <radialGradient id="ld-laura" cx="40%" cy="36%" r="70%">
-              <stop offset="0%" stopColor="#FBF9FF" />
-              <stop offset="55%" stopColor="#CFC7DB" />
-              <stop offset="100%" stopColor="#857C95" />
+            <radialGradient id="ld-laura" cx="38%" cy="36%" r="68%">
+              <stop offset="0%" stopColor="#FFFFFF" />
+              <stop offset="40%" stopColor="#F4F0FF" />
+              <stop offset="75%" stopColor="#BFB0FF" />
+              <stop offset="100%" stopColor="#7E6A9C" />
             </radialGradient>
             <radialGradient id="ld-config" cx="40%" cy="36%" r="70%">
               <stop offset="0%" stopColor="#EDF3F8" />
@@ -264,8 +265,10 @@ export function LiveDesktop({ paused = false }: { paused?: boolean }) {
               <stop offset="100%" stopColor="#3C454D" />
             </radialGradient>
             <radialGradient id="ld-glow">
-              <stop offset="0%" stopColor="#E9E3F2" stopOpacity="0.22" />
-              <stop offset="100%" stopColor="#E9E3F2" stopOpacity="0" />
+              <stop offset="0%" stopColor="#BFB0FF" stopOpacity="0.7" />
+              <stop offset="35%" stopColor="#BFB0FF" stopOpacity="0.35" />
+              <stop offset="70%" stopColor="#BFB0FF" stopOpacity="0.1" />
+              <stop offset="100%" stopColor="#BFB0FF" stopOpacity="0" />
             </radialGradient>
             <linearGradient id="comet-tail" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="1" y2="0">
               <stop offset="0%" stopColor="#E4E2E2" stopOpacity="0.75" />
@@ -377,13 +380,15 @@ export function LiveDesktop({ paused = false }: { paused?: boolean }) {
 
           {/* Laura, the star: agents orbit her */}
           <g transform={`translate(${LAURA.x} ${LAURA.y})`}>
-            <circle r={LAURA.r * 2.6} fill="url(#ld-glow)" />
+            <circle r={LAURA.r * 2.8} fill="url(#ld-glow)" />
+            <circle r={LAURA.r * 1.8} fill="url(#ld-glow)" />
             <g data-spin="-4">
-              <circle r={LAURA.r + 11} fill="none" stroke="#DDD6E6" strokeOpacity="0.5" strokeWidth="3" strokeDasharray="1 4" />
+              <circle r={LAURA.r + 11} fill="none" stroke="#DDD6E6" strokeOpacity="0.6" strokeWidth="3" strokeDasharray="1 4" />
             </g>
-            <circle r={LAURA.r + 20} fill="none" stroke="#DDD6E6" strokeOpacity="0.12" />
+            <circle r={LAURA.r + 20} fill="none" stroke="#DDD6E6" strokeOpacity="0.2" />
             <circle r={LAURA.r} fill="url(#ld-laura)" />
-            <text x={LAURA.r + 26} y="5" className="font-mono" fontSize="13.5" fill="#C9C2D3" letterSpacing="3">
+            <circle r={LAURA.r * 0.35} fill="#FFFFFF" opacity="0.95" />
+            <text x={LAURA.r + 26} y="5" className="font-mono font-semibold" fontSize="13.5" fill="#FFFFFF" letterSpacing="3">
               LAURA
             </text>
           </g>
