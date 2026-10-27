@@ -36,7 +36,6 @@ const SCREENS: { id: ScreenId; label: Record<Locale, string>; shot?: MediaAsset;
     id: "pass",
     label: { en: "Boarding pass", es: "Pase QR" },
     shot: ASSETS.krakount.shots.pass,
-    pop: ASSETS.krakount.pops.flight,
   },
 ];
 
