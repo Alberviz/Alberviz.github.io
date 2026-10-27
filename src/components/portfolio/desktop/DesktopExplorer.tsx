@@ -11,12 +11,13 @@ import type { LinuxDesktopShowcaseItem } from "@/content/types";
 import { EASE_OUT, SPRING_CAMERA, SPRING_LAYOUT, revealProps } from "@/lib/motion";
 import { BODY, CONFIG, LAURA, LiveDesktop } from "./live/LiveDesktop";
 import { RgbRig } from "./live/RgbRig";
+import { LauraVoiceScene } from "./live/LauraVoiceScene";
 
 /* -------------------------------------------------------------------------- */
 /* Scene geometry: desktop pixels (1920 x 1080) shared with the live scene.   */
 /* -------------------------------------------------------------------------- */
 
-type SceneId = "live" | "rig" | "drawer";
+type SceneId = "live" | "rig" | "drawer" | "laura";
 
 type Focus = { scene: SceneId; x: number; y: number; zoom: number };
 
@@ -28,7 +29,7 @@ const FOCUS: Record<string, Focus> = {
   "celestial-desktop": { scene: "live", x: 50, y: 50, zoom: 1 },
   "health-planet": { scene: "live", ...pct(BODY.x + 60, BODY.y + 20), zoom: 2 },
   "rgb-sync": { scene: "rig", x: 50, y: 50, zoom: 1 },
-  "laura-voice": { scene: "live", ...pct(LAURA.x, LAURA.y - 20), zoom: 1.6 },
+  "laura-voice": { scene: "laura", x: 50, y: 50, zoom: 1 },
   "laura-drawer": { scene: "drawer", x: 50, y: 50, zoom: 1 },
 };
 
@@ -44,6 +45,7 @@ const PINS: Record<SceneId, { id: string; x: number; y: number }[]> = {
   ],
   rig: [],
   drawer: [{ id: "laura-drawer", x: 73.4, y: 21.5 }],
+  laura: [],
 };
 
 function focusFor(item: LinuxDesktopShowcaseItem): Focus {
@@ -86,6 +88,10 @@ const UI = {
   rigCaption: {
     en: "Animated diagram · packet bytes as written by sync-rgb.py",
     es: "Diagrama animado · bytes de los paquetes tal como los escribe sync-rgb.py",
+  },
+  lauraCaption: {
+    en: "Interactive simulation: Gemini edge glow shader, sub-second Whisper transcription and Kokoro voice pill · SUPER+A",
+    es: "Simulación interactiva: shader de borde Gemini, transcripción Whisper y píldora de voz Kokoro · SUPER+A",
   },
   fullscreen: { en: "Full screen", es: "Pantalla completa" },
   exitFullscreen: { en: "Exit full screen", es: "Salir de pantalla completa" },
@@ -215,6 +221,18 @@ export function DesktopExplorer() {
                   <RgbRig />
                 </motion.div>
               )}
+              {focus.scene === "laura" && (
+                <motion.div
+                  key="laura"
+                  className="absolute inset-0 z-20"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.45, ease: EASE_OUT }}
+                >
+                  <LauraVoiceScene />
+                </motion.div>
+              )}
               {focus.scene === "drawer" && (
                 <motion.div
                   key="drawer"
@@ -271,7 +289,13 @@ export function DesktopExplorer() {
         </div>
 
         <div className="mt-3 flex items-center justify-between gap-4 font-mono text-[11px] text-[#5D6474]">
-          <span>{focus.scene === "rig" ? UI.rigCaption[locale] : UI.caption[locale]}</span>
+          <span>
+            {focus.scene === "rig"
+              ? UI.rigCaption[locale]
+              : focus.scene === "laura"
+                ? UI.lauraCaption[locale]
+                : UI.caption[locale]}
+          </span>
           <span className="hidden shrink-0 sm:block">{UI.hint[locale]}</span>
         </div>
       </motion.div>
