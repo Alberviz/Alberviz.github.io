@@ -94,8 +94,8 @@ export const KRAKOUNT_SPOTLIGHT = {
     es: "Todo tu dinero y los viajes del grupo, en una app que se usa a una mano.",
   } satisfies LocalizedText,
   description: {
-    en: "Built for our Erasmus group in Kraków because Tricount only covers money and trip apps only cover trips. Krakount puts both in one installable PWA: exact cents in 32 currencies, receipts split item by item, and the whole trip, from the vote on where to sleep to the boarding pass at the gate.",
-    es: "Creada para nuestro grupo Erasmus en Cracovia porque Tricount solo cubre el dinero y las apps de viajes solo los viajes. Krakount junta las dos cosas en una PWA instalable: céntimos exactos en 32 monedas, tickets repartidos producto a producto y el viaje entero, desde votar dónde dormir hasta el billete en la puerta de embarque.",
+    en: "Built for our Erasmus group in Kraków because traditional split apps only cover basic lists and trip apps only cover trips. Krakount puts both in one installable PWA: automated card payments and Bizum auto-settling, exact minor units in 32 currencies, receipts split item by item, and the whole trip, from the vote on where to sleep to offline boarding passes at the gate.",
+    es: "Creada para nuestro grupo Erasmus en Cracovia porque las apps tradicionales de gastos solo llevan listas básicas y las apps de viajes solo los viajes. Krakount junta las dos cosas en una PWA instalable: pagos automáticos de tarjeta y cobros por Bizum que se saldan solos, céntimos exactos en 32 monedas, tickets repartidos producto a producto y el viaje entero, desde votar dónde dormir hasta el billete offline en la puerta de embarque.",
   } satisfies LocalizedText,
   pillars: [
     {

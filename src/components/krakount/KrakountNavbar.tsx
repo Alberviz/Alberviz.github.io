@@ -14,8 +14,8 @@ export function KrakountNavbar() {
   const reduce = useReducedMotion();
 
   const anchors = [
-    { href: "#simulator", label: { en: "Simulator", es: "Simulador" } },
     { href: "#features", label: { en: "Features", es: "Funciones" } },
+    { href: "#gallery", label: { en: "Screens", es: "Pantallas" } },
   ];
 
   return (

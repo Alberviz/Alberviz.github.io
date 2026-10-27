@@ -245,50 +245,50 @@ export const ASSETS = {
       balance: {
         src: "/media/krakount/pop-balance.webp",
         width: 700,
-        height: 526,
+        height: 524,
         alt: {
-          en: "Krakount home card: 267 EUR owed to you overall, this month's spending and the breakdown by person",
-          es: "Tarjeta de inicio de Krakount: en total te deben 267 €, lo que llevas este mes y el desglose por persona",
+          en: "Krakount home card: total money owed to you and personal monthly spending breakdown",
+          es: "Tarjeta de inicio de Krakount: dinero total que te deben y desglose de gasto mensual",
         },
       } satisfies MediaAsset,
 
       share: {
         src: "/media/krakount/pop-share.webp",
         width: 700,
-        height: 338,
+        height: 336,
         alt: {
-          en: "Your share of an open Biedronka receipt so far: 2 of 5 items ticked",
-          es: "Tu parte de un ticket abierto de Biedronka, de momento: 2 de 5 productos marcados",
+          en: "Live receipt claim: items selected and current share in Polish zloty",
+          es: "Reparto de ticket en vivo: productos marcados y parte actual en zloty polaco",
         },
       } satisfies MediaAsset,
 
       flight: {
         src: "/media/krakount/pop-flight.webp",
-        width: 700,
-        height: 282,
+        width: 636,
+        height: 116,
         alt: {
-          en: "Trip wallet card with your Wrocław to Madrid boarding pass ready to show",
-          es: "Tarjeta de la cartera del viaje con tu billete Wrocław a Madrid listo para enseñar",
+          en: "Live flight card: Wroclaw to Madrid route with flight status and gate info",
+          es: "Tarjeta de vuelo en vivo: trayecto Wroclaw a Madrid con estado y puerta de embarque",
         },
       } satisfies MediaAsset,
 
       pass: {
         src: "/media/krakount/pop-pass.webp",
-        width: 700,
-        height: 792,
+        width: 658,
+        height: 736,
         alt: {
-          en: "Offline boarding pass MAD to WRO with a QR code redrawn without network",
-          es: "Billete de embarque MAD a WRO sin conexión, con el QR redibujado sin red",
+          en: "Offline boarding pass: Aztec and QR codes rendered without cellular signal",
+          es: "Pase de embarque sin conexion: codigos Aztec y QR generados sin cobertura",
         },
       } satisfies MediaAsset,
 
       transfer: {
         src: "/media/krakount/pop-transfer.webp",
         width: 700,
-        height: 506,
+        height: 504,
         alt: {
-          en: "Debt card: Marco owes you 1.14 EUR, with remind, invite and swipe to mark paid",
-          es: "Tarjeta de deuda: Marco te debe 1,14 €, con recordar, invitar y deslizar para marcar pagado",
+          en: "Debt settlement slider: Marco owes 1.14 EUR with swipe to confirm",
+          es: "Deslizador de deuda: Marco debe 1,14 EUR con deslizamiento para confirmar pago",
         },
       } satisfies MediaAsset,
     },

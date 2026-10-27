@@ -102,17 +102,3 @@ export interface AcademicAward {
   year: string;
 }
 
-export interface ReceiptSimItem {
-  id: string;
-  polishName: string;
-  translatedName: LocalizedText;
-  priceGrosze: number; // integer minor units (PLN grosze: 100 = 1.00 PLN)
-  defaultClaimants: string[];
-}
-
-export interface KrakountFriend {
-  id: string;
-  name: string;
-  initials: string;
-  colorHex: string;
-}

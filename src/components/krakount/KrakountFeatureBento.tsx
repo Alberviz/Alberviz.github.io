@@ -260,10 +260,10 @@ const GALLERY: GalleryItem[] = [
   },
   {
     key: "captura",
-    label: { en: "Captura", es: "Captura" },
+    label: { en: "Captura & Bizum", es: "Captura y Bizum" },
     desc: {
-      en: "Kotlin notification listener detecting Revolut, Google Wallet, and Bizum payments.",
-      es: "Lector de notificaciones en Kotlin que detecta pagos de Revolut, Google Wallet y Bizum.",
+      en: "Kotlin notification listener: captures card payments and auto-settles debts when receiving a Bizum.",
+      es: "Lector de notificaciones en Kotlin: captura pagos de tarjeta y salda deudas al recibir un Bizum.",
     },
     asset: SHOTS.captura,
   },
@@ -306,7 +306,7 @@ function ScreenGallery({ locale }: { locale: Locale }) {
   const current = GALLERY[active] ?? GALLERY[0];
 
   return (
-    <div className="mt-24 border-t border-[#26272F] pt-16">
+    <div id="gallery" className="mt-24 scroll-mt-20 border-t border-[#26272F] pt-16">
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-12 lg:items-end">
         <motion.h3
           {...revealProps(reduce)}

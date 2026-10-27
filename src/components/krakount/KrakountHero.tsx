@@ -10,10 +10,16 @@ import { ASSETS } from "@/content/assets";
 import type { MediaAsset } from "@/content/assets";
 import { DURATION, EASE_OUT, SPRING_LAYOUT, usePointerDepth } from "@/lib/motion";
 
-type ScreenId = "reel" | "receipt" | "balances" | "pass";
+type ScreenId = "reel" | "captura" | "receipt" | "balances" | "pass";
 
 const SCREENS: { id: ScreenId; label: Record<Locale, string>; shot?: MediaAsset; pop?: MediaAsset }[] = [
   { id: "reel", label: { en: "30s reel", es: "Reel 30s" } },
+  {
+    id: "captura",
+    label: { en: "Auto-pay", es: "Auto-pagos" },
+    shot: ASSETS.krakount.shots.captura,
+    pop: ASSETS.krakount.pops.balance,
+  },
   {
     id: "receipt",
     label: { en: "Receipt", es: "Ticket" },
@@ -35,9 +41,9 @@ const SCREENS: { id: ScreenId; label: Record<Locale, string>; shot?: MediaAsset;
 ];
 
 const TRUST: { k: Record<Locale, string>; v: Record<Locale, string> }[] = [
-  { k: { en: "32 currencies", es: "32 divisas" }, v: { en: "Market and Revolut rates", es: "Tipos de mercado y Revolut" } },
-  { k: { en: "Offline PWA", es: "PWA offline" }, v: { en: "Passes work without signal", es: "Pases sin cobertura" } },
-  { k: { en: "Private OCR", es: "OCR privado" }, v: { en: "Receipt photos never stored", es: "Fotos nunca guardadas" } },
+  { k: { en: "Android auto-sync", es: "Auto-captura Android" }, v: { en: "Revolut, Wallet and Bizum", es: "Revolut, Wallet y Bizum" } },
+  { k: { en: "Offline travel wallet", es: "Cartera sin conexión" }, v: { en: "Aztec and QR boarding passes", es: "Pases Aztec y QR offline" } },
+  { k: { en: "Private on-device OCR", es: "OCR privado en local" }, v: { en: "Receipt photos never stored", es: "Fotos nunca guardadas" } },
 ];
 
 export function KrakountHero() {
@@ -97,7 +103,7 @@ export function KrakountHero() {
                 <ArrowUpRight size={16} weight="bold" className="cta-arrow cta-arrow-diag" aria-hidden="true" />
               </a>
               <a
-                href="#simulator"
+                href="#features"
                 className="group inline-flex items-center gap-2 rounded-full border border-[#26272F] px-5 py-2.5 text-[15px] font-semibold text-[#EDEDEF] transition-colors duration-150 hover:border-[#3A3B45] hover:bg-[#17181E] press-scale"
               >
                 {KRAKOUNT_PAGE.hero.secondaryCta[locale]}

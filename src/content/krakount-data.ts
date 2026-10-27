@@ -1,4 +1,4 @@
-import type { KrakountFriend, LocalizedText, ReceiptSimItem } from "./types";
+import type { LocalizedText } from "./types";
 
 export const KRAKOUNT_PAGE = {
   liveDemoUrl: "https://krakount.vercel.app",
@@ -19,23 +19,37 @@ export const KRAKOUNT_PAGE = {
       es: "KAZIMIERZ DE NOCHE · PWA MÓVIL + APP ANDROID NATIVA",
     } satisfies LocalizedText,
     headline: {
-      en: "Shared money and group trips, engineered for one hand.",
-      es: "Gastos compartidos y viajes en grupo, diseñados a una mano.",
+      en: "No manual entries. Automate payments, receipts and trips.",
+      es: "Cero apuntar a mano. Automatiza pagos, tickets y viajes.",
     } satisfies LocalizedText,
     subtext: {
-      en: "Split Polish supermarket receipts item by item, settle 32 currencies at live market and Revolut rates with optional +1% bank fee (NBP fallback), and carry every flight and boarding pass offline.",
-      es: "Divide tickets del súper ítem por ítem, liquida 32 divisas a cambio de mercado y Revolut con +1% bancario opcional (respaldo NBP) y lleva tus vuelos y pases QR sin conexión.",
+      en: "Engineered to eliminate the friction of traditional split apps. Krakount captures Revolut and Google Wallet payments on Android in 1 tap, automatically settles debts when incoming Bizums arrive, splits supermarket receipts item by item with on-device OCR, and stores boarding passes 100% offline.",
+      es: "Diseñada para eliminar la fricción de las herramientas tradicionales de repartir gastos. Krakount captura pagos de Revolut y Google Wallet en Android en 1 toque, liquida deudas solo cuando te llega un Bizum, divide tickets del súper producto a producto con OCR en local y lleva tus pases de embarque 100% sin conexión.",
     } satisfies LocalizedText,
     primaryCta: {
       en: "Open Live App",
       es: "Abrir App en Vivo",
     } satisfies LocalizedText,
     secondaryCta: {
-      en: "Try Interactive Split",
-      es: "Probar Simulador",
+      en: "Explore Features",
+      es: "Ver funciones",
     } satisfies LocalizedText,
   },
   stats: [
+    {
+      value: "0 s",
+      label: {
+        en: "Manual typing: 1 tap payment capture on Android from Revolut, Google Wallet and Bizum",
+        es: "Escritura manual: captura de pagos en 1 toque en Android con Revolut, Google Wallet y Bizum",
+      },
+    },
+    {
+      value: "Auto",
+      label: {
+        en: "Debt settlement: incoming Bizums clear who owes you with zero manual taps",
+        es: "Liquidación de deudas: los Bizum recibidos saldan las cuentas sin tocar nada",
+      },
+    },
     {
       value: "32",
       label: {
@@ -46,101 +60,34 @@ export const KRAKOUNT_PAGE = {
     {
       value: "0.00",
       label: {
-        en: "Floating-point errors: 100% integer minor-unit arithmetic",
+        en: "Floating-point errors: 100% integer minor-unit arithmetic in cents and grosze",
         es: "Errores de coma flotante: aritmética pura en céntimos y grosze enteros",
       },
     },
-    {
-      value: "0",
-      label: {
-        en: "Receipt photos stored: read in the moment, never uploaded",
-        es: "Fotos de tickets guardadas: se leen al momento y nunca se suben",
-      },
-    },
-    {
-      value: "1 tap",
-      label: {
-        en: "Android payment capture from Revolut, Google Wallet, and Bizum",
-        es: "Captura automática en Android al pagar con Revolut, Google Wallet o Bizum",
-      },
-    },
   ],
-  simulator: {
-    heading: {
-      en: "Touch the engine: Live Paragon Fiskalny & Debt Graph",
-      es: "Toca el motor: Ticket Polaco en Vivo y Simplificación de Deudas",
-    } satisfies LocalizedText,
-    subheading: {
-      en: "Tap friends on any Biedronka receipt line below. Krakount computes exact integer shares in grosze (PLN) and converts to EUR without rounding drift. The app uses the market rate of the day; this demo uses a fixed one.",
-      es: "Pulsa los amigos en cada línea de este ticket real de Biedronka. Krakount reparte cada céntimo exacto en grosze (PLN) y calcula la liquidación mínima en EUR sin errores de redondeo.",
-    } satisfies LocalizedText,
-    receiptHeader: "BIEDRONKA · UL. KRAKOWSKA 41 · PARAGON FISKALNY",
-    paidByLabel: {
-      en: "Paid at checkout by Alberto",
-      es: "Pagado en caja por Alberto",
-    } satisfies LocalizedText,
-    currencyToggleLabel: {
-      en: "Flip PLN / EUR (demo rate 1 EUR = 4.28 PLN)",
-      es: "Cambiar PLN / EUR (tipo de demo 1 EUR = 4,28 PLN)",
-    } satisfies LocalizedText,
-    whyLabel: {
-      en: "Why do I owe this? Integer cent breakdown:",
-      es: "¿Por qué debo esto? Desglose exacto al céntimo:",
-    } satisfies LocalizedText,
-  },
-  friends: [
-    { id: "alberto", name: "Alberto", initials: "AV", colorHex: "#F5A524" },
-    { id: "lucia", name: "Lucía", initials: "LM", colorHex: "#3DD68C" },
-    { id: "pablo", name: "Pablo", initials: "PR", colorHex: "#3550C4" },
-    { id: "marta", name: "Marta", initials: "MG", colorHex: "#CF3F72" },
-  ] satisfies KrakountFriend[],
-  receiptItems: [
-    {
-      id: "pierogi",
-      polishName: "PIEROGI RUSKIE 2X500G",
-      translatedName: { en: "Pierogi Ruskie (2 packs)", es: "Pierogi Ruskie (2 paquetes)" },
-      priceGrosze: 1898,
-      defaultClaimants: ["alberto", "lucia", "pablo", "marta"],
-    },
-    {
-      id: "ser",
-      polishName: "SER GOUDA KROJONY 400G",
-      translatedName: { en: "Sliced Gouda Cheese", es: "Queso Gouda en lonchas" },
-      priceGrosze: 1349,
-      defaultClaimants: ["alberto", "pablo"],
-    },
-    {
-      id: "zubrowka",
-      polishName: "NAPOJ CHMIELOWY 4PAK",
-      translatedName: { en: "Craft Lager 4-Pack", es: "Pack 4 cervezas polacas" },
-      priceGrosze: 1996,
-      defaultClaimants: ["lucia", "pablo", "marta"],
-    },
-    {
-      id: "kawa",
-      polishName: "KAWA ZIARNISTA 500G",
-      translatedName: { en: "Whole Bean Coffee 500g", es: "Café en grano 500g" },
-      priceGrosze: 2799,
-      defaultClaimants: ["alberto", "lucia"],
-    },
-    {
-      id: "maliny",
-      polishName: "MALINY SWIEZE 250G",
-      translatedName: { en: "Fresh Raspberries", es: "Frambuesas frescas" },
-      priceGrosze: 1149,
-      defaultClaimants: ["marta"],
-    },
-  ] satisfies ReceiptSimItem[],
   features: [
+    {
+      id: "android-capture",
+      title: {
+        en: "Zero-Friction Payment & Bizum Auto-Settlement",
+        es: "Automatización al Pagar y Cobrar: Cero Fricción",
+      },
+      body: {
+        en: "Traditional split apps make you open the app and type every number. Krakount Captura (Kotlin) listens to payments on Android: pay with Revolut or Google Wallet, and the expense is proposed in 1 tap. Even better: when a friend sends you a Bizum, Krakount detects the incoming alert and marks their debt as settled automatically.",
+        es: "Las herramientas convencionales te obligan a abrir la aplicación y teclear cada número. Krakount Captura (Kotlin) escucha pagos en Android: pagas con Revolut o Google Wallet y el gasto se propone en 1 toque. Y aún mejor: cuando un amigo te envía un Bizum, Krakount detecta la alerta y salda su deuda de forma automática.",
+      },
+      shotKey: "shotCaptura",
+      popKey: "popPass",
+    },
     {
       id: "receipt-ocr",
       title: {
-        en: "AI + On-Device Receipt Splitting",
-        es: "Lectura de Tickets con IA + OCR Local",
+        en: "Real-Time AI + On-Device Receipt Splitting",
+        es: "Tickets del Súper: OCR en Local y Reparto en Vivo",
       },
       body: {
-        en: "Snap a photo at the supermarket till. Gemini structures Polish lines with a browser-side Tesseract.js fallback, while Supabase Realtime lets everyone claim items concurrently. Photos are never stored on servers.",
-        es: "Haz una foto en la caja del súper. Gemini estructura las líneas con respaldo local en Tesseract.js, y Supabase Realtime permite reclamar productos a la vez sin guardar la foto en servidores.",
+        en: "No more mental arithmetic or typing 30 line items at the checkout till. Snap a photo of any supermarket receipt: Gemini and on-device Tesseract.js parse each item and price. Friends claim their own items concurrently in real time, and photos are never uploaded or stored on servers.",
+        es: "Se acabó hacer cuentas mentales o teclear 30 productos en la caja del supermercado. Haz una foto al ticket: Gemini y Tesseract.js en local extraen cada línea y precio. Cada amigo marca sus productos a la vez en tiempo real y la foto nunca se guarda en ningún servidor.",
       },
       shotKey: "shotReceipt",
       popKey: "popShare",
@@ -148,12 +95,12 @@ export const KRAKOUNT_PAGE = {
     {
       id: "honest-balances",
       title: {
-        en: "Honest Balances & Instant Settle-Up",
-        es: "Saldos Honestos y Liquidación en Un Toque",
+        en: "Honest Balances, Real Rates & Instant Settle-Up",
+        es: "Saldos Honestos, Cambio Real y Liquidación en Un Toque",
       },
       body: {
-        en: "Every balance displays exact minor units, live 32-currency market and Revolut conversion with optional +1% bank fee (NBP fallback), and inline Revolut, Bizum, BLIK, or IBAN copy actions right where the debt lives.",
-        es: "Cada saldo muestra céntimos exactos, conversión en 32 divisas a tipos de mercado y Revolut con +1% bancario opcional (respaldo NBP) y copia directa de Revolut, Bizum, BLIK o IBAN donde aparece la deuda.",
+        en: "Every balance is computed in exact integer minor units, preventing penny rounding errors. When traveling, balances convert across 32 currencies with live market and Revolut rates, plus optional bank fee buffers. Friends copy Revolut, Bizum, BLIK, or IBAN directly where the debt is shown.",
+        es: "Cada balance se calcula en unidades enteras exactas, eliminando descuadres de céntimos. Al viajar, convierte entre 32 divisas a tipos de mercado y Revolut en tiempo real con recargo bancario opcional, con copia directa de Revolut, Bizum, BLIK o IBAN junto a la deuda.",
       },
       shotKey: "shotBalances",
       popKey: "popBalance",
@@ -161,28 +108,15 @@ export const KRAKOUNT_PAGE = {
     {
       id: "group-trips",
       title: {
-        en: "Trips, Live Flights & Offline Passes Wallet",
-        es: "Viajes, Vuelos en Vivo y Cartera QR Offline",
+        en: "All-in-One Trip Wallet & Offline Boarding Passes",
+        es: "Cartera de Viaje Completa y Pases Offline",
       },
       body: {
-        en: "Vote on destination proposals, track live flight status via AeroDataBox, render scannable QR and Aztec boarding passes offline with BWIP-JS, and subscribe to live webcal itineraries.",
-        es: "Vota destinos en grupo, sigue vuelos en directo con AeroDataBox, muestra tarjetas de embarque QR sin cobertura y sincroniza el itinerario por webcal.",
+        en: "Stop juggling separate apps for money, flights, boarding passes, and itineraries. Krakount organizes your trip timeline with interactive maps, tracks live flights via AeroDataBox, and renders high-contrast Aztec and QR boarding passes completely offline when there is no cellular signal at the gate.",
+        es: "Deja de alternar entre cinco aplicaciones distintas para gastos, vuelos, billetes y planes. Krakount reúne el itinerario con mapas, monitoriza vuelos en vivo con AeroDataBox y muestra tarjetas de embarque QR y Aztec 100% sin conexión en la puerta de embarque sin cobertura.",
       },
       shotKey: "shotFlight",
       popKey: "popFlight",
-    },
-    {
-      id: "android-capture",
-      title: {
-        en: "Everything You Spend, in One Place",
-        es: "Todos tus Gastos en un Mismo Sitio",
-      },
-      body: {
-        en: "Mis gastos adds your share of every group to what you spend alone, with income, savings, and a monthly budget. Krakount Captura (Kotlin) reads Revolut and Wallet payments on Android and proposes the expense, and a received Bizum settles the debt by itself.",
-        es: "Mis gastos suma tu parte de cada grupo a lo que gastas tú solo, con ingresos, ahorro y presupuesto mensual. Krakount Captura (Kotlin) lee los pagos de Revolut y Wallet en Android y propone el gasto, y un Bizum recibido salda la deuda solo.",
-      },
-      shotKey: "shotCaptura",
-      popKey: "popPass",
     },
   ],
   designSystemNote: {

@@ -2,17 +2,18 @@ import type { Metadata } from "next";
 import { KrakountNavbar } from "@/components/krakount/KrakountNavbar";
 import { KrakountHero } from "@/components/krakount/KrakountHero";
 import { KrakountMetricsStrip } from "@/components/krakount/KrakountMetricsStrip";
-import { ReceiptDebtSimulator } from "@/components/krakount/ReceiptDebtSimulator";
 import { KrakountFeatureBento } from "@/components/krakount/KrakountFeatureBento";
 import { KrakountEngineeringFooter } from "@/components/krakount/KrakountEngineeringFooter";
 
 export const metadata: Metadata = {
-  title: "Krakount | Shared Expenses, Receipt OCR & Group Trips",
+  title: "Krakount | Automated Expenses, Receipt OCR & Group Trips",
   description:
-    "Krakount: mobile-first shared expenses, Polish supermarket receipt OCR, live NBP 32-currency settlement, and offline travel wallet engineered by Alberto Vizcaíno Ponte.",
+    "Krakount: automated payment capture, incoming Bizum auto-settlement, Polish supermarket receipt OCR, live 32-currency settlement, and offline travel wallet engineered by Alberto Vizcaíno Ponte.",
   keywords: [
     "Krakount",
     "Expense Sharing",
+    "Automatic Payments",
+    "Bizum Settlement",
     "Receipt OCR",
     "Paragon Fiskalny",
     "NBP Currencies",
@@ -23,9 +24,9 @@ export const metadata: Metadata = {
     "Erasmus",
   ],
   openGraph: {
-    title: "Krakount | Shared Expenses, Receipt OCR & Group Trips",
+    title: "Krakount | Automated Expenses, Receipt OCR & Group Trips",
     description:
-      "Split Polish supermarket receipts item by item, settle 32 currencies at official NBP rates, and carry every flight offline.",
+      "Automated payment capture, incoming Bizum auto-settle, Polish supermarket receipts split item by item, and offline travel wallet.",
     url: "https://alberviz.github.io/krakount/",
     siteName: "Krakount Showcase",
     images: [
@@ -41,9 +42,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Krakount | Shared Expenses, Receipt OCR & Group Trips",
+    title: "Krakount | Automated Expenses, Receipt OCR & Group Trips",
     description:
-      "Split Polish supermarket receipts item by item, settle 32 currencies at official NBP rates, and carry every flight offline.",
+      "Automated payment capture, incoming Bizum auto-settle, Polish supermarket receipts split item by item, and offline travel wallet.",
     images: ["/media/krakount/shot-home.webp"],
   },
 };
@@ -63,10 +64,7 @@ export default function KrakountPage() {
         <section data-scene="metrics">
           <KrakountMetricsStrip />
         </section>
-        <section data-scene="simulator">
-          <ReceiptDebtSimulator />
-        </section>
-        <section data-scene="features">
+        <section id="features" data-scene="features">
           <KrakountFeatureBento />
         </section>
         <section data-scene="engineering">
