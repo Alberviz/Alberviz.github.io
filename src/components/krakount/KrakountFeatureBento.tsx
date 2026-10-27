@@ -15,6 +15,7 @@ const SHOTS = ASSETS.krakount.shots;
 /** Resolves the content layer's shot keys (for example "shotCaptura") to real captures. */
 const SHOT_BY_KEY: Record<string, MediaAsset> = {
   shotHome: SHOTS.home,
+  shotGroup: SHOTS.group,
   shotCurrency: SHOTS.currency,
   shotItinerary: SHOTS.itinerary,
   shotFlight: SHOTS.flight,
@@ -233,9 +234,21 @@ type GalleryItem = {
 const GALLERY: GalleryItem[] = [
   {
     key: "home",
-    label: { en: "Group expenses", es: "Gastos de grupo" },
-    desc: { en: "Home overview in PLN and EUR with one-tap expense creation.", es: "Vista principal en PLN y EUR con gastos en un toque." },
+    label: { en: "Debt overview", es: "Resumen de tus deudas" },
+    desc: {
+      en: "Home overview in PLN and EUR with total balances across all your groups.",
+      es: "Vista principal en PLN y EUR con el balance total de tus deudas y grupos.",
+    },
     asset: SHOTS.home,
+  },
+  {
+    key: "group",
+    label: { en: "Group expenses", es: "Gastos de grupo" },
+    desc: {
+      en: "Shared expenses in Piso Kraków, open supermarket receipts, and per-person balances.",
+      es: "Gastos compartidos en Piso Kraków, tickets abiertos del súper y saldos por persona.",
+    },
+    asset: SHOTS.group,
   },
   {
     key: "currency",

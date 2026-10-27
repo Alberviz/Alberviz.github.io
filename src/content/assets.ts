@@ -125,8 +125,18 @@ export const ASSETS = {
         width: 780,
         height: 1688,
         alt: {
-          en: "Krakount home: 267 EUR owed to you, payments captured on Android to review, and your groups with live trips",
-          es: "Inicio de Krakount: te deben 267 €, pagos capturados en Android por revisar y tus grupos con viajes en marcha",
+          en: "Krakount debt overview: 267 EUR owed to you, captured payments to review, and your active groups",
+          es: "Resumen de deudas en Krakount: te deben 267 €, pagos capturados por revisar y tus grupos activos",
+        },
+      } satisfies MediaAsset,
+
+      group: {
+        src: "/media/krakount/shot-group.webp",
+        width: 780,
+        height: 1688,
+        alt: {
+          en: "Krakount group expenses: Piso Kraków shared expenses, open supermarket receipts, and balances",
+          es: "Gastos de grupo en Krakount: gastos compartidos de Piso Kraków, tickets abiertos del súper y saldos",
         },
       } satisfies MediaAsset,
 
