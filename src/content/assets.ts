@@ -104,8 +104,8 @@ export const ASSETS = {
       height: 1080,
       poster: "/media/krakount/trip-poster.webp",
       alt: {
-        en: "Krakount interactive trip workflow and offline QR boarding pass loop",
-        es: "Bucle de flujo de viaje interactivo y pase de embarque QR offline en Krakount",
+        en: "Krakount trip loop: create the group, the day by day itinerary with its map, the wallet of boarding passes, and a live flight alert",
+        es: "Bucle de viaje en Krakount: crear el grupo, el itinerario día a día con su mapa, la cartera de billetes y un aviso de vuelo en directo",
       },
     } satisfies MediaAsset,
 

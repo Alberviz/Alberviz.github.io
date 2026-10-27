@@ -13,6 +13,7 @@ import { DURATION, EASE_OUT, SPRING_LAYOUT, usePointerDepth } from "@/lib/motion
 type ScreenId = "reel" | "receipt" | "balances" | "pass";
 
 const SCREENS: { id: ScreenId; label: Record<Locale, string>; shot?: MediaAsset; pop?: MediaAsset }[] = [
+  { id: "reel", label: { en: "30s reel", es: "Reel 30s" } },
   {
     id: "receipt",
     label: { en: "Receipt", es: "Ticket" },
@@ -31,7 +32,6 @@ const SCREENS: { id: ScreenId; label: Record<Locale, string>; shot?: MediaAsset;
     shot: ASSETS.krakount.shots.pass,
     pop: ASSETS.krakount.pops.flight,
   },
-  { id: "reel", label: { en: "30s reel", es: "Reel 30s" } },
 ];
 
 const TRUST: { k: Record<Locale, string>; v: Record<Locale, string> }[] = [
@@ -43,7 +43,7 @@ const TRUST: { k: Record<Locale, string>; v: Record<Locale, string> }[] = [
 export function KrakountHero() {
   const { locale } = useLocale();
   const reduce = useReducedMotion();
-  const [screen, setScreen] = useState<ScreenId>("receipt");
+  const [screen, setScreen] = useState<ScreenId>("reel");
   const depth = usePointerDepth(2);
   const words = KRAKOUNT_PAGE.hero.headline[locale].split(" ");
   const current = SCREENS.find((s) => s.id === screen) ?? SCREENS[0];
