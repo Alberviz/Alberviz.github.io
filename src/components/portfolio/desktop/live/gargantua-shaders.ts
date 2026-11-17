@@ -548,7 +548,14 @@ void main(){
 }
 `;
 
-/** Final pass: void, a sparse twinkling star field, and the black hole on top. */
+/**
+ * Final pass: void, a sparse twinkling star field, and the black hole on top.
+ * Camera uniforms (portfolio hero, "falling in"): with zoom 1, roll 0 and the
+ * rest at 0 the pass is the original one. `zoom` scales the hole around its
+ * centre, which travels to `camTarget`; the stars zoom less (parallax), get
+ * bent by the hole (`lensAmt`) and streak radially (`streak`); `fall` darkens
+ * everything toward the horizon.
+ */
 export const PRESENT_FRAG = `${PRE}
 uniform sampler2D bhTex;
 uniform vec2 canvasSize;
@@ -559,6 +566,14 @@ uniform float time;
 uniform float hasBh;
 uniform vec3 bgColor;
 uniform float vignette;
+uniform float zoom;
+uniform float roll;
+uniform vec2 bhC;
+uniform vec2 camTarget;
+uniform float lensAmt;
+uniform float lensR;
+uniform float streak;
+uniform float fall;
 float h12(vec2 p){ vec3 p3 = fract(vec3(p.xyx) * 0.1031); p3 += dot(p3, p3.yzx + 33.33); return fract((p3.x + p3.y) * p3.z); }
 float stars(vec2 frag, float cell, float density, float seed){
     vec2 g = frag / cell;
@@ -570,16 +585,40 @@ float stars(vec2 frag, float cell, float density, float seed){
     float tw = 0.75 + 0.25 * sin(time * (0.6 + 1.4 * h12(id + 1.7)) + 6.28 * h);
     return (1.0 - smoothstep(0.35 * scale, 1.25 * scale, d)) * (0.35 + 0.65 * h12(id + 9.3)) * tw;
 }
+vec4 hole(vec2 src){
+    vec2 bu = (src - boxOrigin) / boxSize;
+    if (hasBh > 0.5 && bu.x >= 0.0 && bu.y >= 0.0 && bu.x <= 1.0 && bu.y <= 1.0)
+        return texture(bhTex, vec2(bu.x, 1.0 - bu.y));
+    return vec4(0.0);
+}
 void main(){
     vec2 frag = vec2(vUv.x, 1.0 - vUv.y) * canvasSize;
     vec2 q = vUv - 0.5;
     vec3 bg = bgColor * (1.0 - vignette * dot(q, q));
-    float s = stars(frag, 46.0 * scale, 0.42, 1.0) + 0.6 * stars(frag, 23.0 * scale, 0.22, 5.0);
+    float c = cos(roll), sn = sin(roll);
+    vec2 d = frag - camTarget;
+    d = vec2(d.x * c - d.y * sn, d.x * sn + d.y * c);
+    vec2 rel = d / zoom;
+    // Stars: weaker zoom (they are far away), bent around the hole, streaked toward it.
+    float rb = max(length(rel), 1.0);
+    float bend = 1.0 - lensAmt * lensR * lensR / (rb * rb);
+    vec2 sd = d / pow(zoom, 0.45) * max(bend, -2.0);
+    float s = 0.0;
+    for (int k = 0; k < 4; k++){
+        vec2 sf = bhC + sd * (1.0 + streak * float(k) * 0.045);
+        s += stars(sf, 46.0 * scale, 0.42, 1.0) + 0.6 * stars(sf, 23.0 * scale, 0.22, 5.0);
+        if (streak < 0.001) break;
+    }
+    s /= streak < 0.001 ? 1.0 : 4.0 - 2.2 * min(streak, 1.0);
     bg += vec3(0.78, 0.8, 0.84) * s;
-    vec4 b = vec4(0.0);
-    vec2 bu = (frag - boxOrigin) / boxSize;
-    if (hasBh > 0.5 && bu.x >= 0.0 && bu.y >= 0.0 && bu.x <= 1.0 && bu.y <= 1.0)
-        b = texture(bhTex, vec2(bu.x, 1.0 - bu.y));
-    fragColor = vec4(b.rgb + bg * (1.0 - b.a), 1.0);
+    vec4 b = hole(bhC + rel);
+    if (streak > 0.001){
+        // Radial motion blur toward the hole: it reads as speed and hides the magnified texels.
+        float j = h12(frag + fract(time) * 37.0);
+        for (int k = 1; k < 6; k++) b += hole(bhC + rel * (1.0 - 0.016 * streak * (float(k) - j)));
+        b *= 1.0 / 6.0;
+    }
+    vec3 col = b.rgb + bg * (1.0 - b.a);
+    fragColor = vec4(col * (1.0 - fall), 1.0);
 }
 `;

@@ -77,6 +77,29 @@ export interface RendererOptions {
   progressRing?: boolean;
 }
 
+/**
+ * Optional camera for the final pass (the portfolio hero "falls in" while you
+ * scroll). Defaults reproduce the plain render exactly.
+ */
+export interface Camera {
+  /** Scale of the hole around its centre (1 = as baked). */
+  zoom: number;
+  /** Camera roll in radians. */
+  roll: number;
+  /** 0-1: where the hole centre sits, from its baked place (0) to the canvas centre (1). */
+  pan: number;
+  /** 0-1: how much the hole bends the star field. */
+  lens: number;
+  /** 0-1: radial motion blur. */
+  streak: number;
+  /** 0-1: fade to black (past the horizon). */
+  fall: number;
+  /** Multiplier on the disk's flow speed. */
+  spin: number;
+}
+
+const CAMERA_REST: Camera = { zoom: 1, roll: 0, pan: 0, lens: 0, streak: 0, fall: 0, spin: 1 };
+
 export const TRACK = { title: "CONTIGO", artist: "Lucho RK", duration: 177, start: 94 } as const;
 const BEAT = 60 / 96;
 const GEO_STRIPS = 12;
@@ -331,7 +354,7 @@ export class GargantuaRenderer {
     return (TRACK.start + t) % TRACK.duration;
   }
 
-  private music(t: number) {
+  private music(t: number, spin = 1) {
     const lap = Math.floor((TRACK.start + t) / TRACK.duration);
     if (lap !== this.lastLap) {
       this.lastLap = lap;
@@ -351,7 +374,7 @@ export class GargantuaRenderer {
     const energy = 0.62;
     if (this.lastT >= 0) {
       const dt = t - this.lastT;
-      if (dt > 0 && dt < 2) this.flowT += dt * (1 + 0.9 * energy);
+      if (dt > 0 && dt < 2) this.flowT += dt * (1 + 0.9 * energy) * spin;
     }
     this.lastT = t;
     return {
@@ -368,7 +391,7 @@ export class GargantuaRenderer {
     };
   }
 
-  render(t: number) {
+  render(t: number, camera: Camera = CAMERA_REST) {
     const gl = this.gl;
     const ready = this.bakeRow >= GEO_STRIPS;
     const T = this.targets;
@@ -378,7 +401,7 @@ export class GargantuaRenderer {
         "shade",
         {
           ...this.bhUniforms,
-          ...this.music(t),
+          ...this.music(t, camera.spin),
           progressRing: this.progressRing,
           time: t,
           colPrimary: rgba(this.palette.primary),
@@ -446,6 +469,17 @@ export class GargantuaRenderer {
         hasBh: ready ? 1 : 0,
         bgColor: this.bgColor,
         vignette: this.vignette,
+        zoom: camera.zoom,
+        roll: camera.roll,
+        bhC: [this.bh.cx, this.bh.cy],
+        camTarget: [
+          this.bh.cx + (this.width / 2 - this.bh.cx) * camera.pan,
+          this.bh.cy + (this.height / 2 - this.bh.cy) * camera.pan,
+        ],
+        lensAmt: camera.lens,
+        lensR: this.bh.R * 1.6,
+        streak: camera.streak,
+        fall: camera.fall,
       },
       { bhTex: T.comp.tex[0] }
     );
