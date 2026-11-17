@@ -1,7 +1,9 @@
 "use client";
 
+import { useReducedMotionSafe } from "@/lib/motion";
+
 import React, { useEffect, useRef, useState } from "react";
-import { useInView, useReducedMotion } from "motion/react";
+import {useInView} from "motion/react";
 import { useLocale } from "@/lib/i18n-context";
 
 /*
@@ -60,7 +62,7 @@ const fans = [
 
 export function RgbRig() {
   const { locale } = useLocale();
-  const reduce = useReducedMotion();
+  const reduce = useReducedMotionSafe();
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { margin: "-10%" });
   const [active, setActive] = useState(0);

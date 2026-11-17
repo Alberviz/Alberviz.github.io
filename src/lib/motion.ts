@@ -186,3 +186,14 @@ export function usePointerDepth(maxTiltDeg = 3) {
     handlers: { onPointerMove, onPointerLeave },
   };
 }
+
+/**
+ * Reduced-motion preference that is safe to hydrate: null on the server and on
+ * the first client render (so the markup matches), the real value right after.
+ */
+export function useReducedMotionSafe() {
+  const reduce = useReducedMotion();
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  return mounted ? reduce : null;
+}

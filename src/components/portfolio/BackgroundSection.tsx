@@ -1,15 +1,15 @@
 "use client";
 
 import React from "react";
-import { motion, useReducedMotion } from "motion/react";
+import {motion} from "motion/react";
 import { useLocale } from "@/lib/i18n-context";
 import { BACKGROUND_UI, EXPERIENCE, HONORS, STUDY } from "@/content/portfolio-data";
-import { revealProps } from "@/lib/motion";
+import { revealProps, useReducedMotionSafe } from "@/lib/motion";
 
 /** #trayectoria: work and study side by side, honors underneath. No skill bars. */
 export function BackgroundSection() {
   const { locale } = useLocale();
-  const reduce = useReducedMotion();
+  const reduce = useReducedMotionSafe();
 
   return (
     <section id="trayectoria" data-scene="background" className="relative border-t border-line">

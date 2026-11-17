@@ -1,13 +1,13 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion, useReducedMotion, useScroll, useTransform } from "motion/react";
+import {AnimatePresence, motion, useScroll, useTransform} from "motion/react";
 import { ArrowUpRight, Lightning } from "@phosphor-icons/react";
 import { useLocale } from "@/lib/i18n-context";
 import { WARI } from "@/content/site-copy";
 import { WARI_URL } from "@/content/links";
 import { WARI_SHOTS, WARI_STORY_SHOTS } from "@/content/wari-shots";
-import { EASE_OUT } from "@/lib/motion";
+import { EASE_OUT, useReducedMotionSafe } from "@/lib/motion";
 
 /**
  * Wari portal: the one color block of the page. The deep-space page dissolves
@@ -94,7 +94,7 @@ function Phone({
 
 export function WariPortal() {
   const { locale } = useLocale();
-  const reduce = useReducedMotion();
+  const reduce = useReducedMotionSafe();
   const sectionRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({ target: sectionRef, offset: ["start end", "end start"] });
   const tiltY = useTransform(scrollYProgress, [0, 0.5, 1], [-22, -14, -8]);

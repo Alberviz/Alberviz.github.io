@@ -1,10 +1,10 @@
 "use client";
 
 import React, { useRef, useState } from "react";
-import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
+import {motion, useScroll, useTransform} from "motion/react";
 import { useLocale } from "@/lib/i18n-context";
 import { OLIMPO, WARP } from "@/content/olimpo";
-import { revealProps, usePointerDepth } from "@/lib/motion";
+import { revealProps, usePointerDepth, useReducedMotionSafe } from "@/lib/motion";
 import { ScaledStage } from "./olimpo/ScaledStage";
 import { Firmamento } from "./olimpo/Firmamento";
 import { SkyPhone } from "./olimpo/SkyPhone";
@@ -61,7 +61,7 @@ function Window({ locale }: { locale: "en" | "es" }) {
 
 export function OlimpoSection() {
   const { locale } = useLocale();
-  const reduce = useReducedMotion();
+  const reduce = useReducedMotionSafe();
   const [view, setView] = useState<"phone" | "desktop">("phone");
   const showcaseRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: showcaseRef, offset: ["start end", "end start"] });

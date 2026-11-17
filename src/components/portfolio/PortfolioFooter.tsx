@@ -1,17 +1,17 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import {AnimatePresence, motion} from "motion/react";
 import { ArrowUpRight, Check, Copy } from "@phosphor-icons/react";
 import { useLocale } from "@/lib/i18n-context";
 import { CONTACT } from "@/content/site-copy";
 import { PROFILE } from "@/content/portfolio-data";
 import { CV_PATH, EMAIL, GITHUB_URL, LINKEDIN_URL, WARI_URL } from "@/content/links";
-import { SPRING_SNAPPY } from "@/lib/motion";
+import { SPRING_SNAPPY, useReducedMotionSafe } from "@/lib/motion";
 
 export function PortfolioFooter() {
   const { locale } = useLocale();
-  const reduce = useReducedMotion();
+  const reduce = useReducedMotionSafe();
   const [copied, setCopied] = useState(false);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
 

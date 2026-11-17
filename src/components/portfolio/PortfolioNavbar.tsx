@@ -1,12 +1,12 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import { AnimatePresence, LayoutGroup, motion, useReducedMotion } from "motion/react";
+import {AnimatePresence, LayoutGroup, motion} from "motion/react";
 import { Command, DotsThree, MagnifyingGlass, X } from "@phosphor-icons/react";
 import { useLocale } from "@/lib/i18n-context";
 import type { Locale } from "@/lib/i18n-context";
 import { NAV } from "@/content/site-copy";
-import { EASE_DRAWER, SPRING_LAYOUT } from "@/lib/motion";
+import { EASE_DRAWER, SPRING_LAYOUT, useReducedMotionSafe } from "@/lib/motion";
 
 type NavItem = { id: string; label: Record<Locale, string> };
 
@@ -96,7 +96,7 @@ function useScrolled(ref: React.RefObject<HTMLElement | null>) {
 
 export function PortfolioNavbar() {
   const { locale, setLocale } = useLocale();
-  const reduce = useReducedMotion();
+  const reduce = useReducedMotionSafe();
   const [sheetOpen, setSheetOpen] = useState(false);
   const heroVisible = useHeroVisible();
   const [hovered, setHovered] = useState<string | null>(null);

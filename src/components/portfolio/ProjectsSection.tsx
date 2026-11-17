@@ -1,12 +1,12 @@
 "use client";
 
 import React from "react";
-import { motion, useReducedMotion } from "motion/react";
+import {motion} from "motion/react";
 import { ArrowUpRight, FilePdf, GithubLogo } from "@phosphor-icons/react";
 import { useLocale } from "@/lib/i18n-context";
 import { LAB, LAB_NAMES_ES, MENTIONS, MYCROHNIE, WORK_UI } from "@/content/projects";
 import type { ExternalLink } from "@/content/types";
-import { revealProps } from "@/lib/motion";
+import { revealProps, useReducedMotionSafe } from "@/lib/motion";
 
 function LinkIcon({ kind }: { kind: ExternalLink["kind"] }) {
   if (kind === "github") return <GithubLogo size={15} aria-hidden="true" />;
@@ -39,7 +39,7 @@ function Pill({ link, locale, primary }: { link: ExternalLink; locale: "en" | "e
  */
 export function ProjectsSection() {
   const { locale } = useLocale();
-  const reduce = useReducedMotion();
+  const reduce = useReducedMotionSafe();
   const M = MYCROHNIE;
 
   return (

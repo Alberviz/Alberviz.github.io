@@ -1,10 +1,10 @@
 "use client";
 
 import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import {AnimatePresence, motion} from "motion/react";
 import { DeviceMobile, DeviceTablet, File, FilePdf, FileVideo, Image as ImageIcon, Television, TextAa, X } from "@phosphor-icons/react";
 import { WARP } from "@/content/olimpo";
-import { EASE_OUT } from "@/lib/motion";
+import { EASE_OUT, useReducedMotionSafe } from "@/lib/motion";
 import { WarpEngine } from "./warp-engine";
 import type { Rect } from "./warp-engine";
 import { fileArea, paintDesktop } from "./warp-desktop";
@@ -69,7 +69,7 @@ function kindOf(file: { name: string; type: string }): Kind {
 const accepts = (dev: DeviceId, item: Item | null) => dev !== "tele" || item?.kind === "video";
 
 export function WarpDemo({ locale }: { locale: "en" | "es" }) {
-  const reduce = useReducedMotion();
+  const reduce = useReducedMotionSafe();
   const stageRef = useRef<HTMLDivElement>(null);
   const screenRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -127,7 +127,8 @@ export function WarpDemo({ locale }: { locale: "en" | "es" }) {
   /* Engine: one per mount (and per reduced-motion flip). */
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    // Wait for the real preference (null until mounted): a disposed context cannot be reused on this canvas.
+    if (!canvas || reduce === null) return;
     const still = !!reduce || window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const engine = WarpEngine.create(canvas, still);
     engineRef.current = engine;
@@ -604,7 +605,7 @@ export function WarpDemo({ locale }: { locale: "en" | "es" }) {
         </ul>
 
         {/* The shader canvas covers everything (screen, portals, white holes); it never takes the pointer */}
-        <canvas ref={canvasRef} aria-hidden="true" className="pointer-events-none absolute inset-0 z-10 h-full w-full" />
+        <canvas key={String(reduce)} ref={canvasRef} aria-hidden="true" className="pointer-events-none absolute inset-0 z-10 h-full w-full" />
 
         {/* Portal targets: real buttons over the holes (tap, click or keyboard) */}
         {g && mode === "choosing" && (

@@ -1,7 +1,9 @@
 "use client";
 
+import { useReducedMotionSafe } from "@/lib/motion";
+
 import React, { useEffect, useRef, useState } from "react";
-import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
+import {motion, useScroll, useTransform} from "motion/react";
 import type { MotionValue } from "motion/react";
 import { ArrowDown } from "@phosphor-icons/react";
 import { useLocale } from "@/lib/i18n-context";
@@ -55,7 +57,7 @@ function weakDevice() {
 
 export function HeroSection() {
   const { locale } = useLocale();
-  const reduce = useReducedMotion();
+  const reduce = useReducedMotionSafe();
   const sectionRef = useRef<HTMLElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const [state, setState] = useState<HeroState>("loading");

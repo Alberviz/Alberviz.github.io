@@ -1,7 +1,9 @@
 "use client";
 
+import { useReducedMotionSafe } from "@/lib/motion";
+
 import React, { useRef } from "react";
-import { motion, useMotionValueEvent, useReducedMotion, useScroll, useTransform } from "motion/react";
+import {motion, useMotionValueEvent, useScroll, useTransform} from "motion/react";
 import type { MotionValue } from "motion/react";
 import { DeviceMobile, DeviceTablet, Laptop, Television } from "@phosphor-icons/react";
 import { WARP } from "@/content/olimpo";
@@ -58,7 +60,7 @@ function Arc({ d, progress, range, reduce }: { d: string; progress: MotionValue<
 }
 
 export function WarpRoute({ locale }: { locale: "en" | "es" }) {
-  const reduce = useReducedMotion();
+  const reduce = useReducedMotionSafe();
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start 90%", "end 40%"] });
   const ranges: [number, number][] = [

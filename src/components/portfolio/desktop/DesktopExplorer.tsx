@@ -1,13 +1,13 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import { AnimatePresence, LayoutGroup, motion, useReducedMotion } from "motion/react";
+import {AnimatePresence, LayoutGroup, motion} from "motion/react";
 import { ArrowUpRight, CornersIn, CornersOut, GithubLogo } from "@phosphor-icons/react";
 import { useLocale } from "@/lib/i18n-context";
 import { DESKTOP_LINKS, DESKTOP_MOMENTS, DESKTOP_UI as UI } from "@/content/desktop";
 import type { DesktopMoment } from "@/content/desktop";
 import { ASSETS } from "@/content/assets";
-import { EASE_OUT, SPRING_CAMERA, SPRING_LAYOUT } from "@/lib/motion";
+import { EASE_OUT, SPRING_CAMERA, SPRING_LAYOUT, useReducedMotionSafe } from "@/lib/motion";
 import { CONFIG, LAURA, LiveDesktop } from "./live/LiveDesktop";
 import { RgbRig } from "./live/RgbRig";
 import { LauraVoiceScene } from "./live/LauraVoiceScene";
@@ -67,7 +67,7 @@ function cameraTransform(focus: Focus) {
 
 export function DesktopExplorer() {
   const { locale } = useLocale();
-  const reduce = useReducedMotion();
+  const reduce = useReducedMotionSafe();
   const items = DESKTOP_MOMENTS;
   const [activeId, setActiveId] = useState<string>(items[0]?.id ?? "");
   const [fullscreen, setFullscreen] = useState(false);

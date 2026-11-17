@@ -1,12 +1,12 @@
 "use client";
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { motion, useMotionValueEvent, useReducedMotion, useScroll } from "motion/react";
+import {motion, useMotionValueEvent, useScroll} from "motion/react";
 import { ArrowUpRight, GithubLogo } from "@phosphor-icons/react";
 import { useLocale } from "@/lib/i18n-context";
 import { FLOW_EDGES, FLOW_NODES, SYSTEMS_UI, SYSTEM_PLANETS } from "@/content/systems";
 import type { FlowNode, SystemPlanet } from "@/content/systems";
-import { revealProps } from "@/lib/motion";
+import { revealProps, useReducedMotionSafe } from "@/lib/motion";
 
 /**
  * #sistemas: a data-flow diagram of everything that crosses the Raspberry Pi.
@@ -271,7 +271,7 @@ function Fact({ fact, locale }: { fact: SystemPlanet["facts"][number]; locale: "
 
 export function SystemsSection() {
   const { locale } = useLocale();
-  const reduce = useReducedMotion();
+  const reduce = useReducedMotionSafe();
 
   return (
     <section id="sistemas" data-scene="systems" className="relative border-t border-line">

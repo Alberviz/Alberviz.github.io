@@ -1,10 +1,10 @@
 "use client";
 
 import React from "react";
-import { motion, useReducedMotion } from "motion/react";
+import {motion} from "motion/react";
 import { useLocale } from "@/lib/i18n-context";
 import { DESKTOP_UI } from "@/content/desktop";
-import { revealProps } from "@/lib/motion";
+import { revealProps, useReducedMotionSafe } from "@/lib/motion";
 import { DesktopExplorer } from "./desktop/DesktopExplorer";
 import { HardwareStory } from "./desktop/HardwareStory";
 
@@ -15,7 +15,7 @@ import { HardwareStory } from "./desktop/HardwareStory";
  */
 export function DesktopSection() {
   const { locale } = useLocale();
-  const reduce = useReducedMotion();
+  const reduce = useReducedMotionSafe();
 
   return (
     <section id="escritorio" data-scene="desktop" className="relative border-t border-line">

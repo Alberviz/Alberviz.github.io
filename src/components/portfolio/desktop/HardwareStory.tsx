@@ -1,10 +1,10 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
+import {motion, useScroll, useTransform} from "motion/react";
 import { useLocale } from "@/lib/i18n-context";
 import { HARDWARE_STORY } from "@/content/desktop";
-import { EASE_OUT, revealProps } from "@/lib/motion";
+import { EASE_OUT, revealProps, useReducedMotionSafe } from "@/lib/motion";
 
 /**
  * The reverse-engineering story in four steps: sniff, decode, driver, desktop.
@@ -296,7 +296,7 @@ function Visual({ i, active, locale, still }: { i: number; active: boolean; loca
 
 export function HardwareStory() {
   const { locale } = useLocale();
-  const reduce = useReducedMotion();
+  const reduce = useReducedMotionSafe();
   const still = !!reduce;
   const [active, setActive] = useState(0);
   const [inline, setInline] = useState<boolean[]>([false, false, false, false]);
