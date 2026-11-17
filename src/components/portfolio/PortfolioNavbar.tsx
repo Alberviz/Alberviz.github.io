@@ -14,6 +14,7 @@ const NAV_ITEMS: NavItem[] = [
   { id: "wari", label: NAV.wari },
   { id: "olimpo", label: NAV.olimpo },
   { id: "sistemas", label: NAV.systems },
+  { id: "laura", label: NAV.laura },
   { id: "proyectos", label: NAV.projects },
   { id: "trayectoria", label: NAV.background },
 ];
@@ -32,13 +33,14 @@ const SHEET_ITEMS: NavItem[] = [
   { id: "wari", label: NAV.wari },
   { id: "olimpo", label: NAV.olimpo },
   { id: "sistemas", label: NAV.systems },
+  { id: "laura", label: NAV.laura },
   { id: "escritorio", label: NAV.desktop },
   { id: "proyectos", label: NAV.projects },
   { id: "trayectoria", label: NAV.background },
   { id: "contacto", label: NAV.contact },
 ];
 
-const SECTION_IDS = ["wari", "olimpo", "sistemas", "escritorio", "proyectos", "trayectoria", "contacto"];
+const SECTION_IDS = ["wari", "olimpo", "sistemas", "laura", "escritorio", "proyectos", "trayectoria", "contacto"];
 
 /** True while most of the hero is on screen (the thumb bar stays out of its way). */
 function useHeroVisible() {

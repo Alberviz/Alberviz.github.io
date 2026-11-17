@@ -13,7 +13,7 @@ notable (MyCrohnie y su hackathon, el escritorio Linux, los sistemas) y laborato
 
 ## 2. Estructura de `/`
 
-Orden en `src/app/page.tsx`: Nav, Hero, Wari, Olimpo, Sistemas, Escritorio, Proyectos, Trayectoria, Pie (con `CommandPalette`).
+Orden en `src/app/page.tsx`: Nav, Hero, Wari, Olimpo, Sistemas, Laura, Escritorio, Proyectos, Trayectoria, Pie (con `CommandPalette`).
 
 | Sección | Id | Componente |
 | --- | --- | --- |
@@ -22,6 +22,7 @@ Orden en `src/app/page.tsx`: Nav, Hero, Wari, Olimpo, Sistemas, Escritorio, Proy
 | Caso 01 · Wari (portal en niebla azul, única ruptura de tema, historia con scroll) | `#wari` | `WariPortal` |
 | Caso 02 · Olimpo (recreación con datos inventados) y Warp (portal GLSL jugable) | `#olimpo`, `#warp` | `OlimpoSection`, `olimpo/*` |
 | Sistemas (mapa orbital: lo que corre detrás de Olimpo) | `#sistemas` | `SystemsSection` |
+| Laura (asistente de voz local: demo de hologramas jugable, capacidades, pipeline y red de seguridad) | `#laura` | `LauraSection`, `laura/*` (`HoloDemo`, `HoloFrame`, `panels`, `Capabilities`, `Pipeline`, `SafetyNet`) |
 | Escritorio (LinuxRicing: explorador + hardware) | `#escritorio` | `DesktopSection`, `desktop/DesktopExplorer`, `desktop/live/*` |
 | Trabajo (MyCrohnie contado por su hackathon, laboratorio y una mención) | `#proyectos` | `ProjectsSection` |
 | Trayectoria | `#trayectoria` | `BackgroundSection` |
@@ -36,6 +37,7 @@ Todo el copy es bilingüe (`en` por defecto, `es`) y se elige con `useLocale()` 
 - `site-copy.ts`: nav, hero, portal de Wari (con los capítulos de la historia), contacto.
 - `olimpo.ts`: caso Olimpo, sus pilares y cifras, los datos INVENTADOS de la recreación y Warp.
 - `systems.ts`: planetas del mapa orbital (Patrimonio, Aurora, Salud, Laura).
+- `laura.ts`: toda la sección Laura: cifras verificadas, frases y datos INVENTADOS de la demo de hologramas, capacidades, pipeline y red de seguridad.
 - `desktop.ts`: momentos del escritorio y la historia de ingeniería inversa (`HARDWARE_STORY`).
 - `projects.ts`: MyCrohnie (destacado), laboratorio y menciones (enlaces solo si están verificados como públicos).
 - `portfolio-data.ts`: perfil, experiencia, estudios y reconocimientos.

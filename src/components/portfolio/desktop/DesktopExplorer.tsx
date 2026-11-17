@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import {AnimatePresence, LayoutGroup, motion} from "motion/react";
-import { ArrowUpRight, CornersIn, CornersOut, GithubLogo } from "@phosphor-icons/react";
+import { ArrowUp, ArrowUpRight, CornersIn, CornersOut, GithubLogo } from "@phosphor-icons/react";
 import { useLocale } from "@/lib/i18n-context";
 import { DESKTOP_LINKS, DESKTOP_MOMENTS, DESKTOP_UI as UI } from "@/content/desktop";
 import type { DesktopMoment } from "@/content/desktop";
@@ -316,6 +316,12 @@ export function DesktopExplorer() {
                           </li>
                         ))}
                       </ul>
+                      {item.link && (
+                        <a href={item.link.href} className="mt-4 inline-flex items-center gap-1.5 text-[14px] text-accent underline-offset-4 hover:underline">
+                          {item.link.label[locale]}
+                          <ArrowUp size={13} weight="bold" aria-hidden="true" />
+                        </a>
+                      )}
                     </motion.div>
                   )}
                 </li>
@@ -349,6 +355,12 @@ export function DesktopExplorer() {
                   </li>
                 ))}
               </ul>
+              {active.link && (
+                <a href={active.link.href} className="mt-6 inline-flex items-center gap-1.5 text-[14.5px] text-accent underline-offset-4 hover:underline">
+                  {active.link.label[locale]}
+                  <ArrowUp size={13} weight="bold" aria-hidden="true" />
+                </a>
+              )}
             </motion.div>
           </AnimatePresence>
           </div>

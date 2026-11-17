@@ -12,6 +12,8 @@ export interface DesktopMoment {
   tech: string;
   summary: LocalizedText;
   details: LocalizedText[];
+  /** A pointer to another section of the page instead of more detail here. */
+  link?: { href: string; label: LocalizedText };
 }
 
 export const DESKTOP_UI = {
@@ -94,21 +96,13 @@ export const DESKTOP_MOMENTS: DesktopMoment[] = [
   {
     id: "laura-voice",
     title: { en: "Laura, my voice assistant", es: "Laura, mi asistente de voz" },
-    tech: "Faster-Whisper · Qwen3 4B · Kokoro · Super+A",
+    tech: "Super+A",
     summary: {
-      en: "One shortcut and I talk to a model that lives on my own GPU. The edge of the screen glows with a shader while it listens, and an orb in the shell shows what it is doing.",
-      es: "Un atajo y hablo con un modelo que vive en mi propia GPU. El borde de la pantalla brilla con un shader mientras escucha, y un orbe en la shell muestra lo que hace.",
+      en: "One shortcut and the edge of the screen glows with a shader while she listens.",
+      es: "Un atajo y el borde de la pantalla brilla con un shader mientras escucha.",
     },
-    details: [
-      {
-        en: "Faster-Whisper (small) on CUDA transcribes in under a second, Qwen3 4B runs on Ollama with a 10,240 token context, and Kokoro speaks the answer.",
-        es: "Faster-Whisper (small) en CUDA transcribe en menos de un segundo, Qwen3 4B corre en Ollama con 10.240 tokens de contexto y Kokoro dice la respuesta.",
-      },
-      {
-        en: "A watchdog checks my calendar, mail and tasks every 5 minutes and leaves the GPU alone when nothing is new.",
-        es: "Un vigía revisa mi calendario, mi correo y mis tareas cada 5 minutos y deja la GPU en paz cuando no hay novedades.",
-      },
-    ],
+    details: [],
+    link: { href: "#laura", label: { en: "Everything about Laura, with a playable demo", es: "Todo sobre Laura, con una demo jugable" } },
   },
   {
     id: "laura-drawer",

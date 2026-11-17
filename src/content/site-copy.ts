@@ -7,6 +7,7 @@ export const NAV = {
   wari: { en: "Wari", es: "Wari" },
   olimpo: { en: "Olimpo", es: "Olimpo" },
   systems: { en: "Systems", es: "Sistemas" },
+  laura: { en: "Laura", es: "Laura" },
   desktop: { en: "Desktop", es: "Escritorio" },
   projects: { en: "Work", es: "Trabajo" },
   background: { en: "Background", es: "Trayectoria" },

@@ -131,6 +131,7 @@ export function CommandPalette() {
       nav("olimpo", es ? "Olimpo, el sistema operativo de mi vida" : "Olimpo, the operating system of my life", "olimpo svelte pwa raspberry pi horas firmamento cielo agents agentes"),
       nav("warp", es ? "Warp, archivos entre dispositivos" : "Warp, files between devices", "warp portal black hole agujero super space espacio files archivos clipboard portapapeles"),
       nav("sistemas", es ? "Lo que corre detrás de Olimpo" : "What runs behind Olimpo", "systems sistemas homelab aurora laura ghostfolio wealth patrimonio salud health raspberry pi"),
+      nav("laura", es ? "Ir a Laura" : "Go to Laura", "laura voice voz assistant asistente holograms hologramas holo warp whisper qwen kokoro ollama local tools herramientas"),
       nav("escritorio", es ? "El escritorio Linux" : "The Linux desktop", "desktop escritorio linux hyprland quickshell caelestia gargantua laura shader webgl rgb hidraw"),
       nav("proyectos", es ? "Más trabajo: hackathon y laboratorio" : "More work: hackathon and lab", "projects proyectos trabajo work mycrohnie hackyeah closhare barber lab laboratorio"),
       nav("trayectoria", es ? "Trayectoria" : "Background", "background trayectoria stel order education olympiad umu agh"),

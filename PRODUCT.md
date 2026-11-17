@@ -24,10 +24,10 @@ Demostrar con artefactos reales que Alberto (Doble Grado en Matemáticas e Ingen
 Una sola página (`/`), modo `Experience`, con jerarquía en tres niveles:
 
 1. **Casos estrella:** Wari (su producto, en beta camino de Google Play y la App Store; nunca "ya en las tiendas" ni "la app de mis amigos") y Olimpo con Warp (el sistema operativo de su vida, autoalojado en la Raspberry Pi 5).
-2. **Trabajo notable:** Sistemas (lo que corre detrás de Olimpo: Patrimonio, Aurora, Salud, Laura), Escritorio Linux y MyCrohnie contado a través de HackYeah 2026 (24 horas).
+2. **Trabajo notable:** Sistemas (lo que corre detrás de Olimpo: Patrimonio, Aurora, Salud, Laura), Laura (su asistente de voz local, con demo de hologramas y datos inventados), Escritorio Linux y MyCrohnie contado a través de HackYeah 2026 (24 horas).
 3. **Laboratorio:** Barber Bot, CloShare y el vault de la universidad, compactos. Choppy solo como mención de una línea; gts2-mando como enlace en la ficha de Salud.
 
-Secciones: Nav, Hero, Wari, Olimpo (con Warp), Sistemas, Escritorio, Trabajo, Trayectoria y Contacto. La ruta `/wari` es un atajo estático que lleva a la web de Wari. El nombre viene de 割り勘 (warikan).
+Secciones: Nav, Hero, Wari, Olimpo (con Warp), Sistemas, Laura, Escritorio, Trabajo, Trayectoria y Contacto. La ruta `/wari` es un atajo estático que lleva a la web de Wari. El nombre viene de 割り勘 (warikan).
 
 ## Voice
 
@@ -44,6 +44,7 @@ Primera persona, directo, humano, sin humo. Se explica qué hace cada cosa y qu�
 7. **Cifras robustas:** se publican redondeadas hacia abajo cuando cambian a menudo. En Wari no se publican cifras de monedas, tests ni migraciones: se enseña lo que hace (captura de pagos opcional desde las notificaciones de Revolut y Google Wallet, Bizum recibido que salda la deuda, Revolut con importe, moneda y concepto puestos, Bizum que copia el número, recordatorio como mucho una vez al día, compensación automática si los dos la activan). Google Wallet (pases) está en demo y Transitous apagado: no se venden.
 8. **Warp en el PC:** Super+Espacio manda lo seleccionado o el portapapeles; saltar de portal con Espacio y sumar con Shift están diseñados y en la demo, y se dice que en el escritorio aún se están conectando. Soltar entre dos portales ya los funde.
 9. **Hardware:** se cuenta la ingeniería inversa, no los aparatos. Solo bytes de protocolo (opcodes, payloads, checksums); nada de números de serie, MACs, direcciones ni puertos. Las baterías de la simulación son de ejemplo.
+10. **Laura:** la demo de hologramas usa solo datos inventados y no se publican capturas reales de hologramas (agenda, correo y archivos son datos privados). Sin frase de activación explicada ni personas reales, sin sockets, rutas de `$HOME`, IPs ni red privada.
 
 ## Evidence on Hand
 

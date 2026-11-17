@@ -73,6 +73,8 @@ export class WarpEngine {
   private visible = true;
   private io: IntersectionObserver;
   private dirty = true;
+  /** Overlay mode: no screen pass and no lens, only the holes over whatever is behind the canvas. */
+  private bare = false;
   readonly still: boolean;
 
   static create(canvas: HTMLCanvasElement, still: boolean): WarpEngine | null {
@@ -205,6 +207,11 @@ export class WarpEngine {
     gl.bindTexture(gl.TEXTURE_2D, this.tex);
     gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, false);
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+    this.kick();
+  }
+
+  setBare(bare: boolean) {
+    this.bare = bare;
     this.kick();
   }
 
@@ -349,12 +356,14 @@ export class WarpEngine {
     const ease = (x: number) => 1 - Math.pow(1 - x, 3);
 
     // 1. The screen.
-    this.use(this.progs.screen, {
-      uRes: [this.canvas.width, this.canvas.height],
-      scrO: [L.screen.x * d, L.screen.y * d],
-      scrS: [L.screen.w * d, L.screen.h * d],
-    });
-    gl.drawArrays(gl.TRIANGLES, 0, 3);
+    if (!this.bare) {
+      this.use(this.progs.screen, {
+        uRes: [this.canvas.width, this.canvas.height],
+        scrO: [L.screen.x * d, L.screen.y * d],
+        scrS: [L.screen.w * d, L.screen.h * d],
+      });
+      gl.drawArrays(gl.TRIANGLES, 0, 3);
+    }
 
     gl.enable(gl.SCISSOR_TEST);
     const f = this.fusion;
@@ -380,7 +389,7 @@ export class WarpEngine {
         estrellas: 0.55,
         reposo: 0,
         discoReposo: 0.13,
-        lente: 1,
+        lente: this.bare ? 0 : 1,
       });
       gl.drawArrays(gl.TRIANGLES, 0, 3);
     }

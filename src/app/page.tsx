@@ -3,6 +3,7 @@ import { HeroSection } from "@/components/portfolio/HeroSection";
 import { WariPortal } from "@/components/portfolio/WariPortal";
 import { OlimpoSection } from "@/components/portfolio/OlimpoSection";
 import { SystemsSection } from "@/components/portfolio/SystemsSection";
+import { LauraSection } from "@/components/portfolio/LauraSection";
 import { DesktopSection } from "@/components/portfolio/DesktopSection";
 import { ProjectsSection } from "@/components/portfolio/ProjectsSection";
 import { BackgroundSection } from "@/components/portfolio/BackgroundSection";
@@ -18,6 +19,7 @@ export default function HomePage() {
         <WariPortal />
         <OlimpoSection />
         <SystemsSection />
+        <LauraSection />
         <DesktopSection />
         <ProjectsSection />
         <BackgroundSection />

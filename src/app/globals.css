@@ -913,3 +913,236 @@ html {
     border-color: rgb(242 179 111 / 0.7);
   }
 }
+
+/* ---------------------------------------------------------------------
+ * Laura: the holographic chassis, the voice pill and the demo stage.
+ * Only transform, opacity and clip-path move.
+ * ------------------------------------------------------------------- */
+.laura-section {
+  background: var(--bg);
+}
+.laura-glow {
+  background:
+    radial-gradient(52rem 26rem at 50% 0%, rgb(242 179 111 / 0.07), transparent 70%),
+    radial-gradient(40rem 30rem at 92% 38%, rgb(74 62 120 / 0.14), transparent 70%),
+    radial-gradient(36rem 26rem at 4% 70%, rgb(242 179 111 / 0.05), transparent 70%);
+}
+
+.holo-stage {
+  background:
+    radial-gradient(60% 50% at 50% 100%, rgb(242 179 111 / 0.09), transparent 70%),
+    radial-gradient(50% 40% at 80% 10%, rgb(64 60 110 / 0.22), transparent 70%),
+    linear-gradient(180deg, #06070b, #0a0b11 62%, #0d0e14);
+  box-shadow:
+    0 0 0 1px rgb(0 0 0 / 0.5),
+    0 60px 120px -60px rgb(242 179 111 / 0.18),
+    0 40px 80px -40px rgb(0 0 0 / 0.9);
+}
+
+.holo-glass {
+  position: relative;
+  border-radius: 14px;
+  background: linear-gradient(180deg, rgb(22 18 13 / 0.84), rgb(9 9 12 / 0.9));
+  border: 1px solid rgb(242 179 111 / 0.26);
+  box-shadow:
+    0 0 0 5px rgb(242 179 111 / 0.04),
+    0 28px 56px -30px rgb(0 0 0 / 0.95),
+    inset 0 1px 0 rgb(255 255 255 / 0.05);
+}
+.holo-scanlines {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  border-radius: inherit;
+  pointer-events: none;
+  background: repeating-linear-gradient(0deg, rgb(255 255 255 / 0.03) 0 1px, transparent 1px 3px);
+}
+.holo-dots {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0.55;
+  background-image: radial-gradient(rgb(242 179 111 / 0.2) 0.9px, transparent 1.3px);
+  background-size: 10px 10px;
+  -webkit-mask-image: linear-gradient(180deg, #000, transparent 55%);
+  mask-image: linear-gradient(180deg, #000, transparent 55%);
+}
+.holo-sweep {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  z-index: 3;
+  height: 32%;
+  opacity: 0;
+  pointer-events: none;
+  background: linear-gradient(180deg, transparent, rgb(242 179 111 / 0.14) 72%, rgb(255 230 199 / 0.5) 98%, transparent);
+}
+.holo-corner {
+  position: absolute;
+  z-index: 4;
+  width: 18px;
+  height: 18px;
+  opacity: 0;
+  pointer-events: none;
+  border: 0 solid var(--accent);
+}
+.holo-corner-a {
+  left: -6px;
+  top: -6px;
+  border-top-width: 1.5px;
+  border-left-width: 1.5px;
+}
+.holo-corner-b {
+  right: -6px;
+  bottom: -6px;
+  border-bottom-width: 1.5px;
+  border-right-width: 1.5px;
+}
+.holo-row {
+  animation: holoRow 280ms var(--ease-out) both;
+  animation-delay: calc(var(--arrive, 0ms) + var(--d, 0ms));
+}
+@keyframes holoRow {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+.holo-urge {
+  animation: holoShake 120ms linear infinite;
+}
+@keyframes holoShake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-1.5px);
+  }
+  75% {
+    transform: translateX(1.5px);
+  }
+}
+.holo-bar {
+  animation: holoBar 900ms var(--ease-in-out) infinite alternate;
+}
+@keyframes holoBar {
+  from {
+    transform: scaleY(var(--lo, 0.2));
+  }
+  to {
+    transform: scaleY(var(--hi, 1));
+  }
+}
+.holo-toast {
+  animation: holoToast 280ms var(--ease-out) both;
+}
+@keyframes holoToast {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+.holo-bin-hit {
+  display: inline-grid;
+  animation: holoBin 420ms var(--ease-out);
+}
+@keyframes holoBin {
+  0% {
+    transform: scale(1);
+    color: inherit;
+  }
+  30% {
+    transform: scale(1.22);
+    color: var(--accent);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.laura-ring-spin {
+  animation: lauraSpin 2.6s linear infinite;
+}
+@keyframes lauraSpin {
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+.laura-caret {
+  animation: lauraCaret 900ms steps(1) infinite;
+}
+@keyframes lauraCaret {
+  50% {
+    opacity: 0;
+  }
+}
+.holo-chips {
+  scrollbar-width: none;
+  scroll-snap-type: x proximity;
+}
+.holo-chips::-webkit-scrollbar {
+  display: none;
+}
+.holo-chip {
+  scroll-snap-align: start;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .holo-rowbtn:hover {
+    background: rgb(242 179 111 / 0.07);
+  }
+  .holo-close:hover {
+    color: var(--ink);
+    background: rgb(236 237 240 / 0.08);
+  }
+  .holo-btn:hover {
+    border-color: rgb(236 237 240 / 0.45);
+  }
+  .holo-btn-primary:hover {
+    background: #f6c58a;
+  }
+  .holo-chip:hover {
+    border-color: rgb(242 179 111 / 0.55);
+  }
+  .laura-group:hover {
+    border-top-color: rgb(242 179 111 / 0.6);
+  }
+}
+
+/* Capability map, pipeline and safety net */
+.laura-group {
+  border-top: 1px solid var(--line);
+  transition: border-color 180ms var(--ease-out);
+}
+.laura-verb::before {
+  content: "";
+  display: block;
+  width: 10px;
+  height: 1px;
+  margin-top: 0.72em;
+  background: var(--accent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .holo-row,
+  .holo-toast,
+  .holo-bin-hit,
+  .laura-ring-spin,
+  .holo-urge,
+  .laura-caret {
+    animation: none;
+  }
+  .holo-bar {
+    animation: none;
+  }
+}
