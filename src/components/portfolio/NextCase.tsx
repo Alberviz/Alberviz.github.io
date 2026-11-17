@@ -5,7 +5,7 @@ import Link from "next/link";
 import { motion } from "motion/react";
 import { ArrowRight } from "@phosphor-icons/react";
 import { useLocale } from "@/lib/i18n-context";
-import { CASES, CASES_UI } from "@/content/pages";
+import { CASES, CASES_UI, CASE_CTA } from "@/content/pages";
 import type { CaseId, CasePage } from "@/content/pages";
 import { EASE_OUT, revealProps, useReducedMotionSafe } from "@/lib/motion";
 import { DesktopVisual, HomeVisual, LauraVisual, OlimpoVisual, WariVisual } from "./CaseVisuals";
@@ -58,7 +58,7 @@ export function NextCase({ from }: { from: CaseId }) {
             </p>
             <p className="mt-4 max-w-[44ch] text-pretty text-[15px] leading-relaxed text-muted">{lines}</p>
             <span className="mt-8 inline-flex h-12 items-center gap-2 rounded-full border border-ink/25 px-6 text-[15px] font-semibold text-ink transition-colors duration-150 group-hover:border-accent group-focus-visible:border-accent group-focus-visible:ring-2 group-focus-visible:ring-accent/60">
-              {next ? CASES_UI.cta[locale] : CASES_UI.backHome[locale]}
+              {next ? (CASE_CTA.byPath[next.path] ?? CASE_CTA.fallback)[locale] : CASES_UI.backHome[locale]}
               <ArrowRight size={16} weight="bold" className="cta-arrow" aria-hidden="true" />
             </span>
           </motion.div>

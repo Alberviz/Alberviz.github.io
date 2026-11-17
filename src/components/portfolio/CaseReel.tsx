@@ -6,7 +6,7 @@ import { motion, useScroll, useTransform } from "motion/react";
 import { ArrowRight } from "@phosphor-icons/react";
 import { useLocale } from "@/lib/i18n-context";
 import type { Locale } from "@/lib/i18n-context";
-import { CASES, CASES_UI } from "@/content/pages";
+import { CASES, CASES_UI, CASE_CTA } from "@/content/pages";
 import type { CasePage } from "@/content/pages";
 import { EASE_OUT, revealProps, useReducedMotionSafe } from "@/lib/motion";
 import { DesktopVisual, LauraVisual, OlimpoVisual, WariVisual } from "./CaseVisuals";
@@ -81,9 +81,9 @@ function Preview({ c, locale, reduce }: { c: CasePage; locale: Locale; reduce: b
               ? "bg-[color:var(--wari-action)] text-[color:var(--wari-on-action)] hover:bg-[#1F3A69]"
               : "bg-accent text-on-accent hover:bg-accent-pressed"
           }`}
-          aria-label={`${CASES_UI.cta[locale]}: ${c.name}`}
+          aria-label={`${(CASE_CTA.byPath[c.path] ?? CASE_CTA.fallback)[locale]}: ${c.name}`}
         >
-          {CASES_UI.cta[locale]}
+          {(CASE_CTA.byPath[c.path] ?? CASE_CTA.fallback)[locale]}
           <ArrowRight size={16} weight="bold" className="cta-arrow" aria-hidden="true" />
         </Link>
       </motion.div>
@@ -119,7 +119,6 @@ export function CaseReel() {
           >
             {CASES_UI.heading[locale]}
           </h2>
-          <p className="max-w-[46ch] text-pretty text-[15.5px] leading-relaxed text-muted lg:col-span-5">{CASES_UI.lead[locale]}</p>
         </motion.div>
 
         <div className="mt-16 space-y-24 lg:mt-24 lg:space-y-36">

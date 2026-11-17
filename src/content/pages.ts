@@ -162,11 +162,6 @@ export const OLD_ANCHORS: Record<string, string> = {
 
 export const CASES_UI = {
   heading: { en: "Four things I built end to end.", es: "Cuatro cosas que construí de punta a punta." },
-  lead: {
-    en: "Each one has its own page, with the real thing to play with: screens, shaders, holograms and bytes.",
-    es: "Cada una tiene su página, con lo de verdad para tocar: pantallas, shaders, hologramas y bytes.",
-  },
-  cta: { en: "See the case", es: "Ver el caso" },
   next: { en: "Next case", es: "Siguiente caso" },
   backHome: { en: "Back to the start", es: "Volver al inicio" },
   homeHeadline: {
@@ -180,3 +175,14 @@ export const CASES_UI = {
   pages: { en: "Pages", es: "Páginas" },
   onThisPage: { en: "On this page", es: "En esta página" },
 } satisfies Record<string, LocalizedText>;
+
+export const CASE_CTA = {
+  /** Button that opens each case page, worded per case. */
+  byPath: {
+    "/wari/": { en: "How Wari works", es: "Cómo funciona Wari" },
+    "/olimpo/": { en: "Step into Olimpo", es: "Entra en Olimpo" },
+    "/laura/": { en: "Talk to Laura", es: "Habla con Laura" },
+    "/escritorio/": { en: "Open the desktop", es: "Abre el escritorio" },
+  },
+  fallback: { en: "Open", es: "Abrir" },
+} as { byPath: Record<string, LocalizedText>; fallback: LocalizedText };
