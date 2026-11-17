@@ -42,6 +42,10 @@ export const DESKTOP_UI = {
   fullscreen: { en: "Full screen", es: "Pantalla completa" },
   exitFullscreen: { en: "Exit full screen", es: "Salir de pantalla completa" },
   repo: { en: "LinuxRicing on GitHub", es: "LinuxRicing en GitHub" },
+  hardwareNote: {
+    en: "a small Android hack that turns the music buttons of my Amazfit GTS 2 into shortcuts.",
+    es: "un hack pequeño para Android que convierte los botones de música de mi Amazfit GTS 2 en atajos.",
+  },
   hardwareHeading: {
     en: "Hardware I hacked to work my way",
     es: "Hardware que hackeé para que funcione a mi manera",
@@ -170,21 +174,6 @@ export const HARDWARE: HardwarePiece[] = [
     label: {
       en: "opcode that returns the wireless battery. Reports 0x07 and 0x08 set the key and side lighting",
       es: "opcode que devuelve la batería inalámbrica. Los informes 0x07 y 0x08 fijan la luz de teclas y laterales",
-    },
-  },
-  {
-    id: "gts2",
-    name: "Amazfit GTS 2 + gts2-mando",
-    kind: { en: "Watch and Android app", es: "Reloj y app Android" },
-    value: "3",
-    label: {
-      en: "music buttons turned into webhooks. A silent media session catches the presses and a Bluetooth SCO call opens the watch mic",
-      es: "botones de música convertidos en webhooks. Una sesión multimedia silenciosa recoge las pulsaciones y una llamada Bluetooth SCO abre el micro del reloj",
-    },
-    link: {
-      label: { en: "gts2-mando on GitHub", es: "gts2-mando en GitHub" },
-      href: "https://github.com/Alberviz/gts2-mando",
-      kind: "github",
     },
   },
 ];

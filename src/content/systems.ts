@@ -30,12 +30,12 @@ export interface SystemPlanet {
 
 export const SYSTEMS_UI = {
   heading: {
-    en: "The systems I run at home.",
-    es: "Los sistemas que mantengo en casa.",
+    en: "What runs behind Olimpo.",
+    es: "Lo que corre detrás de Olimpo.",
   },
   lead: {
-    en: "A Raspberry Pi 5 keeps my daily life running, and everything else orbits it. Laura, my voice AI, lives on my laptop GPU, so she sits on the outer ring.",
-    es: "Una Raspberry Pi 5 sostiene mi día a día y todo lo demás gira a su alrededor. Laura, mi IA de voz, vive en la GPU de mi portátil y por eso va en el anillo exterior.",
+    en: "Olimpo is the window; these are the systems that feed it. They orbit the same Raspberry Pi 5, except Laura, my voice AI, who lives on my laptop GPU and sits on the outer ring.",
+    es: "Olimpo es la ventana; estos son los sistemas que la alimentan. Giran alrededor de la misma Raspberry Pi 5, salvo Laura, mi IA de voz, que vive en la GPU del portátil y va en el anillo exterior.",
   },
   star: { en: "Raspberry Pi 5", es: "Raspberry Pi 5" },
   stageLabel: {
@@ -43,45 +43,14 @@ export const SYSTEMS_UI = {
     es: "Mapa orbital de mis sistemas. Elige un planeta para leer sobre él.",
   },
   hint: {
-    en: "Hover, focus or tap a planet",
-    es: "Pasa el cursor, enfoca o toca un planeta",
+    en: "Tap a planet or a name below",
+    es: "Toca un planeta o un nombre de abajo",
   },
   runsOn: { en: "Runs on", es: "Corre en" },
   stack: { en: "Stack", es: "Stack" },
 } satisfies Record<string, LocalizedText>;
 
 export const SYSTEM_PLANETS: SystemPlanet[] = [
-  {
-    id: "olimpo",
-    name: { en: "Olimpo", es: "Olimpo" },
-    line: {
-      en: "The operating system of my life.",
-      es: "El sistema operativo de mi vida.",
-    },
-    body: {
-      en: "One private dashboard for my tasks, health and money. It also moves files and the clipboard between my devices with a single shortcut, and every login goes through a gateway I hardened myself.",
-      es: "Un panel privado para mis tareas, mi salud y mi dinero. También mueve archivos y portapapeles entre mis dispositivos con un atajo, y todo acceso pasa por una pasarela que blindé yo.",
-    },
-    host: { en: "Raspberry Pi 5, self-hosted", es: "Raspberry Pi 5, autoalojado" },
-    stack: ["Svelte 5", "TypeScript", "Python", "FastAPI", "SQLite", "Docker"],
-    facts: [
-      {
-        value: "v2",
-        label: {
-          en: "in daily use, shipped release by release from its own roadmap",
-          es: "en uso diario, publicada versión a versión desde su propio roadmap",
-        },
-      },
-      {
-        value: "SHA-256",
-        label: {
-          en: "is all the gateway keeps of each access token, never the token itself",
-          es: "es todo lo que guarda la pasarela de cada token de acceso, nunca el token",
-        },
-      },
-    ],
-    orbit: { r: 17, period: 110, phase: 0.55 },
-  },
   {
     id: "networth",
     name: { en: "Net worth", es: "Patrimonio" },
@@ -112,7 +81,7 @@ export const SYSTEM_PLANETS: SystemPlanet[] = [
         },
       },
     ],
-    orbit: { r: 25, period: 150, phase: 2.35 },
+    orbit: { r: 19, period: 150, phase: 2.35 },
   },
   {
     id: "aurora",
@@ -151,7 +120,7 @@ export const SYSTEM_PLANETS: SystemPlanet[] = [
         kind: "live",
       },
     ],
-    orbit: { r: 32, period: 200, phase: 4.1 },
+    orbit: { r: 27.5, period: 200, phase: 4.1 },
   },
   {
     id: "health",
@@ -183,14 +152,7 @@ export const SYSTEM_PLANETS: SystemPlanet[] = [
         },
       },
     ],
-    links: [
-      {
-        label: { en: "gts2-mando on GitHub", es: "gts2-mando en GitHub" },
-        href: "https://github.com/Alberviz/gts2-mando",
-        kind: "github",
-      },
-    ],
-    orbit: { r: 38.5, period: 260, phase: 5.55 },
+    orbit: { r: 36, period: 260, phase: 5.55 },
   },
   {
     id: "laura",

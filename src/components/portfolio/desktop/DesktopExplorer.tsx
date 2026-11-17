@@ -268,6 +268,7 @@ export function DesktopExplorer() {
                     type="button"
                     onClick={() => setActiveId(item.id)}
                     aria-pressed={isActive}
+                    aria-expanded={isActive}
                     className="relative isolate grid w-full grid-cols-[2rem_1fr] items-baseline gap-x-3 px-3 py-4 text-left"
                   >
                     {isActive && (
@@ -298,6 +299,25 @@ export function DesktopExplorer() {
                       <span className="mt-1 block truncate font-mono text-[11px] text-muted">{item.tech}</span>
                     </span>
                   </button>
+                  {/* Phones: the detail opens in place, like an accordion */}
+                  {isActive && (
+                    <motion.div
+                      className="px-3 pb-6 pl-[3.5rem] lg:hidden"
+                      initial={{ opacity: 0, transform: reduce ? "none" : "translateY(-4px)" }}
+                      animate={{ opacity: 1, transform: "translateY(0px)" }}
+                      transition={{ duration: 0.22, ease: EASE_OUT }}
+                    >
+                      <p className="text-pretty text-[15px] leading-relaxed text-ink/85">{item.summary[locale]}</p>
+                      <ul className="mt-4 space-y-3">
+                        {item.details.map((detail, i) => (
+                          <li key={i} className="grid grid-cols-[1.25rem_1fr] gap-x-2 text-[14px] leading-relaxed text-muted">
+                            <span aria-hidden="true" className="mt-[0.7em] h-px w-3 bg-accent" />
+                            <span>{detail[locale]}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </motion.div>
+                  )}
                 </li>
               );
             })}
@@ -305,6 +325,7 @@ export function DesktopExplorer() {
         </LayoutGroup>
 
         <div className="lg:col-span-7" aria-live="polite">
+          <div className="hidden lg:block">
           <AnimatePresence mode="wait" initial={false}>
             <motion.div
               key={active.id}
@@ -330,9 +351,10 @@ export function DesktopExplorer() {
               </ul>
             </motion.div>
           </AnimatePresence>
+          </div>
 
           {repoLinks.length > 0 && (
-            <div className="mt-8 flex flex-wrap items-center gap-2 border-t border-line pt-6">
+            <div className="flex flex-wrap items-center gap-2 lg:mt-8 lg:border-t lg:border-line lg:pt-6">
               {repoLinks.map((link) => (
                 <a
                   key={link.href}

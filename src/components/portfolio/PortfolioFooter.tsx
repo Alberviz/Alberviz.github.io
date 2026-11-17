@@ -51,7 +51,12 @@ export function PortfolioFooter() {
     "inline-flex items-center gap-1.5 text-[15px] text-muted transition-colors duration-150 hover:text-ink focus-visible:text-ink";
 
   return (
-    <footer id="contacto" data-scene="contact" className="bg-bg pb-10 pt-[var(--spacing-section)]">
+    <footer
+      id="contacto"
+      data-scene="contact"
+      className="footer-horizon relative isolate overflow-hidden border-t border-line bg-bg pb-32 pt-[var(--spacing-section)] md:pb-10"
+    >
+      <div aria-hidden="true" className="grain pointer-events-none absolute inset-0 -z-10" />
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <h2 className="font-display text-balance text-[clamp(2rem,4.4vw,3.5rem)] font-semibold leading-[1.02] tracking-[-0.035em] text-ink">
           {CONTACT.heading[locale]}

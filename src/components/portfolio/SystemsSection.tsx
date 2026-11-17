@@ -30,7 +30,7 @@ const pos = (planet: SystemPlanet, angle: number) => {
 };
 
 /** Planet sizes in px (visual dot, the hit area is always 44px). */
-const DOT: Record<string, number> = { olimpo: 13, networth: 15, aurora: 12, health: 11, laura: 14 };
+const DOT: Record<string, number> = { networth: 15, aurora: 12, health: 11, laura: 14 };
 
 /** Deterministic star dust (no Math.random: same on server and client). */
 const DUST = Array.from({ length: 34 }, (_, i) => {
@@ -107,11 +107,11 @@ export function SystemsSection() {
           </p>
         </motion.div>
 
-        <div className="mt-14 grid gap-12 lg:mt-20 lg:grid-cols-[minmax(0,1.08fr)_minmax(0,1fr)] lg:items-center lg:gap-16">
+        <div className="mt-14 grid grid-cols-1 gap-12 lg:mt-20 lg:grid-cols-[minmax(0,1.08fr)_minmax(0,1fr)] lg:items-center lg:gap-16">
           {/* Orbital map */}
           <motion.div
             {...revealProps(reduce, 0.06)}
-            className="relative mx-auto w-full max-w-[40rem]"
+            className="relative mx-auto w-full min-w-0 max-w-[40rem]"
           >
             <div
               ref={stageRef}
@@ -224,6 +224,30 @@ export function SystemsSection() {
               <span aria-hidden="true" className="inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
               {SYSTEMS_UI.hint[locale]}
             </p>
+            <div
+              role="tablist"
+              aria-label={SYSTEMS_UI.stageLabel[locale]}
+              className="no-scrollbar -mx-5 mt-4 flex snap-x gap-2 overflow-x-auto px-5 pb-1 sm:mx-0 sm:flex-wrap sm:px-0"
+            >
+              {SYSTEM_PLANETS.map((p) => {
+                const on = p.id === activeId;
+                return (
+                  <button
+                    key={p.id}
+                    type="button"
+                    role="tab"
+                    aria-selected={on}
+                    aria-controls="systems-panel"
+                    onClick={() => setActiveId(p.id)}
+                    className={`press-scale h-10 shrink-0 snap-start rounded-full border px-4 text-[13.5px] font-medium transition-colors duration-150 ${
+                      on ? "border-accent/70 bg-accent/10 text-ink" : "border-line text-muted hover:border-ink/40"
+                    }`}
+                  >
+                    {p.name[locale]}
+                  </button>
+                );
+              })}
+            </div>
           </motion.div>
 
           {/* Ficha */}

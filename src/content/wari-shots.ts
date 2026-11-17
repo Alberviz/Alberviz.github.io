@@ -41,3 +41,43 @@ export const WARI_SHOTS: WariShot[] = [
     },
   },
 ];
+
+/** Screens for the scroll story, one per chapter (same ids as WARI.chapters). */
+export const WARI_STORY_SHOTS: Record<string, WariShot> = {
+  inicio: {
+    src: "/media/wari/wari-inicio-light.webp",
+    width: 780,
+    height: 1688,
+    alt: {
+      en: "Wari home: the total balance, what you are owed and what you owe, and the people in your groups",
+      es: "Inicio de Wari: el saldo total, lo que te deben y lo que debes, y las personas de tus grupos",
+    },
+  },
+  ticket: {
+    src: "/media/wari/wari-ticket-light.webp",
+    width: 780,
+    height: 1688,
+    alt: {
+      en: "Wari splitting a supermarket receipt, product by product",
+      es: "Wari repartiendo un ticket del súper producto a producto",
+    },
+  },
+  gasto: {
+    src: "/media/wari/wari-gasto-nuevo-light.webp",
+    width: 780,
+    height: 1688,
+    alt: {
+      en: "New expense in Wari: 36 euros with the equivalent in złoty, who paid and who it is split between",
+      es: "Gasto nuevo en Wari: 36 euros con su equivalencia en złotys, quién pagó y entre quiénes se reparte",
+    },
+  },
+  viaje: {
+    src: "/media/wari/wari-itinerario-light.webp",
+    width: 780,
+    height: 1688,
+    alt: {
+      en: "Wari trip itinerary for the day, with stops, times and a flight ticket",
+      es: "Itinerario del viaje en Wari para el día, con paradas, horas y un billete de avión",
+    },
+  },
+};

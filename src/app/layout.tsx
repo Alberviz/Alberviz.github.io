@@ -5,6 +5,7 @@ import {
   Geist_Mono,
   Inter,
   Inter_Tight,
+  Marcellus,
 } from "next/font/google";
 import { LanguageProvider } from "@/lib/i18n-context";
 import { SITE_URL } from "@/content/links";
@@ -44,9 +45,18 @@ const fontWariDisplay = Inter_Tight({
   preload: false,
 });
 
+/* Olimpo's own display face, only used inside the recreated Olimpo interface. */
+const fontOlimpo = Marcellus({
+  subsets: ["latin"],
+  weight: "400",
+  variable: "--f-olimpo",
+  display: "swap",
+  preload: false,
+});
+
 const TITLE = "Alberto Vizcaíno Ponte";
 const DESCRIPTION =
-  "Maths and computer science student in Kraków. I build whole systems: Wari, the app my Erasmus group uses every day, my own AI running on a Raspberry Pi, and a Linux desktop with a black hole I wrote by hand.";
+  "Maths and computer science student in Kraków. I build whole systems: Wari, my group expenses and trips app, in beta on its way to the stores; Olimpo, the operating system of my life on a Raspberry Pi; and a Linux desktop with a black hole I wrote by hand.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -61,6 +71,8 @@ export const metadata: Metadata = {
     "Wari",
     "WebGL",
     "Raspberry Pi",
+    "Olimpo",
+    "Svelte",
   ],
   authors: [{ name: TITLE, url: SITE_URL }],
   creator: TITLE,
@@ -99,6 +111,7 @@ export const viewport: Viewport = {
   themeColor: "#07080B",
   width: "device-width",
   initialScale: 1,
+  viewportFit: "cover",
 };
 
 export default function RootLayout({
@@ -109,7 +122,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`dark ${fontDisplay.variable} ${fontSans.variable} ${fontMono.variable} ${fontWari.variable} ${fontWariDisplay.variable}`}
+      className={`dark ${fontDisplay.variable} ${fontSans.variable} ${fontMono.variable} ${fontWari.variable} ${fontWariDisplay.variable} ${fontOlimpo.variable}`}
       suppressHydrationWarning
     >
       <body className="min-h-screen bg-bg font-sans text-ink antialiased selection:bg-accent/25">

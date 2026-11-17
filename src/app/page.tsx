@@ -1,6 +1,7 @@
 import { PortfolioNavbar } from "@/components/portfolio/PortfolioNavbar";
 import { HeroSection } from "@/components/portfolio/HeroSection";
 import { WariPortal } from "@/components/portfolio/WariPortal";
+import { OlimpoSection } from "@/components/portfolio/OlimpoSection";
 import { SystemsSection } from "@/components/portfolio/SystemsSection";
 import { DesktopSection } from "@/components/portfolio/DesktopSection";
 import { ProjectsSection } from "@/components/portfolio/ProjectsSection";
@@ -15,6 +16,7 @@ export default function HomePage() {
       <main className="flex w-full flex-1 flex-col">
         <HeroSection />
         <WariPortal />
+        <OlimpoSection />
         <SystemsSection />
         <DesktopSection />
         <ProjectsSection />

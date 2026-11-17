@@ -217,7 +217,7 @@ export function HeroSection() {
       {/* Veil: guarantees text contrast on the left and melts the stage into the page below */}
       <div aria-hidden="true" className="hero-veil pointer-events-none absolute inset-0 -z-10" />
 
-      <div className="relative mx-auto flex w-full max-w-7xl flex-1 flex-col justify-end px-5 pb-14 pt-24 sm:px-8 wide:justify-center wide:pb-16 wide:pt-24">
+      <div className="relative mx-auto flex w-full max-w-7xl flex-1 flex-col justify-end px-5 pb-16 pt-24 sm:px-8 wide:justify-center wide:pb-20 wide:pt-24">
         <div className="max-w-[40rem] wide:max-w-[36rem] xl:wide:max-w-[40rem]">
           <h1
             className="hero-rise font-display text-balance text-[clamp(2.4rem,5.2vw,4.5rem)] font-semibold leading-[0.98] tracking-[-0.035em] text-ink"
@@ -227,27 +227,37 @@ export function HeroSection() {
           </h1>
 
           <p
-            className="hero-rise mt-6 max-w-[34ch] text-pretty text-[1.0625rem] leading-relaxed text-muted sm:text-lg"
+            className="hero-rise mt-6 max-w-[38ch] text-pretty text-[1.0625rem] leading-relaxed text-muted sm:text-lg"
             style={{ ["--d" as string]: "160ms" }}
           >
             {HERO.sub[locale]}
           </p>
 
-          <div className="hero-rise mt-9 flex flex-wrap items-center gap-3" style={{ ["--d" as string]: "260ms" }}>
-            <a
-              href="#wari"
-              className="group press-scale inline-flex h-12 items-center gap-2 rounded-full bg-accent px-6 text-[15px] font-semibold text-on-accent transition-colors duration-150 hover:bg-accent-pressed"
-            >
-              {HERO.ctaPrimary[locale]}
-              <ArrowDown size={16} weight="bold" className="cta-arrow-down" aria-hidden="true" />
-            </a>
-            <a
-              href="#contacto"
-              className="press-scale inline-flex h-12 items-center rounded-full border border-ink/25 bg-bg/40 px-6 text-[15px] font-medium text-ink backdrop-blur-sm transition-colors duration-150 hover:border-ink/50"
-            >
-              {HERO.ctaSecondary[locale]}
-            </a>
-          </div>
+          <nav
+            aria-label={HERO.casesLabel[locale]}
+            className="hero-rise mt-9 max-w-[34rem]"
+            style={{ ["--d" as string]: "260ms" }}
+          >
+            <ul className="hero-cases overflow-hidden rounded-[20px] border border-ink/12 bg-bg/45 backdrop-blur-md">
+              {HERO.cases.map((c) => (
+                <li key={c.id} className="border-b border-ink/10 last:border-b-0">
+                  <a
+                    href={`#${c.id}`}
+                    className="hero-case group grid min-h-[4.25rem] grid-cols-[2.25rem_minmax(0,1fr)_1.25rem] items-center gap-x-3 px-4 py-3.5 sm:px-5"
+                  >
+                    <span className="font-mono text-[11.5px] tabular-nums text-accent">{c.n}</span>
+                    <span className="min-w-0">
+                      <span className="block font-display text-[1.15rem] font-semibold leading-tight tracking-[-0.02em] text-ink">
+                        {c.name}
+                      </span>
+                      <span className="mt-0.5 block text-pretty text-[13.5px] leading-snug text-muted">{c.line[locale]}</span>
+                    </span>
+                    <ArrowDown size={16} weight="bold" className="cta-arrow cta-arrow-down text-ink/70" aria-hidden="true" />
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
         </div>
 
         <p

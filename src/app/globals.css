@@ -8,6 +8,7 @@
   --font-mono: var(--f-mono), "Geist Mono", ui-monospace, monospace;
   --font-wari: var(--f-wari), "Inter", system-ui, sans-serif;
   --font-wari-display: var(--f-wari-display), "Inter Tight", "Inter", system-ui, sans-serif;
+  --font-olimpo: var(--f-olimpo), "Marcellus", Georgia, serif;
 
   --color-bg: var(--bg);
   --color-surface: var(--surface);
@@ -470,4 +471,180 @@ html {
   .proj-list:has(.proj-row:focus-within) .proj-row:not(:focus-within) {
     opacity: 0.38;
   }
+}
+
+/* Wari story: progress dots (transform + opacity) and the chapter in focus */
+.wari-dot {
+  opacity: 0.28;
+  transform: scaleX(0.25);
+  transition: transform 300ms var(--ease-out), opacity 300ms var(--ease-out);
+}
+.wari-dot[data-on="1"] {
+  opacity: 1;
+  transform: scaleX(1);
+}
+.wari-chapter-title {
+  opacity: 0.35;
+  transition: opacity 300ms var(--ease-out);
+}
+.wari-chapter-title[data-on="1"] {
+  opacity: 1;
+}
+
+/* ---------------------------------------------------------------------
+ * Hero case index: two flagship cases as tappable rows.
+ * ------------------------------------------------------------------- */
+.hero-case {
+  transition: background-color 180ms var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .hero-case:hover {
+    background-color: rgb(236 237 240 / 0.05);
+  }
+}
+.hero-case:active {
+  background-color: rgb(236 237 240 / 0.07);
+}
+
+/* Static film grain for layered sections (not fixed: no per-frame cost) */
+.grain {
+  opacity: 0.06;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.9 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+}
+
+/* ---------------------------------------------------------------------
+ * Olimpo: deep night with a nebula, the recreated window and phone.
+ * ------------------------------------------------------------------- */
+.olimpo-section {
+  background: var(--bg);
+}
+.olimpo-nebula {
+  background:
+    radial-gradient(60rem 34rem at 85% 8%, rgb(64 76 170 / 0.28), transparent 70%),
+    radial-gradient(44rem 30rem at 6% 46%, rgb(80 62 150 / 0.16), transparent 70%),
+    radial-gradient(50rem 26rem at 70% 92%, rgb(242 179 111 / 0.07), transparent 70%);
+}
+.olimpo-window {
+  border: 1px solid rgb(140 146 180 / 0.22);
+  box-shadow:
+    0 0 0 1px rgb(0 0 0 / 0.4),
+    0 60px 120px -50px rgb(30 40 120 / 0.65),
+    0 30px 60px -30px rgb(0 0 0 / 0.8);
+}
+.olimpo-phone {
+  border-radius: 2rem;
+  padding: 6px;
+  background: #05060c;
+  box-shadow:
+    inset 0 0 0 1px rgb(255 255 255 / 0.12),
+    0 50px 80px -30px rgb(0 0 0 / 0.85),
+    0 0 60px -20px rgb(64 76 170 / 0.5);
+}
+.olimpo-now {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: olimpoNow 3.2s var(--ease-in-out) infinite;
+}
+@keyframes olimpoNow {
+  0%,
+  100% {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.25);
+  }
+}
+.olimpo-twinkle {
+  animation: statusBreath 2.4s ease-in-out infinite;
+}
+
+/* Keyboard keys for shortcuts */
+.keycap {
+  display: inline-grid;
+  place-items: center;
+  min-width: 2rem;
+  height: 1.9rem;
+  padding: 0 0.6rem;
+  border-radius: 0.5rem;
+  border: 1px solid rgb(236 237 240 / 0.16);
+  border-bottom-width: 2px;
+  background: linear-gradient(180deg, #1a1d26, #12141b);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ink);
+}
+
+/* Warp stage: the portal lives at the top edge of a dark screen */
+.warp-stage {
+  background:
+    radial-gradient(70% 55% at 50% 30%, rgb(242 179 111 / 0.06), transparent 70%),
+    linear-gradient(180deg, #05060a, #0a0b10 70%, #0d0f15);
+}
+.warp-fallback {
+  width: 7rem;
+  height: 7rem;
+  transform: translate(-50%, -50%);
+  border-radius: 999px;
+  background: radial-gradient(circle, #000 0 42%, rgb(255 222 185 / 0.9) 45%, rgb(242 140 70 / 0.35) 55%, transparent 72%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .olimpo-now,
+  .olimpo-twinkle {
+    animation: none !important;
+  }
+}
+
+/* Hackathon card: a warm horizon behind the featured story */
+.hack-card {
+  background: linear-gradient(180deg, var(--surface), var(--bg));
+}
+.hack-glow {
+  background:
+    radial-gradient(50rem 22rem at 100% 0%, rgb(242 179 111 / 0.12), transparent 70%),
+    radial-gradient(30rem 20rem at 0% 100%, rgb(242 179 111 / 0.05), transparent 70%);
+}
+
+/* Contact: an accretion horizon rising from the bottom edge */
+.footer-horizon::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  left: 50%;
+  bottom: -38rem;
+  width: 120rem;
+  height: 44rem;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgb(242 179 111 / 0.22), rgb(242 179 111 / 0.07) 55%, transparent 75%);
+  pointer-events: none;
+}
+
+/* ---------------------------------------------------------------------
+ * Phone navigation: thumb bar + bottom sheet
+ * ------------------------------------------------------------------- */
+.thumb-bar {
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 12px);
+  transition: transform 320ms var(--ease-drawer), opacity 220ms var(--ease-out);
+}
+.thumb-bar[data-hidden="1"] {
+  transform: translateY(calc(100% + 24px));
+  opacity: 0;
+  pointer-events: none;
+}
+.thumb-link {
+  -webkit-user-select: none;
+  user-select: none;
+  touch-action: manipulation;
+  transition: transform 140ms var(--ease-out), background-color 180ms var(--ease-out);
+}
+.thumb-link:active {
+  transform: scale(0.96);
+}
+.nav-sheet {
+  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 20px);
+  box-shadow: 0 -30px 60px -20px rgb(0 0 0 / 0.7);
 }

@@ -1,93 +1,46 @@
 "use client";
 
-import React, { useRef, useState } from "react";
-import { AnimatePresence, motion, useMotionValue, useReducedMotion, useSpring } from "motion/react";
+import React from "react";
+import { motion, useReducedMotion } from "motion/react";
 import { ArrowUpRight, FilePdf, GithubLogo } from "@phosphor-icons/react";
 import { useLocale } from "@/lib/i18n-context";
-import { PROJECTS, PROJECTS_UI } from "@/content/projects";
-import type { Project, ProjectAxis } from "@/content/projects";
+import { LAB, LAB_NAMES_ES, MENTIONS, MYCROHNIE, WORK_UI } from "@/content/projects";
 import type { ExternalLink } from "@/content/types";
-import { EASE_OUT, revealProps, useFinePointer } from "@/lib/motion";
-
-type Filter = "all" | ProjectAxis;
-const FILTERS: Filter[] = ["all", "product", "ai", "hardware"];
-
-const REVEAL_W = 300;
-const REVEAL_H = 200;
+import { revealProps } from "@/lib/motion";
 
 function LinkIcon({ kind }: { kind: ExternalLink["kind"] }) {
-  if (kind === "github") return <GithubLogo size={14} aria-hidden="true" />;
-  if (kind === "pdf") return <FilePdf size={14} aria-hidden="true" />;
-  return <ArrowUpRight size={14} aria-hidden="true" />;
+  if (kind === "github") return <GithubLogo size={15} aria-hidden="true" />;
+  if (kind === "pdf") return <FilePdf size={15} aria-hidden="true" />;
+  return null;
 }
 
-/** What shows in the floating reveal and the mobile thumbnail: media, or a typographic plate. */
-function Visual({ project, locale, small }: { project: Project; locale: "en" | "es"; small?: boolean }) {
-  const { media, plate } = project;
-  if (media) {
-    const portrait = media.height > media.width;
-    return (
-      // eslint-disable-next-line @next/next/no-img-element
-      <img
-        src={media.src}
-        width={media.width}
-        height={media.height}
-        alt=""
-        loading="lazy"
-        decoding="async"
-        draggable={false}
-        className={`h-full w-full ${portrait ? "object-contain" : "object-cover"}`}
-      />
-    );
-  }
+function Pill({ link, locale, primary }: { link: ExternalLink; locale: "en" | "es"; primary?: boolean }) {
   return (
-    <div className="flex h-full w-full flex-col justify-between p-3 sm:p-4">
-      <p
-        className={`font-display font-semibold leading-none tracking-[-0.03em] tabular-nums text-ink ${
-          small ? "text-[1.05rem]" : "text-[2.6rem]"
-        }`}
-      >
-        {locale === "es" && plate.valueEs ? plate.valueEs : plate.value}
-      </p>
-      {!small && <p className="max-w-[22ch] text-[12.5px] leading-snug text-muted">{plate.label[locale]}</p>}
-    </div>
+    <a
+      href={link.href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={`group press-scale inline-flex h-11 items-center gap-2 rounded-full px-4 text-[14px] font-medium transition-colors duration-150 ${
+        primary
+          ? "bg-accent font-semibold text-on-accent hover:bg-accent-pressed"
+          : "border border-ink/25 text-ink hover:border-ink/50"
+      }`}
+    >
+      <LinkIcon kind={link.kind} />
+      {link.label[locale]}
+      {link.kind === "live" && <ArrowUpRight size={13} className="cta-arrow cta-arrow-diag" aria-hidden="true" />}
+    </a>
   );
 }
 
+/**
+ * #proyectos: notable work told as a story (MyCrohnie, through its hackathon),
+ * then a compact lab of small real projects, then one line for prototypes.
+ */
 export function ProjectsSection() {
   const { locale } = useLocale();
   const reduce = useReducedMotion();
-  const fine = useFinePointer();
-  const [filter, setFilter] = useState<Filter>("all");
-  const [hoverId, setHoverId] = useState<string | null>(null);
-  const listRef = useRef<HTMLDivElement>(null);
-
-  /* Pointer lives in motion values: no React render per mouse move. */
-  const px = useMotionValue(0);
-  const py = useMotionValue(0);
-  const sx = useSpring(px, { stiffness: 220, damping: 26, mass: 0.5 });
-  const sy = useSpring(py, { stiffness: 220, damping: 26, mass: 0.5 });
-
-  const place = (clientX: number, clientY: number) => {
-    const rect = listRef.current?.getBoundingClientRect();
-    if (!rect) return;
-    /* On wide rows keep the card in the empty gutter between text and role column. */
-    const gutter = rect.width >= 900 ? Math.min(rect.width * 0.55, rect.width - REVEAL_W - 8) : 0;
-    let x = Math.max(gutter, clientX - rect.left + 28);
-    if (x + REVEAL_W > rect.width - 8) x = rect.width - REVEAL_W - 8;
-    px.set(Math.max(0, x));
-    py.set(clientY - rect.top - REVEAL_H / 2);
-  };
-
-  const onRowFocus = (id: string, el: HTMLElement) => {
-    if (!fine) return;
-    const r = el.getBoundingClientRect();
-    place(r.left + r.width * 0.62, r.top + r.height / 2);
-    setHoverId(id);
-  };
-
-  const shown = filter === "all" ? PROJECTS : PROJECTS.filter((p) => p.axis === filter);
-  const hovered = fine ? PROJECTS.find((p) => p.id === hoverId) : undefined;
+  const M = MYCROHNIE;
 
   return (
     <section id="proyectos" data-scene="work" className="relative border-t border-line">
@@ -97,144 +50,120 @@ export function ProjectsSection() {
             className="font-display text-balance text-[clamp(2.2rem,4.4vw,3.75rem)] font-semibold leading-[1.02] tracking-[-0.035em] text-ink lg:col-span-7"
             style={{ fontVariationSettings: '"opsz" 80' }}
           >
-            {PROJECTS_UI.heading[locale]}
+            {WORK_UI.heading[locale]}
           </h2>
-          <p className="max-w-[46ch] text-pretty text-[15.5px] leading-relaxed text-muted lg:col-span-5">
-            {PROJECTS_UI.lead[locale]}
-          </p>
+          <p className="max-w-[46ch] text-pretty text-[15.5px] leading-relaxed text-muted lg:col-span-5">{WORK_UI.lead[locale]}</p>
         </motion.div>
 
-        <div
-          role="group"
-          aria-label={PROJECTS_UI.filterLabel[locale]}
-          className="mt-12 flex flex-wrap gap-2 lg:mt-16"
+        {/* Featured: the hackathon */}
+        <motion.article
+          {...revealProps(reduce, 0.04)}
+          className="hack-card relative mt-14 overflow-hidden rounded-[28px] border border-line lg:mt-20"
         >
-          {FILTERS.map((f) => {
-            const on = filter === f;
-            return (
-              <button
-                key={f}
-                type="button"
-                aria-pressed={on}
-                onClick={() => setFilter(f)}
-                className={`press-scale h-10 rounded-full border px-4 text-[13.5px] font-medium transition-colors duration-150 ${
-                  on ? "border-ink bg-ink text-bg" : "border-line text-ink/85 hover:border-ink/40"
-                }`}
+          <div aria-hidden="true" className="hack-glow pointer-events-none absolute inset-0" />
+          <div className="relative grid gap-8 p-5 sm:p-8 lg:grid-cols-2 lg:items-center lg:gap-12 lg:p-12">
+            <div>
+              <div className="overflow-hidden rounded-[18px] border border-line bg-surface shadow-[0_40px_80px_-40px_rgb(0_0_0/0.9)]">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={M.media.src}
+                  width={M.media.width}
+                  height={M.media.height}
+                  alt={M.media.alt[locale]}
+                  loading="lazy"
+                  decoding="async"
+                  className="block h-auto w-full"
+                />
+              </div>
+              <p className="mt-4 font-display text-[1.6rem] font-semibold tracking-[-0.03em] text-ink">{M.name}</p>
+            </div>
+            <div>
+              <p className="font-mono text-[12px] uppercase tracking-[0.14em] text-accent">{M.eyebrow[locale]}</p>
+              <h3
+                className="mt-4 font-display text-[clamp(2.3rem,4.6vw,3.8rem)] font-semibold leading-[0.98] tracking-[-0.04em] text-ink"
+                style={{ fontVariationSettings: '"opsz" 96' }}
               >
-                {PROJECTS_UI.filters[f][locale]}
-              </button>
-            );
-          })}
-        </div>
+                {M.title[locale]}
+              </h3>
+              <p className="mt-5 max-w-[46ch] text-pretty text-[15.5px] leading-relaxed text-muted">{M.lead[locale]}</p>
 
-        <div
-          ref={listRef}
-          className="proj-list relative mt-8"
-          onPointerMove={(e) => {
-            if (fine && e.pointerType === "mouse") place(e.clientX, e.clientY);
-          }}
-          onPointerLeave={() => setHoverId(null)}
-        >
-          <ul className="border-t border-line">
-            <AnimatePresence mode="popLayout" initial={false}>
-              {shown.map((project) => (
-                <motion.li
-                  key={project.id}
-                  layout={reduce ? false : "position"}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.24, ease: EASE_OUT }}
-                  className="border-b border-line"
-                  onPointerEnter={(e) => {
-                    if (fine && e.pointerType === "mouse") setHoverId(project.id);
-                  }}
-                  onFocusCapture={(e) => onRowFocus(project.id, e.currentTarget)}
-                  onBlurCapture={(e) => {
-                    if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setHoverId(null);
-                  }}
-                >
-                  <article className="proj-row group/row grid gap-x-8 gap-y-3 py-7 md:grid-cols-[4.5rem_minmax(0,1fr)_14rem] md:py-9">
-                    <p className="font-mono text-[12px] tabular-nums text-muted md:pt-3">{project.year}</p>
+              {/* 24 hours, three marks */}
+              <ol className="relative mt-8 grid grid-cols-3 gap-3">
+                <span aria-hidden="true" className="absolute left-[6px] right-[calc(33%-6px)] top-[5px] h-px bg-gradient-to-r from-accent via-accent/60 to-accent" />
+                {M.timeline.map((step) => (
+                  <li key={step.t.en} className="relative pt-6">
+                    <span aria-hidden="true" className="absolute left-0 top-0 h-[11px] w-[11px] rounded-full border-2 border-accent bg-bg" />
+                    <p className="font-mono text-[12px] tabular-nums text-ink">{step.t[locale]}</p>
+                    <p className="mt-1 text-[12.5px] leading-snug text-muted">{step.label[locale]}</p>
+                  </li>
+                ))}
+              </ol>
 
-                    <div className="min-w-0">
-                      <div className="flex items-start justify-between gap-4">
-                        <h3
-                          className="font-display text-[clamp(2rem,4.6vw,3.9rem)] font-semibold leading-[1] tracking-[-0.035em] text-ink transition-transform duration-300 ease-[var(--ease-out)] md:group-hover/row:translate-x-1.5"
-                          style={{ fontVariationSettings: '"opsz" 96' }}
-                        >
-                          {project.name[locale]}
-                        </h3>
-                        {/* Mobile thumbnail, inline */}
-                        <div
-                          aria-hidden="true"
-                          className="h-14 w-14 shrink-0 overflow-hidden rounded-[14px] border border-line bg-elevated md:hidden"
-                        >
-                          <Visual project={project} locale={locale} small />
-                        </div>
-                      </div>
-                      <p className="mt-4 max-w-[54ch] text-pretty text-[15px] leading-relaxed text-muted">
-                        {project.line[locale]}
-                      </p>
-                      <div className="mt-5 flex flex-wrap items-center gap-2">
-                        {project.links.map((link) => (
-                          <a
-                            key={link.href}
-                            href={link.href}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="group press-scale inline-flex h-10 items-center gap-2 rounded-full border border-ink/25 px-4 text-[13.5px] font-medium text-ink transition-colors duration-150 hover:border-ink/50"
-                          >
-                            <LinkIcon kind={link.kind} />
-                            {link.label[locale]}
-                            {link.kind !== "github" && (
-                              <ArrowUpRight size={12} className="cta-arrow cta-arrow-diag text-muted" aria-hidden="true" />
-                            )}
-                          </a>
-                        ))}
-                        {project.note && <p className="font-mono text-[11.5px] text-muted">{project.note[locale]}</p>}
-                      </div>
-                    </div>
+              <dl className="mt-8 grid gap-4 sm:grid-cols-3">
+                {M.points.map((pt) => (
+                  <div key={pt.value.en} className="border-t border-line pt-3">
+                    <dt className="font-display text-[1.15rem] font-semibold tracking-[-0.02em] text-ink">{pt.value[locale]}</dt>
+                    <dd className="mt-1 text-[13px] leading-snug text-muted">{pt.label[locale]}</dd>
+                  </div>
+                ))}
+              </dl>
+              <div className="mt-7 flex flex-wrap items-center gap-2">
+                {M.links.map((link, i) => (
+                  <Pill key={link.href} link={link} locale={locale} primary={i === 0} />
+                ))}
+              </div>
+              <p className="mt-4 font-mono text-[11.5px] text-muted">{M.stack.join(" · ")}</p>
+            </div>
+          </div>
+        </motion.article>
 
-                    <div className="md:pt-3">
-                      <p className="text-[13.5px] text-ink/90">{project.role[locale]}</p>
-                      <p className="mt-1 font-mono text-[11.5px] text-muted">{PROJECTS_UI.filters[project.axis][locale]}</p>
-                      <p className="mt-3 hidden font-mono text-[11.5px] leading-relaxed text-muted md:block">
-                        {project.stack.join(" · ")}
-                      </p>
-                    </div>
-                  </article>
-                </motion.li>
-              ))}
-            </AnimatePresence>
+        {/* Lab */}
+        <div className="mt-20 lg:mt-28">
+          <motion.div {...revealProps(reduce)} className="flex flex-wrap items-baseline justify-between gap-3">
+            <h3 className="font-display text-[clamp(1.6rem,2.8vw,2.3rem)] font-semibold tracking-[-0.03em] text-ink">
+              {WORK_UI.labHeading[locale]}
+            </h3>
+            <p className="text-[14px] text-muted">{WORK_UI.labLead[locale]}</p>
+          </motion.div>
+          <ul className="mt-6 grid border-t border-line md:grid-cols-3 md:divide-x md:divide-line">
+            {LAB.map((p, i) => (
+              <motion.li
+                key={p.id}
+                {...revealProps(reduce, i * 0.05)}
+                className="flex flex-col border-b border-line py-7 md:border-b-0 md:px-8 md:first:pl-0 md:last:pr-0"
+              >
+                <div className="flex items-baseline justify-between gap-4">
+                  <p className="font-display text-[1.45rem] font-semibold tracking-[-0.025em] text-ink">
+                    {locale === "es" && LAB_NAMES_ES[p.id] ? LAB_NAMES_ES[p.id] : p.name}
+                  </p>
+                  <p className="font-mono text-[11.5px] tabular-nums text-muted">{p.year}</p>
+                </div>
+                <p className="mt-3 text-pretty text-[14.5px] leading-relaxed text-muted md:min-h-[4.8rem]">{p.line[locale]}</p>
+                <p className="mt-5 flex items-baseline gap-2.5">
+                  <span className="font-display text-[1.6rem] font-semibold leading-none tracking-[-0.03em] tabular-nums text-ink">
+                    {locale === "es" && p.plate.valueEs ? p.plate.valueEs : p.plate.value}
+                  </span>
+                  <span className="text-[12.5px] leading-snug text-muted">{p.plate.label[locale]}</span>
+                </p>
+                <div className="mt-auto flex flex-wrap items-center gap-2 pt-5">
+                  {p.links.map((link) => (
+                    <a
+                      key={link.href}
+                      href={link.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group inline-flex min-h-10 items-center gap-1.5 text-[14px] font-medium text-accent"
+                    >
+                      <span className="link-rule">{link.label[locale]}</span>
+                      <ArrowUpRight size={13} className="cta-arrow cta-arrow-diag" aria-hidden="true" />
+                    </a>
+                  ))}
+                  {p.note && <p className="font-mono text-[11.5px] text-muted">{p.note[locale]}</p>}
+                </div>
+              </motion.li>
+            ))}
           </ul>
-
-          {/* One floating reveal for the whole list. Fine pointers only. */}
-          {fine && (
-            <motion.div
-              aria-hidden="true"
-              className="pointer-events-none absolute left-0 top-0 z-20 overflow-hidden rounded-[20px] border border-line bg-surface shadow-[0_30px_60px_-30px_rgb(0_0_0/0.8)]"
-              style={{ x: reduce ? px : sx, y: reduce ? py : sy, width: REVEAL_W, height: REVEAL_H }}
-              initial={false}
-              animate={{ opacity: hovered ? 1 : 0, scale: hovered || reduce ? 1 : 0.96 }}
-              transition={{ duration: 0.2, ease: EASE_OUT }}
-            >
-              <AnimatePresence initial={false}>
-                {hovered && (
-                  <motion.div
-                    key={hovered.id}
-                    className="absolute inset-0"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.16, ease: EASE_OUT }}
-                  >
-                    <Visual project={hovered} locale={locale} />
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </motion.div>
-          )}
+          <p className="mt-8 text-[14px] text-muted">{MENTIONS[locale]}</p>
         </div>
       </div>
     </section>

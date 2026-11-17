@@ -2,13 +2,14 @@
 
 import React from "react";
 import { motion, useReducedMotion } from "motion/react";
-import { ArrowUpRight, GithubLogo, Keyboard, Mouse, Watch } from "@phosphor-icons/react";
+import { ArrowUpRight, GithubLogo, Keyboard, Mouse } from "@phosphor-icons/react";
 import { useLocale } from "@/lib/i18n-context";
 import { DESKTOP_UI, HARDWARE } from "@/content/desktop";
 import { revealProps } from "@/lib/motion";
 import { DesktopExplorer } from "./desktop/DesktopExplorer";
 
-const ICONS: Record<string, typeof Mouse> = { mchose: Mouse, akko: Keyboard, gts2: Watch };
+const ICONS: Record<string, typeof Mouse> = { mchose: Mouse, akko: Keyboard };
+const GTS2_URL = "https://github.com/Alberviz/gts2-mando";
 
 /**
  * #escritorio: the real Linux desktop. An interactive explorer over a live
@@ -46,7 +47,7 @@ export function DesktopSection() {
             {DESKTOP_UI.hardwareHeading[locale]}
           </motion.h3>
 
-          <ul className="no-scrollbar -mx-5 mt-8 flex scroll-px-5 snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-2 sm:-mx-8 sm:scroll-px-8 sm:px-8 md:mx-0 md:grid md:grid-cols-3 md:gap-0 md:overflow-visible md:px-0 md:pb-0">
+          <ul className="no-scrollbar -mx-5 mt-8 flex scroll-px-5 snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-2 sm:-mx-8 sm:scroll-px-8 sm:px-8 md:mx-0 md:grid md:grid-cols-2 md:gap-0 md:overflow-visible md:px-0 md:pb-0">
             {HARDWARE.map((piece, i) => {
               const Icon = ICONS[piece.id] ?? Mouse;
               return (
@@ -82,6 +83,13 @@ export function DesktopSection() {
               );
             })}
           </ul>
+          <p className="mt-8 max-w-[70ch] text-[14px] leading-relaxed text-muted">
+            <a href={GTS2_URL} target="_blank" rel="noopener noreferrer" className="link-rule text-ink/90">
+              gts2-mando
+            </a>
+            {locale === "es" ? " también está ahí: " : " is in there too: "}
+            {DESKTOP_UI.hardwareNote[locale]}
+          </p>
         </div>
       </div>
     </section>
