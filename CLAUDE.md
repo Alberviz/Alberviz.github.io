@@ -1,9 +1,9 @@
 # CLAUDE.md: guía del portfolio de Alberto Vizcaíno Ponte
 
 Portfolio estático (`/`) de Alberto en `https://alberviz.github.io`, rediseñado en noviembre de 2026 con el lenguaje
-"precisión cósmica": espacio profundo, un único acento ámbar y un agujero negro real calculado en WebGL. La segunda
-vuelta (rama `rediseno/nivel-2`) añade jerarquía en tres niveles: casos estrella (Wari y Olimpo con Warp), trabajo
-notable (MyCrohnie y su hackathon, el escritorio Linux, los sistemas) y laboratorio. El repo es
+"precisión cósmica": espacio profundo, un único acento ámbar y un agujero negro real calculado en WebGL. La tercera
+vuelta (rama `rediseno/paginas`) parte la página única en una home de avances y una página por caso (Wari, Olimpo con
+Warp y los sistemas, Laura y el escritorio), más MyCrohnie y el laboratorio en la home. El repo es
 **público**: nada de datos privados en código, copy, comentarios ni commits.
 
 ## 1. Leer primero
@@ -11,29 +11,33 @@ notable (MyCrohnie y su hackathon, el escritorio Linux, los sistemas) y laborato
 1. `PRODUCT.md`: audiencia, tono, reglas de contenido y privacidad.
 2. `DESIGN.md`: tokens (color, tipografía, forma), movimiento y reglas de composición.
 
-## 2. Estructura de `/`
+## 2. Estructura: una home y una página por caso (rama `rediseno/paginas`, noviembre de 2026)
 
-Orden en `src/app/page.tsx`: Nav, Hero, Wari, Olimpo, Sistemas, Laura, Escritorio, Proyectos, Trayectoria, Pie (con `CommandPalette`).
+El layout (`src/app/layout.tsx`) pone en todas las páginas la barra (`PortfolioNavbar`, que deduce la página de la ruta),
+el pie (`PortfolioFooter`, `#contacto`) y la paleta (`CommandPalette`). Así el idioma y la barra persisten al navegar.
 
-| Sección | Id | Componente |
+| Ruta | Contenido | Archivo |
 | --- | --- | --- |
-| Nav (barra arriba; en móvil, barra del pulgar abajo + hoja con todo) | - | `PortfolioNavbar` |
-| Hero (Gargantua WebGL en vivo, poster como LCP, índice de los dos casos) | `#hero` | `HeroSection` + `desktop/live/gargantua-*` |
-| Caso 01 · Wari (portal en niebla azul, única ruptura de tema, historia con scroll) | `#wari` | `WariPortal` |
-| Caso 02 · Olimpo (recreación con datos inventados) y Warp (portal GLSL jugable) | `#olimpo`, `#warp` | `OlimpoSection`, `olimpo/*` |
-| Sistemas (mapa orbital: lo que corre detrás de Olimpo) | `#sistemas` | `SystemsSection` |
-| Laura (asistente de voz local: demo de hologramas jugable, capacidades, pipeline y red de seguridad) | `#laura` | `LauraSection`, `laura/*` (`HoloDemo`, `HoloFrame`, `panels`, `Capabilities`, `Pipeline`, `SafetyNet`) |
-| Escritorio (LinuxRicing: explorador + hardware) | `#escritorio` | `DesktopSection`, `desktop/DesktopExplorer`, `desktop/live/*` |
-| Trabajo (MyCrohnie contado por su hackathon, laboratorio y una mención) | `#proyectos` | `ProjectsSection` |
-| Trayectoria | `#trayectoria` | `BackgroundSection` |
-| Contacto y pie | `#contacto` | `PortfolioFooter` |
+| `/` | Hero (Gargantua WebGL, solo aquí), `#casos` con un avance vivo de cada caso (`CaseReel` + `CaseVisuals`), `#proyectos`, `#trayectoria` | `src/app/page.tsx` |
+| `/wari/` | `WariPortal` (portal en niebla, `#wari-historia`, automatizaciones, CTA a `WARI_URL`) | `src/app/wari/page.tsx` |
+| `/olimpo/` | `OlimpoSection` (Firmamento, móvil, `#warp` con la demo y Cast) y `SystemsSection` (`#sistemas`) | `src/app/olimpo/page.tsx` |
+| `/laura/` | `LauraSection` completa (`#laura-demo`, capacidades, pipeline, red de seguridad) | `src/app/laura/page.tsx` |
+| `/escritorio/` | `DesktopSection` (explorador y momentos) y la historia del hardware (`#hardware`) | `src/app/escritorio/page.tsx` |
 
-`/wari` es solo un atajo estático (meta refresh) que lleva a la web de Wari.
+- Mapa del sitio, orden de los casos, metadatos, secciones por página y anclas viejas: `src/content/pages.ts`.
+  Metadatos y OG de cada caso: `src/app/case-metadata.ts` (imágenes en `public/media/og/`, capturas de la cabecera de cada página a 1200x630).
+- Cada caso termina con `NextCase` (Wari → Olimpo → Laura → Escritorio → home), con un avance quieto (sin WebGL).
+- Anclas viejas (`/#wari`, `/#olimpo`, `/#warp`, `/#sistemas`, `/#laura`, `/#escritorio`): un script en línea de la home
+  hace `location.replace` a su página antes de pintar.
+- El avance de Olimpo en la home carga `warp-engine` en su propio chunk solo cuando se acerca a la pantalla.
+- Barra: los cuatro casos y Trabajo (`/#proyectos`); en móvil, barra del pulgar con los cuatro casos y "Más" (hoja con
+  páginas y secciones de la página actual). La paleta lista páginas y secciones; un ancla en otra página navega con documento.
 
 ## 3. Contenido (`src/content/`)
 
 Todo el copy es bilingüe (`en` por defecto, `es`) y se elige con `useLocale()` de `src/lib/i18n-context.tsx`.
 
+- `pages.ts`: páginas, avances de cada caso (titular y dos líneas), secciones, metadatos y anclas viejas.
 - `site-copy.ts`: nav, hero, portal de Wari (con los capítulos de la historia), contacto.
 - `olimpo.ts`: caso Olimpo, sus pilares y cifras, los datos INVENTADOS de la recreación y Warp.
 - `systems.ts`: planetas del mapa orbital (Patrimonio, Aurora, Salud, Laura).
@@ -62,8 +66,9 @@ las tiendas". Olimpo nunca se enseña con datos reales: solo la recreación de `
    - La paleta de comandos (`⌘K`) abre y cierra sin animación (0 ms).
    - Para la preferencia de movimiento usa `useReducedMotionSafe()` de `src/lib/motion.ts` (evita errores de hidratación); los lienzos WebGL que se reutilizan no se recrean sobre el mismo `<canvas>`.
    - Secciones fijas (hero, Sistemas en ancho, historia del hardware en ancho) solo con WebGL o en escritorio; con reduced motion vuelven a scroll normal.
-   - Máximo 3 eyebrows en toda la página (hoy hay 3: Wari, Olimpo y MyCrohnie).
-4. **Verificación visual:** capturas desde el build estático (`out/`), nunca desde `pnpm dev`, a 1280x800, 390x844 y 360x780. Sin scroll horizontal a 360.
+   - Máximo 3 eyebrows por página (hoy: Wari en `/wari/`, Olimpo en `/olimpo/`, MyCrohnie en la home).
+4. **Verificación visual:** capturas desde el build estático (`out/`), nunca desde `pnpm dev`, de cada página a 1280x800, 390x844 y 360x780. Sin scroll horizontal a 360.
+5. **Rutas:** `pnpm build` debe generar las cinco (`/`, `/wari/`, `/olimpo/`, `/laura/`, `/escritorio/`). Cada página carga solo lo suyo.
 
 ## 5. Comandos
 

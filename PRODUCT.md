@@ -21,13 +21,13 @@ Demostrar con artefactos reales que Alberto (Doble Grado en Matemáticas e Ingen
 
 ## Positioning
 
-Una sola página (`/`), modo `Experience`, con jerarquía en tres niveles:
+Una home (`/`) de avances y una página por caso, modo `Experience`, con jerarquía en tres niveles:
 
-1. **Casos estrella:** Wari (su producto, en beta camino de Google Play y la App Store; nunca "ya en las tiendas" ni "la app de mis amigos") y Olimpo con Warp (el sistema operativo de su vida, autoalojado en la Raspberry Pi 5).
-2. **Trabajo notable:** Sistemas (lo que corre detrás de Olimpo: Patrimonio, Aurora, Salud, Laura), Laura (su asistente de voz local, con demo de hologramas y datos inventados), Escritorio Linux y MyCrohnie contado a través de HackYeah 2026 (24 horas).
+1. **Casos con página propia:** Wari (`/wari/`, su producto, en beta camino de Google Play y la App Store; nunca "ya en las tiendas" ni "la app de mis amigos"), Olimpo con Warp y los sistemas de la Pi (`/olimpo/`), Laura (`/laura/`, su asistente de voz local, con demo de hologramas y datos inventados) y el escritorio Linux con la ingeniería inversa del hardware (`/escritorio/`).
+2. **Trabajo notable en la home:** MyCrohnie contado a través de HackYeah 2026 (24 horas).
 3. **Laboratorio:** Barber Bot, CloShare y el vault de la universidad, compactos. Choppy solo como mención de una línea; gts2-mando como enlace en la ficha de Salud.
 
-Secciones: Nav, Hero, Wari, Olimpo (con Warp), Sistemas, Laura, Escritorio, Trabajo, Trayectoria y Contacto. La ruta `/wari` es un atajo estático que lleva a la web de Wari. El nombre viene de 割り勘 (warikan).
+La home se lee en pocos scrolls: Nav, Hero, Casos (un avance vivo por caso con "Ver el caso"), Trabajo, Trayectoria y Contacto. Cada caso es enlazable y compartible (título, descripción y OG propios) y termina con el siguiente caso. Los enlaces viejos a anclas de la página única llevan a su página. El nombre de Wari viene de 割り勘 (warikan).
 
 ## Voice
 

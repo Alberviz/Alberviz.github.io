@@ -35,12 +35,16 @@ El acento se reserva para el CTA primario, el foco, el elemento activo y detalle
 - Botones, filtros y chips: píldora (`999px`). Medios y marcos: `20px`.
 - Iconos: Phosphor, trazo uniforme.
 - Secciones separadas por `border-t border-line` y el espaciado `--spacing-section`; cabecera de sección = titular display a la izquierda y entradilla a la derecha.
-- Eyebrows: máximo 3 en toda la página y ya están todos usados: "01 · Mi producto, en beta" (Wari), "02 · Autoalojado, en uso diario" (Olimpo) y "HackYeah 2026 · 24 horas" (MyCrohnie). Las etiquetas de columna son titulares, no eyebrows.
+- Eyebrows: máximo 3 por página; hoy hay uno por página: "01 · Mi producto, en beta" (Wari), "02 · Autoalojado, en uso diario" (Olimpo) y "HackYeah 2026 · 24 horas" (MyCrohnie). Las etiquetas de columna son titulares, no eyebrows.
 - Composición distinta por sección: hero a sangre con índice de casos y caída con scroll; Wari en niebla con láminas e historia con móvil fijo; Olimpo como cielo profundo con nebulosa, ventana y móvil superpuestos en profundidad, y Warp como demo a lo ancho; Sistemas como diagrama de flujo; Laura como cielo oscuro con la demo de hologramas a lo ancho, un mapa de capacidades de pesos distintos, un pipeline que se llena con el scroll y una banda de seguridad; Trabajo como tarjeta de hackathon con horizonte cálido y un laboratorio compacto; contacto con un horizonte de acreción.
 - Textura: `.grain` (ruido SVG estático, nunca fijo) solo en Olimpo y en el pie.
 - Una sola etiqueta de contacto: "Contacto" en nav y pie.
 
-## 4. Momentos firma
+## 4. Páginas y momentos firma
+
+**Home, `#casos`:** un avance por caso, cada uno con su composición y un fragmento real, no una tarjeta plana: Wari en su niebla (la única ruptura de tema, `[data-surface="wari"]`) con dos pantallas reales; Olimpo como ventana del Firmamento con un portal de Warp en vivo (el motor real en modo superpuesto, cargado en diferido al acercarse; puntero encima lo despierta; sin WebGL, agujero CSS); Laura con un holograma de Descargas que nace de su píldora por un rayo; el escritorio con el setup y los bytes HID decodificándose al entrar. El visual se abre con `clip-path` al entrar y deriva contra el texto con el scroll; el CTA "Ver el caso" es la parada de teclado. **Final de cada caso:** `NextCase`, el siguiente caso con su avance quieto (nada corre ni carga WebGL). Las View Transitions entre home y casos quedan fuera por ahora (Next 15.5 las tiene tras un flag experimental).
+
+
 
 1. **Hero, "caer en el agujero":** Gargantua en WebGL en vivo (`desktop/live/gargantua-renderer.ts`) con poster como LCP. El hero es una pista de 180vh (150vh en móvil) con la primera pantalla fija: el scroll acerca la cámara (zoom exponencial en el pase final, `Camera` del renderer), lleva el agujero al centro, gira, deja que el agujero curve las estrellas, acelera el disco, añade desenfoque radial y funde a negro, donde empieza el amanecer de Wari. El texto se aparta con opacidad y desplazamiento. Reduced motion, sin WebGL2 o dispositivo flojo: poster y scroll normal, sin pista. Si el guardián de fotogramas congela el lienzo, la caída sigue como zoom CSS.
 2. **Wari:** historia con scroll en cinco capítulos (Inicio, captura de pagos, ticket, saldar con Revolut o Bizum, viaje) con pantallas reales en modo demo. En ancho, móvil fijo; en estrecho, carrusel con scroll-snap.
@@ -65,6 +69,6 @@ Contraste AA en todo, foco visible con `--focus-ring`, objetivos táctiles de 40
 
 ## 7. Móvil
 
-- Navegación con el pulgar: barra flotante abajo (Wari, Olimpo, Trabajo, Contacto y "Más"), con `env(safe-area-inset-bottom)` y `viewport-fit=cover`. Se esconde mientras el hero ocupa la pantalla.
-- "Más" abre una hoja inferior (curva drawer, 320 ms de entrada, bloqueo de scroll, Escape, foco atrapado y devuelto) con todas las secciones, el idioma y la búsqueda.
+- Navegación con el pulgar: barra flotante abajo (Wari, Olimpo, Laura, Escritorio y "Más"), con `env(safe-area-inset-bottom)` y `viewport-fit=cover`; marca la página actual. En la home se esconde mientras el hero ocupa la pantalla.
+- "Más" abre una hoja inferior (curva drawer, 320 ms de entrada, bloqueo de scroll, Escape, foco atrapado y devuelto) con las páginas, las secciones de la página actual, el idioma y la búsqueda.
 - Nada depende del hover: los planetas tienen además una fila de chips, la historia de Wari es un carrusel con puntos pulsables y Warp se lanza con un botón.
