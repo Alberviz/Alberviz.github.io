@@ -12,16 +12,16 @@ export function HomeLabWealthSection() {
 
   return (
     <section
-      id="systems"
+      id="sistemas"
       data-scene="systems"
-      className="py-16 sm:py-24 border-b border-[#232732]"
+      className="py-16 sm:py-24 border-b border-[#1F232D]"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-3xl">
-          <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-[-0.02em] leading-[1.05] text-[#ECEEF2]">
+          <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-[-0.02em] leading-[1.05] text-[#ECEDF0]">
             {HOMELAB_WEALTH_SYSTEM.heading[locale]}
           </h2>
-          <p className="text-base sm:text-lg text-[#8E95A5] mt-4 leading-relaxed max-w-[60ch]">
+          <p className="text-base sm:text-lg text-[#8A8F9C] mt-4 leading-relaxed max-w-[60ch]">
             {HOMELAB_WEALTH_SYSTEM.subheading[locale]}
           </p>
         </div>
@@ -29,32 +29,32 @@ export function HomeLabWealthSection() {
         {/* Ghostfolio wealth topology */}
         <div className="mt-14">
           <div className="mb-8 max-w-[68ch]">
-            <h3 className="font-display text-2xl sm:text-3xl font-semibold tracking-[-0.02em] text-[#ECEEF2]">
+            <h3 className="font-display text-2xl sm:text-3xl font-semibold tracking-[-0.02em] text-[#ECEDF0]">
               {HOMELAB_WEALTH_SYSTEM.wealthTitle[locale]}
             </h3>
-            <p className="text-sm sm:text-base text-[#8E95A5] mt-2 leading-relaxed">
+            <p className="text-sm sm:text-base text-[#8A8F9C] mt-2 leading-relaxed">
               {HOMELAB_WEALTH_SYSTEM.wealthSummary[locale]}
             </p>
           </div>
           <WealthTopology />
         </div>
 
-        <div className="my-16 sm:my-20 border-t border-[#232732]" />
+        <div className="my-16 sm:my-20 border-t border-[#1F232D]" />
 
         {/* Health hub: the second personal system */}
         <div id="health" className="scroll-mt-24">
           <div className="mb-8 max-w-[68ch]">
-            <h3 className="font-display text-2xl sm:text-3xl font-semibold tracking-[-0.02em] text-[#ECEEF2]">
+            <h3 className="font-display text-2xl sm:text-3xl font-semibold tracking-[-0.02em] text-[#ECEDF0]">
               {HEALTH_SYSTEM.title[locale]}
             </h3>
-            <p className="text-sm sm:text-base text-[#8E95A5] mt-2 leading-relaxed">
+            <p className="text-sm sm:text-base text-[#8A8F9C] mt-2 leading-relaxed">
               {HEALTH_SYSTEM.summary[locale]}
             </p>
           </div>
           <HealthTopology />
         </div>
 
-        <div className="my-16 sm:my-20 border-t border-[#232732]" />
+        <div className="my-16 sm:my-20 border-t border-[#1F232D]" />
 
         <AuroraPipeline />
       </div>

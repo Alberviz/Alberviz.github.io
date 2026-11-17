@@ -10,7 +10,7 @@ import { MobileWealthPreview } from "./MobileWealthPreview";
 const ICONS = {
   brokers: ChartLineUp,
   business: Storefront,
-  krakount: Receipt,
+  wari: Receipt,
   aurora: TelegramLogo,
   "mobile-app": DeviceMobile,
   "voice-queries": Waveform,
@@ -42,8 +42,8 @@ export function WealthTopology() {
       renderExtra={(item, side) => (
         <>
           {item.id === "business" && (
-            <span className="mt-3 ml-11 inline-flex items-center gap-1.5 rounded-full border border-[#10B981]/30 bg-[#10B981]/10 px-2 py-0.5 font-mono text-[10.5px] text-[#34D399]">
-              <span className="size-1.5 rounded-full bg-[#10B981] animate-pulse motion-reduce:animate-none" />
+            <span className="mt-3 ml-11 inline-flex items-center gap-1.5 rounded-full border border-[#F2B36F]/30 bg-[#F2B36F]/10 px-2 py-0.5 font-mono text-[10.5px] text-[#34D399]">
+              <span className="size-1.5 rounded-full bg-[#F2B36F] animate-pulse motion-reduce:animate-none" />
               {locale === "en" ? "Live profit sync" : "Profit en vivo"}
             </span>
           )}

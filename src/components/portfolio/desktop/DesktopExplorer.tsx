@@ -149,20 +149,20 @@ export function DesktopExplorer() {
         animate={{ transform: reduce ? "translate(-50%, -50%) scale(1)" : pinTransform }}
         transition={SPRING_CAMERA}
       >
-        {!isActive && <span aria-hidden="true" className="pin-pulse absolute inset-0 rounded-full border border-[#10B981]/70" />}
+        {!isActive && <span aria-hidden="true" className="pin-pulse absolute inset-0 rounded-full border border-[#F2B36F]/70" />}
         <span
           aria-hidden="true"
           className={`relative grid h-7 w-7 place-items-center rounded-full border font-mono text-[11px] font-semibold transition-colors duration-200 ${
             isActive
-              ? "border-[#10B981] bg-[#10B981] text-[#04130D]"
-              : "border-[#10B981]/60 bg-[#090A0D]/85 text-[#ECEEF2] group-hover:border-[#10B981]"
+              ? "border-[#F2B36F] bg-[#F2B36F] text-[#1A1208]"
+              : "border-[#F2B36F]/60 bg-[#07080B]/85 text-[#ECEDF0] group-hover:border-[#F2B36F]"
           }`}
         >
           {index + 1}
         </span>
         <span
           aria-hidden="true"
-          className={`pointer-events-none absolute top-1/2 hidden -translate-y-1/2 whitespace-nowrap rounded-full border border-[#232732] bg-[#090A0D]/90 px-2.5 py-1 font-mono text-[10.5px] text-[#ECEEF2] opacity-0 transition-opacity duration-150 md:block group-hover:opacity-100 group-focus-visible:opacity-100 ${
+          className={`pointer-events-none absolute top-1/2 hidden -translate-y-1/2 whitespace-nowrap rounded-full border border-[#1F232D] bg-[#07080B]/90 px-2.5 py-1 font-mono text-[10.5px] text-[#ECEDF0] opacity-0 transition-opacity duration-150 md:block group-hover:opacity-100 group-focus-visible:opacity-100 ${
             pin.x > 60 ? "right-9" : "left-9"
           }`}
         >
@@ -173,12 +173,12 @@ export function DesktopExplorer() {
   };
 
   return (
-    <div id="desktop" className="scroll-mt-20">
+    <div className="scroll-mt-20">
       <motion.div {...revealProps(reduce)} className="grid grid-cols-1 gap-6 lg:grid-cols-12 lg:items-end">
-        <h2 className="font-display text-balance text-[clamp(2rem,3.6vw,3rem)] font-semibold leading-[1.04] tracking-[-0.035em] text-[#ECEEF2] lg:col-span-6">
+        <h2 className="font-display text-balance text-[clamp(2rem,3.6vw,3rem)] font-semibold leading-[1.04] tracking-[-0.035em] text-[#ECEDF0] lg:col-span-6">
           {UI.heading[locale]}
         </h2>
-        <p className="max-w-[60ch] text-pretty text-[15px] leading-relaxed text-[#8E95A5] lg:col-span-6">
+        <p className="max-w-[60ch] text-pretty text-[15px] leading-relaxed text-[#8A8F9C] lg:col-span-6">
           {UI.lead[locale]}
         </p>
       </motion.div>
@@ -194,7 +194,7 @@ export function DesktopExplorer() {
         <div ref={shellRef} className={fullscreen ? "flex h-full w-full items-center justify-center bg-[#030304]" : ""}>
           <div
             className={`relative aspect-video w-full overflow-hidden bg-[#030304] ${
-              fullscreen ? "max-h-full max-w-[calc(100vh*16/9)]" : "rounded-2xl border border-[#232732]"
+              fullscreen ? "max-h-full max-w-[calc(100vh*16/9)]" : "rounded-2xl border border-[#1F232D]"
             }`}
           >
             {/* Live scene stays mounted so the shader cache is baked only once */}
@@ -260,7 +260,7 @@ export function DesktopExplorer() {
                 type="button"
                 onClick={toggleFullscreen}
                 aria-label={fullscreen ? UI.exitFullscreen[locale] : UI.fullscreen[locale]}
-                className="absolute right-3 top-3 z-30 inline-flex items-center gap-1.5 rounded-full border border-[#232732] bg-[#090A0D]/85 px-3 py-1.5 text-[12px] font-medium text-[#ECEEF2] backdrop-blur-md press-scale"
+                className="absolute right-3 top-3 z-30 inline-flex items-center gap-1.5 rounded-full border border-[#1F232D] bg-[#07080B]/85 px-3 py-1.5 text-[12px] font-medium text-[#ECEDF0] backdrop-blur-md press-scale"
               >
                 {fullscreen ? <CornersIn size={13} aria-hidden="true" /> : <CornersOut size={13} aria-hidden="true" />}
                 <span className="hidden sm:inline">{fullscreen ? UI.exitFullscreen[locale] : UI.fullscreen[locale]}</span>
@@ -268,7 +268,7 @@ export function DesktopExplorer() {
             )}
 
             {fullscreen && (
-              <ol className="absolute bottom-3 left-1/2 z-30 flex -translate-x-1/2 gap-1 rounded-full border border-[#232732] bg-[#090A0D]/85 p-1 backdrop-blur-md">
+              <ol className="absolute bottom-3 left-1/2 z-30 flex -translate-x-1/2 gap-1 rounded-full border border-[#1F232D] bg-[#07080B]/85 p-1 backdrop-blur-md">
                 {items.map((item, index) => (
                   <li key={item.id}>
                     <button
@@ -276,7 +276,7 @@ export function DesktopExplorer() {
                       onClick={() => setActiveId(item.id)}
                       aria-pressed={item.id === active.id}
                       className={`rounded-full px-3 py-1 font-mono text-[11px] transition-colors duration-150 ${
-                        item.id === active.id ? "bg-[#10B981] text-[#04130D]" : "text-[#B4BAC6] hover:text-[#ECEEF2]"
+                        item.id === active.id ? "bg-[#F2B36F] text-[#1A1208]" : "text-[#B4BAC6] hover:text-[#ECEDF0]"
                       }`}
                     >
                       {String(index + 1).padStart(2, "0")} {item.title}
@@ -288,7 +288,7 @@ export function DesktopExplorer() {
           </div>
         </div>
 
-        <div className="mt-3 flex items-center justify-between gap-4 font-mono text-[11px] text-[#5D6474]">
+        <div className="mt-3 flex items-center justify-between gap-4 font-mono text-[11px] text-[#7B8190]">
           <span>
             {focus.scene === "rig"
               ? UI.rigCaption[locale]
@@ -303,11 +303,11 @@ export function DesktopExplorer() {
       {/* Subsystem selector + active detail */}
       <div className="mt-12 grid grid-cols-1 gap-10 lg:grid-cols-12 lg:gap-12">
         <LayoutGroup id="desktop-subsystems">
-          <ol className="border-t border-[#232732] lg:col-span-5">
+          <ol className="border-t border-[#1F232D] lg:col-span-5">
             {items.map((item, index) => {
               const isActive = item.id === active.id;
               return (
-                <li key={item.id} className="border-b border-[#232732]">
+                <li key={item.id} className="border-b border-[#1F232D]">
                   <button
                     type="button"
                     onClick={() => setActiveId(item.id)}
@@ -318,15 +318,15 @@ export function DesktopExplorer() {
                       <motion.span
                         layoutId="desktop-subsystem-bg"
                         aria-hidden="true"
-                        className="absolute inset-0 -z-10 bg-[#111318]"
+                        className="absolute inset-0 -z-10 bg-[#0E1015]"
                         transition={reduce ? { duration: 0 } : SPRING_LAYOUT}
                       >
-                        <span className="absolute inset-y-0 left-0 w-px bg-[#10B981]" />
+                        <span className="absolute inset-y-0 left-0 w-px bg-[#F2B36F]" />
                       </motion.span>
                     )}
                     <span
                       className={`font-mono text-[11px] transition-colors duration-200 ${
-                        isActive ? "text-[#10B981]" : "text-[#5D6474]"
+                        isActive ? "text-[#F2B36F]" : "text-[#7B8190]"
                       }`}
                     >
                       {String(index + 1).padStart(2, "0")}
@@ -334,12 +334,12 @@ export function DesktopExplorer() {
                     <span className="min-w-0">
                       <span
                         className={`block text-[15px] font-semibold tracking-[-0.01em] transition-colors duration-200 ${
-                          isActive ? "text-[#ECEEF2]" : "text-[#B4BAC6] hover:text-[#ECEEF2]"
+                          isActive ? "text-[#ECEDF0]" : "text-[#B4BAC6] hover:text-[#ECEDF0]"
                         }`}
                       >
                         {item.title}
                       </span>
-                      <span className="mt-1 block truncate font-mono text-[11px] text-[#5D6474]">{item.tech}</span>
+                      <span className="mt-1 block truncate font-mono text-[11px] text-[#7B8190]">{item.tech}</span>
                     </span>
                   </button>
                 </li>
@@ -357,8 +357,8 @@ export function DesktopExplorer() {
               exit={{ opacity: 0, transform: reduce ? "none" : "translateY(-4px)" }}
               transition={{ duration: 0.22, ease: EASE_OUT }}
             >
-              <p className="font-mono text-[11px] text-[#10B981]">{active.badge[locale]}</p>
-              <h3 className="mt-3 font-display text-[clamp(1.5rem,2.4vw,2rem)] font-semibold leading-[1.1] tracking-[-0.03em] text-[#ECEEF2]">
+              <p className="font-mono text-[11px] text-[#F2B36F]">{active.badge[locale]}</p>
+              <h3 className="mt-3 font-display text-[clamp(1.5rem,2.4vw,2rem)] font-semibold leading-[1.1] tracking-[-0.03em] text-[#ECEDF0]">
                 {active.title}
               </h3>
               <p className="mt-4 max-w-[62ch] text-pretty text-[15px] leading-relaxed text-[#B4BAC6]">
@@ -366,8 +366,8 @@ export function DesktopExplorer() {
               </p>
               <ul className="mt-6 space-y-3">
                 {active.details.map((detail, i) => (
-                  <li key={i} className="grid grid-cols-[1.25rem_1fr] gap-x-2 text-[14px] leading-relaxed text-[#8E95A5]">
-                    <span aria-hidden="true" className="mt-[0.7em] h-px w-3 bg-[#10B981]" />
+                  <li key={i} className="grid grid-cols-[1.25rem_1fr] gap-x-2 text-[14px] leading-relaxed text-[#8A8F9C]">
+                    <span aria-hidden="true" className="mt-[0.7em] h-px w-3 bg-[#F2B36F]" />
                     <span className="max-w-[60ch]">{detail[locale]}</span>
                   </li>
                 ))}
@@ -375,7 +375,7 @@ export function DesktopExplorer() {
               {active.id === "health-planet" && (
                 <a
                   href="#health"
-                  className="group mt-6 inline-flex items-center gap-1.5 text-[13.5px] font-medium text-[#10B981] hover:text-[#34D399]"
+                  className="group mt-6 inline-flex items-center gap-1.5 text-[13.5px] font-medium text-[#F2B36F] hover:text-[#34D399]"
                 >
                   {UI.healthLink[locale]}
                   <ArrowDown size={13} className="cta-arrow cta-arrow-down" aria-hidden="true" />
@@ -385,18 +385,18 @@ export function DesktopExplorer() {
           </AnimatePresence>
 
           {repoLinks.length > 0 && (
-            <div className="mt-8 flex flex-wrap items-center gap-2 border-t border-[#232732] pt-6">
+            <div className="mt-8 flex flex-wrap items-center gap-2 border-t border-[#1F232D] pt-6">
               {repoLinks.map((link) => (
                 <a
                   key={link.href}
                   href={link.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group inline-flex items-center gap-2 rounded-full border border-[#232732] px-3.5 py-1.5 text-[13px] text-[#ECEEF2] transition-colors duration-150 hover:border-[#343a48] hover:bg-[#111318] press-scale"
+                  className="group inline-flex items-center gap-2 rounded-full border border-[#1F232D] px-3.5 py-1.5 text-[13px] text-[#ECEDF0] transition-colors duration-150 hover:border-[#343a48] hover:bg-[#0E1015] press-scale"
                 >
                   <GithubLogo size={14} aria-hidden="true" />
                   {link.label[locale]}
-                  <ArrowUpRight size={12} className="cta-arrow cta-arrow-diag text-[#8E95A5]" aria-hidden="true" />
+                  <ArrowUpRight size={12} className="cta-arrow cta-arrow-diag text-[#8A8F9C]" aria-hidden="true" />
                 </a>
               ))}
             </div>

@@ -148,13 +148,13 @@ interface MeasuredEdge {
   };
 
   const toneClass = {
-    active: "border-[#10B981]/60 bg-[#111318]",
+    active: "border-[#F2B36F]/60 bg-[#0E1015]",
     lit: "border-[#2C3240] bg-[#0D0F13]",
-    idle: "border-[#232732] bg-[#0B0C10]",
+    idle: "border-[#1F232D] bg-[#0B0C10]",
   } as const;
 
   const nodeBase =
-    "group relative w-full text-left rounded-xl border transition-[border-color,background-color,transform] duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] active:scale-[0.98] motion-reduce:active:scale-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#10B981]/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[#090A0D]";
+    "group relative w-full text-left rounded-xl border transition-[border-color,background-color,transform] duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] active:scale-[0.98] motion-reduce:active:scale-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F2B36F]/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[#07080B]";
 
   const renderFlowNode = (item: WealthFlowItem, side: "in" | "out") => {
     const NodeIcon = icons[item.id] ?? ChartLineUp;
@@ -170,17 +170,17 @@ interface MeasuredEdge {
       >
         <span className="flex items-start gap-3">
           <span
-            className={`mt-0.5 grid size-8 shrink-0 place-items-center rounded-lg border border-[#232732] bg-[#090A0D] transition-colors duration-200 ${
-              tone === "idle" ? "text-[#8E95A5]" : "text-[#10B981]"
+            className={`mt-0.5 grid size-8 shrink-0 place-items-center rounded-lg border border-[#1F232D] bg-[#07080B] transition-colors duration-200 ${
+              tone === "idle" ? "text-[#8A8F9C]" : "text-[#F2B36F]"
             }`}
           >
             <NodeIcon size={16} weight={tone === "active" ? "fill" : "regular"} />
           </span>
           <span className="min-w-0 flex-1">
-            <span className="block font-display text-[15px] font-medium leading-snug text-[#ECEEF2]">
+            <span className="block font-display text-[15px] font-medium leading-snug text-[#ECEDF0]">
               {item.title[locale]}
             </span>
-            <span className="mt-0.5 block truncate font-mono text-[11px] text-[#8E95A5]">
+            <span className="mt-0.5 block truncate font-mono text-[11px] text-[#8A8F9C]">
               {item.source}
             </span>
           </span>
@@ -194,7 +194,7 @@ interface MeasuredEdge {
     <div aria-hidden className="flex justify-center py-1 lg:hidden">
       <span
         className={`block h-8 w-px transition-colors duration-200 ${
-          lit ? "bg-[#10B981]/70" : "bg-[#232732]"
+          lit ? "bg-[#F2B36F]/70" : "bg-[#1F232D]"
         }`}
       />
     </div>
@@ -219,7 +219,7 @@ interface MeasuredEdge {
           };
         })();
 
-  const columnLabel = "hidden lg:block mb-3 font-mono text-[11px] text-[#8E95A5]";
+  const columnLabel = "hidden lg:block mb-3 font-mono text-[11px] text-[#8A8F9C]";
 
   return (
     <div>
@@ -245,11 +245,11 @@ interface MeasuredEdge {
               const state = edgeState(edge.id, activeId);
               return (
                 <g key={edge.id}>
-                  <path d={edge.d} fill="none" stroke="#232732" strokeWidth={1.25} />
+                  <path d={edge.d} fill="none" stroke="#1F232D" strokeWidth={1.25} />
                   <path
                     d={edge.d}
                     fill="none"
-                    stroke="#10B981"
+                    stroke="#F2B36F"
                     strokeWidth={1.5}
                     style={{
                       opacity: state === "primary" ? 0.9 : state === "secondary" ? 0.3 : 0,
@@ -299,32 +299,32 @@ interface MeasuredEdge {
             className={`${nodeBase} ${toneClass[nodeTone(CORE_ID)]} rounded-2xl p-5 lg:p-6`}
           >
             <span className="flex items-center justify-between gap-3">
-              <span className="font-mono text-[11px] text-[#8E95A5]">{coreHost}</span>
+              <span className="font-mono text-[11px] text-[#8A8F9C]">{coreHost}</span>
               <span className="flex items-center gap-1.5 font-mono text-[10.5px] text-[#34D399]">
-                <span className="size-1.5 rounded-full bg-[#10B981]" />
+                <span className="size-1.5 rounded-full bg-[#F2B36F]" />
                 24/7
               </span>
             </span>
             <span className="mt-4 flex items-center gap-3.5">
-              <span className="grid size-11 shrink-0 place-items-center rounded-xl border border-[#10B981]/35 bg-[#10B981]/10 text-[#10B981]">
+              <span className="grid size-11 shrink-0 place-items-center rounded-xl border border-[#F2B36F]/35 bg-[#F2B36F]/10 text-[#F2B36F]">
                 <CoreIcon size={22} weight={activeId === CORE_ID ? "fill" : "regular"} />
               </span>
               <span className="min-w-0">
-                <span className="block font-display text-lg font-semibold leading-tight text-[#ECEEF2] sm:text-xl">
+                <span className="block font-display text-lg font-semibold leading-tight text-[#ECEDF0] sm:text-xl">
                   {core.title[locale]}
                 </span>
-                <span className="mt-1 block font-mono text-[11px] text-[#8E95A5]">
+                <span className="mt-1 block font-mono text-[11px] text-[#8A8F9C]">
                   {core.platform}
                 </span>
               </span>
             </span>
-            <span className="mt-5 grid grid-cols-2 gap-px overflow-hidden rounded-lg border border-[#232732] bg-[#232732]">
+            <span className="mt-5 grid grid-cols-2 gap-px overflow-hidden rounded-lg border border-[#1F232D] bg-[#1F232D]">
               {coreFacts.map((fact) => (
                 <span
                   key={fact.en}
-                  className="flex items-center gap-2 bg-[#090A0D] px-2.5 py-2 text-[11.5px] leading-tight text-[#C5CAD3]"
+                  className="flex items-center gap-2 bg-[#07080B] px-2.5 py-2 text-[11.5px] leading-tight text-[#C5CAD3]"
                 >
-                  <span className="size-1 shrink-0 rounded-[1px] bg-[#10B981]" />
+                  <span className="size-1 shrink-0 rounded-[1px] bg-[#F2B36F]" />
                   {fact[locale]}
                 </span>
               ))}
@@ -346,7 +346,7 @@ interface MeasuredEdge {
       {/* Single-focus inspector */}
       <div
         aria-live="polite"
-        className="mt-8 min-h-[6.5rem] border-t border-[#232732] pt-5 sm:min-h-[5.5rem]"
+        className="mt-8 min-h-[6.5rem] border-t border-[#1F232D] pt-5 sm:min-h-[5.5rem]"
       >
         <motion.div
           key={`${activeId}-${locale}`}
@@ -356,8 +356,8 @@ interface MeasuredEdge {
           className="grid gap-1.5 lg:grid-cols-[minmax(0,17rem)_minmax(0,1fr)] lg:gap-10"
         >
           <div>
-            <p className="font-display text-base font-medium text-[#ECEEF2]">{activeItem.title}</p>
-            <p className="mt-0.5 font-mono text-[11px] text-[#8E95A5]">{activeItem.meta}</p>
+            <p className="font-display text-base font-medium text-[#ECEDF0]">{activeItem.title}</p>
+            <p className="mt-0.5 font-mono text-[11px] text-[#8A8F9C]">{activeItem.meta}</p>
           </div>
           <p className="max-w-[72ch] text-sm leading-relaxed text-[#B4BAC6] sm:text-[15px]">
             {activeItem.detail}

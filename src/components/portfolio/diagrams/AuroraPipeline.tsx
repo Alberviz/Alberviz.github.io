@@ -56,18 +56,18 @@ export function AuroraPipeline() {
             alt={ASSETS.aurora.logo.alt[locale]}
             width={44}
             height={44}
-            className="size-11 shrink-0 rounded-xl border border-[#232732] bg-[#111318] object-contain p-1"
+            className="size-11 shrink-0 rounded-xl border border-[#1F232D] bg-[#0E1015] object-contain p-1"
           />
           <div>
-            <h3 className="font-display text-2xl font-semibold tracking-[-0.02em] text-[#ECEEF2] sm:text-3xl">
+            <h3 className="font-display text-2xl font-semibold tracking-[-0.02em] text-[#ECEDF0] sm:text-3xl">
               {aurora.title}
             </h3>
-            <p className="mt-2 max-w-[62ch] text-sm leading-relaxed text-[#8E95A5] sm:text-base">
+            <p className="mt-2 max-w-[62ch] text-sm leading-relaxed text-[#8A8F9C] sm:text-base">
               {aurora.summary[locale]}
             </p>
           </div>
         </div>
-        <p className="shrink-0 font-mono text-[11px] text-[#8E95A5] lg:pb-1">
+        <p className="shrink-0 font-mono text-[11px] text-[#8A8F9C] lg:pb-1">
           {aurora.badge[locale]}
         </p>
       </div>
@@ -76,10 +76,10 @@ export function AuroraPipeline() {
         {/* Desktop signal rail */}
         <div
           aria-hidden
-          className="absolute inset-x-0 top-[7px] hidden h-px overflow-hidden bg-[#232732] lg:block"
+          className="absolute inset-x-0 top-[7px] hidden h-px overflow-hidden bg-[#1F232D] lg:block"
         >
           <span className="aurora-signal absolute inset-0 block">
-            <span className="absolute inset-y-0 right-0 block w-32 bg-gradient-to-r from-transparent via-[#10B981] to-transparent" />
+            <span className="absolute inset-y-0 right-0 block w-32 bg-gradient-to-r from-transparent via-[#F2B36F] to-transparent" />
           </span>
         </div>
 
@@ -89,22 +89,22 @@ export function AuroraPipeline() {
               {idx < STAGES.length - 1 && (
                 <span
                   aria-hidden
-                  className="absolute left-[7px] top-[19px] -bottom-7 w-px bg-[#232732] lg:hidden"
+                  className="absolute left-[7px] top-[19px] -bottom-7 w-px bg-[#1F232D] lg:hidden"
                 />
               )}
               <span
                 aria-hidden
-                className="absolute left-0 top-0 grid size-[15px] place-items-center rounded-[4px] border border-[#2C3240] bg-[#090A0D] lg:relative"
+                className="absolute left-0 top-0 grid size-[15px] place-items-center rounded-[4px] border border-[#2C3240] bg-[#07080B] lg:relative"
               >
-                <span className="size-[5px] rounded-[1px] bg-[#10B981]" />
+                <span className="size-[5px] rounded-[1px] bg-[#F2B36F]" />
               </span>
-              <p className="font-mono text-[11px] tabular-nums text-[#10B981] lg:mt-5">
+              <p className="font-mono text-[11px] tabular-nums text-[#F2B36F] lg:mt-5">
                 {String(idx + 1).padStart(2, "0")}
               </p>
-              <h4 className="mt-1 font-display text-base font-medium text-[#ECEEF2]">
+              <h4 className="mt-1 font-display text-base font-medium text-[#ECEDF0]">
                 {stage.title[locale]}
               </h4>
-              <p className="mt-1.5 max-w-[40ch] text-sm leading-relaxed text-[#8E95A5]">
+              <p className="mt-1.5 max-w-[40ch] text-sm leading-relaxed text-[#8A8F9C]">
                 {stage.detail[locale]}
               </p>
             </li>

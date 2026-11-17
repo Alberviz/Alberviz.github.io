@@ -22,25 +22,25 @@ export function AppliedIndex() {
   return (
     <div>
       <motion.div {...revealProps(reduce)} className="flex flex-wrap items-end justify-between gap-4">
-        <h3 className="font-display text-[clamp(1.6rem,2.6vw,2.1rem)] font-semibold leading-[1.1] tracking-[-0.03em] text-[#ECEEF2]">
+        <h3 className="font-display text-[clamp(1.6rem,2.6vw,2.1rem)] font-semibold leading-[1.1] tracking-[-0.03em] text-[#ECEDF0]">
           {locale === "es" ? "IA aplicada y herramientas en producción" : "Applied AI and production tools"}
         </h3>
-        <p className="max-w-[44ch] text-[14px] leading-relaxed text-[#8E95A5]">
+        <p className="max-w-[44ch] text-[14px] leading-relaxed text-[#8A8F9C]">
           {locale === "es"
             ? "Proyectos pequeños, usados por gente real, a coste de servidor casi cero."
             : "Small tools with real users, running at near-zero server cost."}
         </p>
       </motion.div>
 
-      <ol className="mt-10 border-t border-[#232732]">
+      <ol className="mt-10 border-t border-[#1F232D]">
         {APPLIED_AI_PROJECTS.map((project, index) => {
           const isOpen = open === project.id;
           const preview = PREVIEWS[project.id];
           const panelId = `applied-${project.id}`;
           return (
-            <motion.li key={project.id} {...revealProps(reduce, 0.05 * index)} className="border-b border-[#232732]">
+            <motion.li key={project.id} {...revealProps(reduce, 0.05 * index)} className="border-b border-[#1F232D]">
               <div className="grid grid-cols-[2.25rem_1fr_auto] items-start gap-x-3 py-6 sm:grid-cols-[3rem_1fr_auto] sm:gap-x-5">
-                <span className="pt-1.5 font-mono text-[11px] text-[#5D6474]">{String(index + 1).padStart(2, "0")}</span>
+                <span className="pt-1.5 font-mono text-[11px] text-[#7B8190]">{String(index + 1).padStart(2, "0")}</span>
 
                 <button
                   type="button"
@@ -50,15 +50,15 @@ export function AppliedIndex() {
                   className="group min-w-0 text-left"
                 >
                   <span className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                    <span className="font-display text-[clamp(1.25rem,2vw,1.6rem)] font-semibold tracking-[-0.025em] text-[#ECEEF2]">
+                    <span className="font-display text-[clamp(1.25rem,2vw,1.6rem)] font-semibold tracking-[-0.025em] text-[#ECEDF0]">
                       {project.title}
                     </span>
-                    <span className="font-mono text-[11px] text-[#10B981]">{project.badge[locale]}</span>
+                    <span className="font-mono text-[11px] text-[#F2B36F]">{project.badge[locale]}</span>
                   </span>
-                  <span className="mt-2 block max-w-[68ch] text-[14.5px] leading-relaxed text-[#8E95A5] transition-colors duration-150 group-hover:text-[#B4BAC6]">
+                  <span className="mt-2 block max-w-[68ch] text-[14.5px] leading-relaxed text-[#8A8F9C] transition-colors duration-150 group-hover:text-[#B4BAC6]">
                     {project.summary[locale]}
                   </span>
-                  <span className="mt-3 flex items-center gap-2 font-mono text-[11px] text-[#5D6474]">
+                  <span className="mt-3 flex items-center gap-2 font-mono text-[11px] text-[#7B8190]">
                     <Plus
                       size={11}
                       weight="bold"
@@ -78,11 +78,11 @@ export function AppliedIndex() {
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label={`${project.title}: ${link.label[locale]}`}
-                      className="group inline-flex items-center gap-1.5 rounded-full border border-[#232732] px-3 py-1.5 text-[12.5px] text-[#ECEEF2] transition-colors duration-150 hover:border-[#343a48] hover:bg-[#111318] press-scale"
+                      className="group inline-flex items-center gap-1.5 rounded-full border border-[#1F232D] px-3 py-1.5 text-[12.5px] text-[#ECEDF0] transition-colors duration-150 hover:border-[#343a48] hover:bg-[#0E1015] press-scale"
                     >
                       {link.kind === "github" ? <GithubLogo size={13} aria-hidden="true" /> : null}
                       <span className="hidden sm:inline">{link.label[locale]}</span>
-                      <ArrowUpRight size={12} className="cta-arrow cta-arrow-diag text-[#8E95A5]" aria-hidden="true" />
+                      <ArrowUpRight size={12} className="cta-arrow cta-arrow-diag text-[#8A8F9C]" aria-hidden="true" />
                     </a>
                   ))}
                 </div>
@@ -105,7 +105,7 @@ export function AppliedIndex() {
                         <ul className="space-y-3">
                           {project.highlights.map((highlight, i) => (
                             <li key={i} className="grid grid-cols-[1.25rem_1fr] gap-x-2 text-[14px] leading-relaxed text-[#B4BAC6]">
-                              <span aria-hidden="true" className="mt-[0.7em] h-px w-3 bg-[#10B981]" />
+                              <span aria-hidden="true" className="mt-[0.7em] h-px w-3 bg-[#F2B36F]" />
                               <span className="max-w-[60ch]">{highlight[locale]}</span>
                             </li>
                           ))}
@@ -114,7 +114,7 @@ export function AppliedIndex() {
                           <motion.div
                             initial={{ opacity: 0, transform: reduce ? "none" : "translateY(10px)" }}
                             animate={{ opacity: 1, transform: "translateY(0px)", transition: { duration: 0.4, ease: EASE_OUT, delay: 0.08 } }}
-                            className="max-h-[360px] w-[200px] overflow-hidden rounded-[26px] border border-[#232732] bg-[#171A21] p-[5px]"
+                            className="max-h-[360px] w-[200px] overflow-hidden rounded-[26px] border border-[#1F232D] bg-[#151820] p-[5px]"
                           >
                             <img
                               src={preview.src}

@@ -12,9 +12,9 @@ const LINE =
 const AREA = `${LINE} L 200 56 L 0 56 Z`;
 
 const ALLOCATION = [
-  { key: "invest", width: "58%", className: "bg-[#10B981]", label: { en: "Investments", es: "Inversión" } },
-  { key: "business", width: "24%", className: "bg-[#10B981]/45", label: { en: "Business", es: "Negocio" } },
-  { key: "cash", width: "18%", className: "bg-[#8E95A5]/45", label: { en: "Cash", es: "Liquidez" } },
+  { key: "invest", width: "58%", className: "bg-[#F2B36F]", label: { en: "Investments", es: "Inversión" } },
+  { key: "business", width: "24%", className: "bg-[#F2B36F]/45", label: { en: "Business", es: "Negocio" } },
+  { key: "cash", width: "18%", className: "bg-[#8A8F9C]/45", label: { en: "Cash", es: "Liquidez" } },
 ] as const;
 
 export function MobileWealthPreview() {
@@ -24,15 +24,15 @@ export function MobileWealthPreview() {
   return (
     <span
       aria-hidden
-      className="mt-3.5 block rounded-xl border border-[#232732] bg-[#090A0D] p-3"
+      className="mt-3.5 block rounded-xl border border-[#1F232D] bg-[#07080B] p-3"
     >
       <span className="flex items-center justify-between gap-2">
-        <span className="text-[11px] text-[#8E95A5]">
+        <span className="text-[11px] text-[#8A8F9C]">
           {locale === "en" ? "Net worth" : "Patrimonio neto"}
         </span>
         <span className="flex items-center gap-1.5">
-          <Fingerprint size={13} className="text-[#8E95A5]" />
-          <span className="rounded-full border border-[#232732] px-1.5 py-px font-mono text-[9.5px] tabular-nums text-[#8E95A5]">
+          <Fingerprint size={13} className="text-[#8A8F9C]" />
+          <span className="rounded-full border border-[#1F232D] px-1.5 py-px font-mono text-[9.5px] tabular-nums text-[#8A8F9C]">
             HTTP 403 {locale === "en" ? "read-only" : "solo lectura"}
           </span>
         </span>
@@ -48,15 +48,15 @@ export function MobileWealthPreview() {
         <svg viewBox="0 0 200 56" className="block h-12 w-full" preserveAspectRatio="none">
           <defs>
             <linearGradient id="wealth-preview-fill" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#10B981" stopOpacity="0.28" />
-              <stop offset="100%" stopColor="#10B981" stopOpacity="0" />
+              <stop offset="0%" stopColor="#F2B36F" stopOpacity="0.28" />
+              <stop offset="100%" stopColor="#F2B36F" stopOpacity="0" />
             </linearGradient>
           </defs>
           <path d={AREA} fill="url(#wealth-preview-fill)" />
           <path
             d={LINE}
             fill="none"
-            stroke="#10B981"
+            stroke="#F2B36F"
             strokeWidth={1.5}
             vectorEffect="non-scaling-stroke"
           />
@@ -70,12 +70,12 @@ export function MobileWealthPreview() {
       </span>
       <span className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1">
         {ALLOCATION.map((slice) => (
-          <span key={slice.key} className="flex items-center gap-1.5 text-[10.5px] text-[#8E95A5]">
+          <span key={slice.key} className="flex items-center gap-1.5 text-[10.5px] text-[#8A8F9C]">
             <span className={`size-1.5 rounded-[2px] ${slice.className}`} />
             {slice.label[locale]}
           </span>
         ))}
-        <span className="ml-auto font-mono text-[9.5px] text-[#8E95A5]">
+        <span className="ml-auto font-mono text-[9.5px] text-[#8A8F9C]">
           {locale === "en" ? "schematic" : "esquema"}
         </span>
       </span>

@@ -36,7 +36,7 @@ export interface ProjectCaseStudy {
   stack: string[];
   links: ExternalLink[];
   featuredMediaKey:
-    | "krakount"
+    | "wari"
     | "mycrohnie"
     | "gargantua"
     | "celestial"

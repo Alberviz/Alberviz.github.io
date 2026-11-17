@@ -1,91 +1,93 @@
 import type { Metadata, Viewport } from "next";
 import {
-  Space_Grotesk,
-  Plus_Jakarta_Sans,
-  JetBrains_Mono,
-  Schibsted_Grotesk,
-  Archivo,
+  Bricolage_Grotesque,
+  Geist,
+  Geist_Mono,
+  Inter,
+  Inter_Tight,
 } from "next/font/google";
 import { LanguageProvider } from "@/lib/i18n-context";
+import { SITE_URL } from "@/content/links";
 import "./globals.css";
 
-const fontDisplay = Space_Grotesk({
+const fontDisplay = Bricolage_Grotesque({
   subsets: ["latin"],
-  weight: ["500", "600", "700"],
-  variable: "--font-display",
+  axes: ["opsz"],
+  variable: "--f-display",
   display: "swap",
 });
 
-const fontSans = Plus_Jakarta_Sans({
+const fontSans = Geist({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  variable: "--font-sans",
+  variable: "--f-sans",
   display: "swap",
 });
 
-const fontMono = JetBrains_Mono({
+const fontMono = Geist_Mono({
   subsets: ["latin"],
-  weight: ["400", "500", "600"],
-  variable: "--font-mono",
+  variable: "--f-mono",
   display: "swap",
 });
 
-const fontKrakountUi = Schibsted_Grotesk({
+/* Wari's own type, only used inside the Wari portal ("another world"). */
+const fontWari = Inter({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
-  variable: "--font-krakount-ui",
+  variable: "--f-wari",
   display: "swap",
+  preload: false,
 });
 
-const fontKrakountBrand = Archivo({
+const fontWariDisplay = Inter_Tight({
   subsets: ["latin"],
-  weight: ["800", "900"],
-  variable: "--font-krakount-brand",
+  variable: "--f-wari-display",
   display: "swap",
+  preload: false,
 });
+
+const TITLE = "Alberto Vizcaíno Ponte";
+const DESCRIPTION =
+  "Maths and computer science student in Kraków. I build whole systems: Wari, the app my Erasmus group uses every day, my own AI running on a Raspberry Pi, and a Linux desktop with a black hole I wrote by hand.";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://alberviz.github.io"),
-  title: "Alberto Vizcaíno Ponte | Mathematics & CS Engineer | Builder",
-  description:
-    "Alberto Vizcaíno Ponte, Mathematics and Computer Science student. Krakount, a self-hosted wealth and health hub on a Raspberry Pi, and an AI-native Linux desktop with reverse-engineered hardware.",
+  metadataBase: new URL(SITE_URL),
+  title: TITLE,
+  description: DESCRIPTION,
   keywords: [
     "Alberto Vizcaíno Ponte",
     "Software Engineer",
+    "Design Engineer",
     "Mathematics",
     "Computer Science",
-    "Fullstack",
-    "Distributed Systems",
-    "Krakount",
+    "Wari",
+    "WebGL",
+    "Raspberry Pi",
   ],
-  authors: [{ name: "Alberto Vizcaíno Ponte", url: "https://alberviz.github.io" }],
-  creator: "Alberto Vizcaíno Ponte",
+  authors: [{ name: TITLE, url: SITE_URL }],
+  creator: TITLE,
   icons: {
     icon: "/favicon.svg",
   },
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://alberviz.github.io",
-    title: "Alberto Vizcaíno Ponte | Mathematics & CS Engineer | Builder",
-    description:
-      "Alberto Vizcaíno Ponte, Mathematics and Computer Science student. Krakount, a self-hosted wealth and health hub on a Raspberry Pi, and an AI-native Linux desktop with reverse-engineered hardware.",
-    siteName: "Alberto Vizcaíno Ponte Portfolio",
+    url: SITE_URL,
+    title: TITLE,
+    description: DESCRIPTION,
+    siteName: TITLE,
     images: [
       {
-        url: "/media/systems/gargantua-shader.webp",
-        width: 1600,
-        height: 900,
-        alt: "Alberto Vizcaíno Ponte - Mathematics & CS Engineer Portfolio",
+        url: "/media/hero/og.jpg",
+        width: 1200,
+        height: 630,
+        alt: "A black hole with a glowing accretion disk rendered in WebGL, next to the name Alberto Vizcaíno Ponte",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Alberto Vizcaíno Ponte | Mathematics & CS Engineer | Builder",
-    description:
-      "Alberto Vizcaíno Ponte, Mathematics and Computer Science student. Krakount, a self-hosted wealth and health hub on a Raspberry Pi, and an AI-native Linux desktop with reverse-engineered hardware.",
-    images: ["/media/systems/gargantua-shader.webp"],
+    title: TITLE,
+    description: DESCRIPTION,
+    images: ["/media/hero/og.jpg"],
   },
   robots: {
     index: true,
@@ -94,7 +96,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#090A0D",
+  themeColor: "#07080B",
   width: "device-width",
   initialScale: 1,
 };
@@ -107,14 +109,11 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`dark ${fontDisplay.variable} ${fontSans.variable} ${fontMono.variable} ${fontKrakountUi.variable} ${fontKrakountBrand.variable}`}
+      className={`dark ${fontDisplay.variable} ${fontSans.variable} ${fontMono.variable} ${fontWari.variable} ${fontWariDisplay.variable}`}
       suppressHydrationWarning
     >
-      <body className="min-h-screen bg-[#090A0D] text-[#ECEEF2] selection:bg-emerald-500/20 selection:text-emerald-300 antialiased font-sans">
-        <LanguageProvider>
-          <div className="bg-noise" aria-hidden="true" />
-          {children}
-        </LanguageProvider>
+      <body className="min-h-screen bg-bg font-sans text-ink antialiased selection:bg-accent/25">
+        <LanguageProvider>{children}</LanguageProvider>
       </body>
     </html>
   );

@@ -40,24 +40,24 @@ export function MyCrohnieCase() {
     <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-14">
       {/* Story */}
       <motion.div {...revealProps(reduce)} className="lg:col-span-5">
-        <p className="font-mono text-[11px] text-[#8E95A5]">{study.statusLabel[locale]}</p>
-        <h3 className="mt-4 font-display text-[clamp(2rem,3.2vw,2.6rem)] font-semibold leading-none tracking-[-0.035em] text-[#ECEEF2]">
+        <p className="font-mono text-[11px] text-[#8A8F9C]">{study.statusLabel[locale]}</p>
+        <h3 className="mt-4 font-display text-[clamp(2rem,3.2vw,2.6rem)] font-semibold leading-none tracking-[-0.035em] text-[#ECEDF0]">
           {study.title}
         </h3>
-        <p className="mt-4 max-w-[40ch] text-balance text-[17px] font-medium leading-snug text-[#ECEEF2]">
+        <p className="mt-4 max-w-[40ch] text-balance text-[17px] font-medium leading-snug text-[#ECEDF0]">
           {study.tagline[locale]}
         </p>
-        <p className="mt-4 max-w-[56ch] text-pretty text-[14.5px] leading-relaxed text-[#8E95A5]">
+        <p className="mt-4 max-w-[56ch] text-pretty text-[14.5px] leading-relaxed text-[#8A8F9C]">
           {study.problem[locale]}
         </p>
 
-        <ol className="mt-8 border-t border-[#232732]">
+        <ol className="mt-8 border-t border-[#1F232D]">
           {study.engineeringHighlights.slice(0, 3).map((highlight, i) => (
             <li
               key={i}
-              className="grid grid-cols-[2rem_1fr] gap-x-2 border-b border-[#232732] py-4 text-[14px] leading-relaxed text-[#B4BAC6]"
+              className="grid grid-cols-[2rem_1fr] gap-x-2 border-b border-[#1F232D] py-4 text-[14px] leading-relaxed text-[#B4BAC6]"
             >
-              <span className="pt-0.5 font-mono text-[11px] text-[#5D6474]">{String(i + 1).padStart(2, "0")}</span>
+              <span className="pt-0.5 font-mono text-[11px] text-[#7B8190]">{String(i + 1).padStart(2, "0")}</span>
               <span>{highlight[locale]}</span>
             </li>
           ))}
@@ -72,8 +72,8 @@ export function MyCrohnieCase() {
               rel="noopener noreferrer"
               className={`inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 text-[13px] font-medium transition-colors duration-150 press-scale ${
                 link.kind === "live"
-                  ? "bg-[#ECEEF2] text-[#090A0D] hover:bg-[#D9DCE3]"
-                  : "border border-[#232732] text-[#ECEEF2] hover:border-[#343a48] hover:bg-[#111318]"
+                  ? "bg-[#ECEDF0] text-[#07080B] hover:bg-[#D9DCE3]"
+                  : "border border-[#1F232D] text-[#ECEDF0] hover:border-[#343a48] hover:bg-[#0E1015]"
               }`}
             >
               <LinkIcon kind={link.kind} />
@@ -85,8 +85,8 @@ export function MyCrohnieCase() {
 
       {/* Media stage */}
       <motion.div {...revealProps(reduce, 0.08)} className="lg:col-span-7">
-        <div className="overflow-hidden rounded-2xl border border-[#232732] bg-[#0C0E12]">
-          <div className="flex items-center justify-between gap-3 border-b border-[#232732] px-3 py-2.5">
+        <div className="overflow-hidden rounded-2xl border border-[#1F232D] bg-[#0C0E12]">
+          <div className="flex items-center justify-between gap-3 border-b border-[#1F232D] px-3 py-2.5">
             <LayoutGroup id="mycrohnie-views">
               <div role="tablist" aria-label="MyCrohnie" className="flex flex-wrap items-center gap-1">
                 {VIEWS.map((v) => {
@@ -99,14 +99,14 @@ export function MyCrohnieCase() {
                       aria-selected={selected}
                       onClick={() => setView(v.id)}
                       className={`relative isolate rounded-full px-3 py-1.5 text-[12.5px] font-medium transition-colors duration-150 press-scale ${
-                        selected ? "text-[#ECEEF2]" : "text-[#8E95A5] hover:text-[#ECEEF2]"
+                        selected ? "text-[#ECEDF0]" : "text-[#8A8F9C] hover:text-[#ECEDF0]"
                       }`}
                     >
                       {selected && (
                         <motion.span
                           layoutId="mycrohnie-view-pill"
                           aria-hidden="true"
-                          className="absolute inset-0 -z-10 rounded-full border border-[#2A2F3B] bg-[#171A21]"
+                          className="absolute inset-0 -z-10 rounded-full border border-[#2A2F3B] bg-[#151820]"
                           transition={reduce ? { duration: 0 } : SPRING_LAYOUT}
                         />
                       )}
@@ -116,7 +116,7 @@ export function MyCrohnieCase() {
                 })}
               </div>
             </LayoutGroup>
-            <span className="hidden font-mono text-[10.5px] text-[#5D6474] sm:block">HackYeah 2026 · 24h</span>
+            <span className="hidden font-mono text-[10.5px] text-[#7B8190] sm:block">HackYeah 2026 · 24h</span>
           </div>
 
           <div role="tabpanel" className="relative aspect-video w-full">
@@ -130,7 +130,7 @@ export function MyCrohnieCase() {
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.45, ease: EASE_OUT }}
                 >
-                  <div className="h-[108%] translate-y-[8%] rounded-[30px] border border-[#232732] bg-[#171A21] p-[5px] shadow-[0_40px_70px_-30px_rgba(0,0,0,0.95)]">
+                  <div className="h-[108%] translate-y-[8%] rounded-[30px] border border-[#1F232D] bg-[#151820] p-[5px] shadow-[0_40px_70px_-30px_rgba(0,0,0,0.95)]">
                     <img
                       src={current.shot.src}
                       alt={current.shot.alt[locale]}
@@ -163,7 +163,7 @@ export function MyCrohnieCase() {
             </AnimatePresence>
           </div>
         </div>
-        <p className="mt-3 font-mono text-[11px] text-[#5D6474]">{study.stack.join(" / ")}</p>
+        <p className="mt-3 font-mono text-[11px] text-[#7B8190]">{study.stack.join(" / ")}</p>
       </motion.div>
     </div>
   );

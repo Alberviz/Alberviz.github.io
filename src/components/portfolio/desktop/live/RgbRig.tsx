@@ -116,12 +116,12 @@ export function RgbRig() {
             ))}
           </g>
         ))}
-        <text x="150" y="122" className="font-mono" fontSize="17" fill="#5D6474" letterSpacing="2">
+        <text x="150" y="122" className="font-mono" fontSize="17" fill="#7B8190" letterSpacing="2">
           MAGIC HOME STRIP
         </text>
 
         {/* Wallpaper monitor and Matugen */}
-        <rect x="150" y="190" width="560" height="320" rx="18" fill="#0B0C0E" stroke="#232732" strokeWidth="2" />
+        <rect x="150" y="190" width="560" height="320" rx="18" fill="#0B0C0E" stroke="#1F232D" strokeWidth="2" />
         {PALETTES.map((p, pi) => (
           <g key={p.name} style={fade(0, pi === active)}>
             <rect x="166" y="206" width="528" height="288" rx="10" fill={`url(#rig-wall-${pi})`} />
@@ -130,20 +130,20 @@ export function RgbRig() {
             ))}
           </g>
         ))}
-        <text x="150" y="548" className="font-mono" fontSize="17" fill="#5D6474" letterSpacing="2">
+        <text x="150" y="548" className="font-mono" fontSize="17" fill="#7B8190" letterSpacing="2">
           WALLPAPER · MATUGEN M3
         </text>
 
         {/* Packet log */}
         <g className="font-mono">
-          <text x="790" y="214" fontSize="17" fill="#5D6474" letterSpacing="2">
+          <text x="790" y="214" fontSize="17" fill="#7B8190" letterSpacing="2">
             sync-rgb.py
           </text>
           {log.map((line, i) => (
             <g key={line.dev} transform={`translate(790 ${258 + i * 62})`}>
-              <text fontSize="17" fill="#ECEEF2">
+              <text fontSize="17" fill="#ECEDF0">
                 {line.dev}
-                <tspan fill="#5D6474">{`  ${line.via}`}</tspan>
+                <tspan fill="#7B8190">{`  ${line.via}`}</tspan>
               </text>
               <text key={`${active}-${i}`} y="26" fontSize="16" className="rig-bytes" style={{ animationDelay: `${line.delay}s` }} fill={css(pal.primary)}>
                 {line.bytes}
@@ -182,7 +182,7 @@ export function RgbRig() {
               <rect x="-6" y="40" width="5" height="170" rx="2.5" fill={css(p.tertiary)} />
             </g>
           ))}
-          <text y="292" className="font-mono" fontSize="17" fill="#5D6474" letterSpacing="2">
+          <text y="292" className="font-mono" fontSize="17" fill="#7B8190" letterSpacing="2">
             AKKO 5075B PLUS · KEYS + SIDE STRIP
           </text>
         </g>
@@ -198,13 +198,13 @@ export function RgbRig() {
           ))}
           <path d="M-42 40 C-42 -40 42 -40 42 40 C42 82 -42 82 -42 40 Z" fill="#191B20" stroke="#2E313A" strokeWidth="2" />
           <line x1="0" y1="-18" x2="0" y2="10" stroke="#2E313A" strokeWidth="2" />
-          <text x="-90" y="150" className="font-mono" fontSize="17" fill="#5D6474" letterSpacing="2">
+          <text x="-90" y="150" className="font-mono" fontSize="17" fill="#7B8190" letterSpacing="2">
             MCHOSE K7 BASE
           </text>
         </g>
 
         {/* PC case: RAM and two ARGB fans */}
-        <rect x="1330" y="190" width="440" height="700" rx="18" fill="#0B0C0E" stroke="#232732" strokeWidth="2" />
+        <rect x="1330" y="190" width="440" height="700" rx="18" fill="#0B0C0E" stroke="#1F232D" strokeWidth="2" />
         <rect x="1352" y="212" width="396" height="656" rx="10" fill="#0E1013" stroke="#1B1E24" />
         {[0, 1].map((s) => (
           <rect key={s} x={1375 + s * 26} y="240" width="16" height="96" rx="3" fill="#16181D" />
@@ -238,14 +238,14 @@ export function RgbRig() {
             </g>
           </g>
         ))}
-        <text x="1330" y="928" className="font-mono" fontSize="17" fill="#5D6474" letterSpacing="2">
+        <text x="1330" y="928" className="font-mono" fontSize="17" fill="#7B8190" letterSpacing="2">
           RAM + ARGB FANS · OPENRGB
         </text>
       </svg>
 
       {/* Palette picker: real buttons, auto cycle stops once you choose */}
-      <div className="absolute bottom-3 left-3 flex items-center gap-1.5 rounded-full border border-[#232732] bg-[#090A0D]/85 p-1 backdrop-blur-md">
-        <span className="hidden px-2 font-mono text-[10.5px] text-[#5D6474] sm:inline">
+      <div className="absolute bottom-3 left-3 flex items-center gap-1.5 rounded-full border border-[#1F232D] bg-[#07080B]/85 p-1 backdrop-blur-md">
+        <span className="hidden px-2 font-mono text-[10.5px] text-[#7B8190] sm:inline">
           {locale === "es" ? "Fondo" : "Wallpaper"}
         </span>
         {PALETTES.map((p, i) => (
@@ -259,7 +259,7 @@ export function RgbRig() {
             aria-pressed={i === active}
             aria-label={`${locale === "es" ? "Aplicar fondo" : "Apply wallpaper"} ${p.name}`}
             className={`flex items-center gap-1.5 rounded-full px-2 py-1 font-mono text-[10.5px] transition-colors duration-150 press-scale ${
-              i === active ? "bg-[#171A21] text-[#ECEEF2]" : "text-[#8E95A5] hover:text-[#ECEEF2]"
+              i === active ? "bg-[#151820] text-[#ECEDF0]" : "text-[#8A8F9C] hover:text-[#ECEDF0]"
             }`}
           >
             <span aria-hidden="true" className="h-2.5 w-2.5 rounded-full" style={{ background: css(p.primary) }} />

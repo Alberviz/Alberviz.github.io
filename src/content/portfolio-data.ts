@@ -21,113 +21,6 @@ export const PROFILE = {
     en: "Kraków, Poland · Murcia, Spain",
     es: "Cracovia, Polonia · Murcia, España",
   } satisfies LocalizedText,
-  nav: {
-    work: { en: "Work", es: "Proyectos" },
-    systems: { en: "Wealth & Health", es: "Patrimonio y Salud" },
-    krakount: { en: "Krakount", es: "Krakount" },
-    experience: { en: "Background", es: "Trayectoria" },
-    cta: { en: "Get in touch", es: "Contactar" },
-    commandHint: { en: "Jump", es: "Ir a" },
-  },
-  hero: {
-    eyebrow: {
-      en: "MATHEMATICS & COMPUTER SCIENCE · FULL-STACK & SYSTEMS BUILDER",
-      es: "MATEMÁTICAS E INFORMÁTICA · BUILDER FULL-STACK Y SISTEMAS",
-    } satisfies LocalizedText,
-    headline: {
-      en: "Turning formal math into shipped software and hardware hacks.",
-      es: "De las matemáticas formales al software real y hardware hacking.",
-    } satisfies LocalizedText,
-    subtext: {
-      en: "Double degree student shipping daily-use PWAs, autonomous AI agents on self-hosted Linux, and reverse-engineered hardware protocols.",
-      es: "Estudiante del Doble Grado creando PWAs de uso diario, agentes de IA en Linux propio y protocolos hardware.",
-    } satisfies LocalizedText,
-    primaryCta: {
-      en: "Explore Krakount",
-      es: "Explorar Krakount",
-    } satisfies LocalizedText,
-    secondaryCta: {
-      en: "Download CV",
-      es: "Descargar CV",
-    } satisfies LocalizedText,
-  },
-  proofMetrics: [
-    {
-      value: "Double B.S.",
-      label: {
-        en: "Mathematics & CS · UMU + AGH Kraków",
-        es: "Matemáticas e Informática · UMU + AGH Cracovia",
-      },
-    },
-    {
-      value: "15+",
-      label: {
-        en: "Services and AI agents live 24/7 on a Raspberry Pi 5",
-        es: "Servicios y agentes de IA activos 24/7 en una Raspberry Pi 5",
-      },
-    },
-    {
-      value: "Highest Honors",
-      label: {
-        en: "Algorithms · 2x Top-7 Programming Olympiad",
-        es: "Algoritmos · 2x Top-7 Olimpiada de Programación",
-      },
-    },
-    {
-      value: "End-to-End",
-      label: {
-        en: "POS module shipped at STEL Order + 6 live products",
-        es: "Módulo TPV entregado en STEL Order + 6 productos en vivo",
-      },
-    },
-  ] satisfies MetricItem[],
-};
-
-export const KRAKOUNT_SPOTLIGHT = {
-  badge: {
-    en: "Flagship product · In daily use by our Erasmus group",
-    es: "Producto insignia · En uso diario en nuestro grupo Erasmus",
-  } satisfies LocalizedText,
-  title: "Krakount",
-  headline: {
-    en: "All your money and your group trips, in one app you use with one hand.",
-    es: "Todo tu dinero y los viajes del grupo, en una app que se usa a una mano.",
-  } satisfies LocalizedText,
-  description: {
-    en: "Built for our Erasmus group in Kraków because traditional split apps only cover basic lists and trip apps only cover trips. Krakount puts both in one installable PWA: automated card payments and Bizum auto-settling, exact minor units in 32 currencies, receipts split item by item, and the whole trip, from the vote on where to sleep to offline boarding passes at the gate.",
-    es: "Creada para nuestro grupo Erasmus en Cracovia porque las apps tradicionales de gastos solo llevan listas básicas y las apps de viajes solo los viajes. Krakount junta las dos cosas en una PWA instalable: pagos automáticos de tarjeta y cobros por Bizum que se saldan solos, céntimos exactos en 32 monedas, tickets repartidos producto a producto y el viaje entero, desde votar dónde dormir hasta el billete offline en la puerta de embarque.",
-  } satisfies LocalizedText,
-  pillars: [
-    {
-      title: { en: "Every euro in one place", es: "Todos tus gastos en un mismo sitio" },
-      detail: {
-        en: "Mis gastos adds your share of every group to what you spend alone, against a monthly budget, fixed or a share of your income. On Android, Krakount Captura reads Revolut and Wallet payments and a received Bizum settles the debt by itself.",
-        es: "Mis gastos suma tu parte de cada grupo a lo que gastas tú solo, frente a un presupuesto mensual, fijo o un porcentaje de lo que ingresas. En Android, Krakount Captura lee los pagos de Revolut y Wallet, y un Bizum recibido salda la deuda solo.",
-      },
-    },
-    {
-      title: { en: "Receipts split live", es: "Tickets repartidos en vivo" },
-      detail: {
-        en: "Snap the supermarket receipt, Gemini reads every Polish line (Tesseract as fallback), and each friend ticks what is theirs from their own phone, in real time. The photo is never stored.",
-        es: "Foto al ticket del súper, Gemini lee cada línea en polaco (con Tesseract de respaldo) y cada amigo marca lo suyo desde su móvil, en tiempo real. La foto nunca se guarda.",
-      },
-    },
-    {
-      title: { en: "The whole trip, not just the bill", es: "El viaje entero, no solo la cuenta" },
-      detail: {
-        en: "Proposals the group votes on, live flight status, an itinerary with a drawn map, and a wallet of boarding passes whose QR codes are redrawn offline. When it ends, a Wrapped story.",
-        es: "Propuestas que vota el grupo, vuelos en vivo, un itinerario con mapa dibujado y una cartera de billetes cuyos QR se redibujan sin conexión. Al terminar, una historia Wrapped.",
-      },
-    },
-  ],
-  ctaPrimary: {
-    en: "Open Krakount Showcase",
-    es: "Ver Página de Krakount",
-  } satisfies LocalizedText,
-  ctaVideo: {
-    en: "Watch 30s Demo",
-    es: "Ver Vídeo 30s",
-  } satisfies LocalizedText,
 };
 
 export const HOMELAB_WEALTH_SYSTEM = {
@@ -136,8 +29,8 @@ export const HOMELAB_WEALTH_SYSTEM = {
     es: "Dos sistemas personales, una Raspberry Pi",
   } satisfies LocalizedText,
   subheading: {
-    en: "Running 24/7 at home: a wealth engine fed by my brokers, my personal product-selling business and Krakount, a health hub fed by my watch, my meals and my gym log, and Aurora, my autonomous agent.",
-    es: "Activa 24/7 en casa: un motor patrimonial que une mis brókers, mi negocio personal de venta de productos y Krakount, un hub de salud que une mi reloj, mis comidas y mi registro del gimnasio, y Aurora, mi agente autónomo.",
+    en: "Running 24/7 at home: a wealth engine fed by my brokers, my personal product-selling business and Wari, a health hub fed by my watch, my meals and my gym log, and Aurora, my autonomous agent.",
+    es: "Activa 24/7 en casa: un motor patrimonial que une mis brókers, mi negocio personal de venta de productos y Wari, un hub de salud que une mi reloj, mis comidas y mi registro del gimnasio, y Aurora, mi agente autónomo.",
   } satisfies LocalizedText,
   auroraHighlight: {
     title: "Aurora (Hermes Autonomous Agent)",
@@ -170,8 +63,8 @@ export const HOMELAB_WEALTH_SYSTEM = {
     es: "Un patrimonio, cuatro fuentes en vivo",
   } satisfies LocalizedText,
   wealthSummary: {
-    en: "Brokers, my personal product-selling business, Krakount and Aurora write into one isolated Ghostfolio core. A read-only app and voice queries read from it.",
-    es: "Brókers, mi negocio personal de venta de productos, Krakount y Aurora escriben en un único núcleo Ghostfolio aislado. Una app de solo lectura y la voz leen de él.",
+    en: "Brokers, my personal product-selling business, Wari and Aurora write into one isolated Ghostfolio core. A read-only app and voice queries read from it.",
+    es: "Brókers, mi negocio personal de venta de productos, Wari y Aurora escriben en un único núcleo Ghostfolio aislado. Una app de solo lectura y la voz leen de él.",
   } satisfies LocalizedText,
   connectedFeeds: [
     {
@@ -206,10 +99,10 @@ export const HOMELAB_WEALTH_SYSTEM = {
       } satisfies LocalizedText,
     },
     {
-      id: "krakount",
+      id: "wari",
       tag: {
-        en: "03 · Krakount Capital Feed",
-        es: "03 · Feed de Capital Krakount",
+        en: "03 · Wari Capital Feed",
+        es: "03 · Feed de Capital Wari",
       } satisfies LocalizedText,
       title: {
         en: "Group Expense Shares & Debt Ledger",
@@ -241,12 +134,12 @@ export const HOMELAB_WEALTH_SYSTEM = {
       id: "ingest",
       layer: "ingest",
       title: {
-        en: "Brokers, Personal Business & Krakount Sync",
-        es: "Brókers, Negocio Personal y Krakount",
+        en: "Brokers, Personal Business & Wari Sync",
+        es: "Brókers, Negocio Personal y Wari",
       },
       subtitle: {
-        en: "Trade Republic · MyInvestor · Revolut · Supabase Cron 03:15 · Krakount 10m Feed",
-        es: "Trade Republic · MyInvestor · Revolut · Supabase Cron 03:15 · Feed Krakount 10m",
+        en: "Trade Republic · MyInvestor · Revolut · Supabase Cron 03:15 · Wari 10m Feed",
+        es: "Trade Republic · MyInvestor · Revolut · Supabase Cron 03:15 · Feed Wari 10m",
       },
       specs: [
         {
@@ -258,7 +151,7 @@ export const HOMELAB_WEALTH_SYSTEM = {
           es: "Puente Supabase con negocio personal de venta de productos: la participación se valora estrictamente sobre caja cobrada y beneficio realizado (el stock no vendido cuenta como 0 EUR hasta venderse; las reposiciones descuentan caja; los cierres mensuales registran dividendos).",
         },
         {
-          en: "Krakount capital feed polling /api/v1/me/capital every 10 min to keep personal group shares, debts, and income synced in Ghostfolio.",
+          en: "Wari capital feed polling /api/v1/me/capital every 10 min to keep personal group shares, debts, and income synced in Ghostfolio.",
           es: "Sondeo de /api/v1/me/capital cada 10 min para mantener al día en Ghostfolio la parte personal de gastos del grupo, deudas e ingresos.",
         },
       ],
@@ -353,13 +246,13 @@ export const HOMELAB_WEALTH_SYSTEM = {
         },
       },
       {
-        id: "krakount",
-        title: { en: "Krakount Capital Feed", es: "Feed de Capital Krakount" },
-        source: "Krakount /api/v1/me/capital",
+        id: "wari",
+        title: { en: "Wari Capital Feed", es: "Feed de Capital Wari" },
+        source: "Wari /api/v1/me/capital",
         protocol: "GET · 10 min cadence",
         detail: {
-          en: "Every 10 minutes Krakount reports my personal share of group expenses, logged income and net debts per bank.",
-          es: "Cada 10 minutos Krakount envía mi parte personal de los gastos del grupo, los ingresos registrados y las deudas netas por banco.",
+          en: "Every 10 minutes Wari reports my personal share of group expenses, logged income and net debts per bank.",
+          es: "Cada 10 minutos Wari envía mi parte personal de los gastos del grupo, los ingresos registrados y las deudas netas por banco.",
         },
       },
       {

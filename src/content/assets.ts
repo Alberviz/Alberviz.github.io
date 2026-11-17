@@ -46,14 +46,14 @@ export const ASSETS = {
     },
   } satisfies MediaAsset,
 
-  krakount: {
+  wari: {
     icon: {
       src: "/media/krakount/icon.svg",
       width: 512,
       height: 512,
       alt: {
-        en: "Krakount app icon with amber Kazimierz neon",
-        es: "Icono de la app Krakount con neón ámbar Kazimierz",
+        en: "Wari app icon (early dark version)",
+        es: "Icono de la app Wari (versión oscura inicial)",
       },
     } satisfies MediaAsset,
 
@@ -62,8 +62,8 @@ export const ASSETS = {
       width: 512,
       height: 512,
       alt: {
-        en: "Krakount circular emblem with Kraków Erasmus typography",
-        es: "Emblema circular Krakount con tipografía Kraków Erasmus",
+        en: "Wari circular emblem with Kraków Erasmus typography",
+        es: "Emblema circular Wari con tipografía Kraków Erasmus",
       },
     } satisfies MediaAsset,
 
@@ -72,8 +72,8 @@ export const ASSETS = {
       width: 660,
       height: 660,
       alt: {
-        en: "Krakount high-resolution logo emblem",
-        es: "Emblema de logotipo Krakount en alta resolución",
+        en: "Wari high-resolution logo emblem",
+        es: "Emblema de logotipo Wari en alta resolución",
       },
     } satisfies MediaAsset,
 
@@ -83,8 +83,8 @@ export const ASSETS = {
       height: 1080,
       poster: "/media/krakount/reel-poster.webp",
       alt: {
-        en: "Krakount 30-second mobile showcase video reel",
-        es: "Reel de vídeo de 30 segundos mostrando la app Krakount",
+        en: "Wari 30-second mobile showcase video reel",
+        es: "Reel de vídeo de 30 segundos mostrando la app Wari",
       },
     } satisfies MediaAsset,
 
@@ -93,8 +93,8 @@ export const ASSETS = {
       width: 608,
       height: 1080,
       alt: {
-        en: "Poster frame for Krakount 30-second showcase reel",
-        es: "Fotograma de portada para el reel de 30 segundos de Krakount",
+        en: "Poster frame for Wari 30-second showcase reel",
+        es: "Fotograma de portada para el reel de 30 segundos de Wari",
       },
     } satisfies MediaAsset,
 
@@ -104,8 +104,8 @@ export const ASSETS = {
       height: 1080,
       poster: "/media/krakount/trip-poster.webp",
       alt: {
-        en: "Krakount trip loop: create the group, the day by day itinerary with its map, the wallet of boarding passes, and a live flight alert",
-        es: "Bucle de viaje en Krakount: crear el grupo, el itinerario día a día con su mapa, la cartera de billetes y un aviso de vuelo en directo",
+        en: "Wari trip loop: create the group, the day by day itinerary with its map, the wallet of boarding passes, and a live flight alert",
+        es: "Bucle de viaje en Wari: crear el grupo, el itinerario día a día con su mapa, la cartera de billetes y un aviso de vuelo en directo",
       },
     } satisfies MediaAsset,
 
@@ -114,8 +114,8 @@ export const ASSETS = {
       width: 608,
       height: 1080,
       alt: {
-        en: "Poster frame for Krakount trip mobile loop",
-        es: "Fotograma de portada para el bucle de viaje de Krakount",
+        en: "Poster frame for Wari trip mobile loop",
+        es: "Fotograma de portada para el bucle de viaje de Wari",
       },
     } satisfies MediaAsset,
 
@@ -125,8 +125,8 @@ export const ASSETS = {
         width: 780,
         height: 1688,
         alt: {
-          en: "Krakount debt overview: 267 EUR owed to you, captured payments to review, and your active groups",
-          es: "Resumen de deudas en Krakount: te deben 267 €, pagos capturados por revisar y tus grupos activos",
+          en: "Wari debt overview: 267 EUR owed to you, captured payments to review, and your active groups",
+          es: "Resumen de deudas en Wari: te deben 267 €, pagos capturados por revisar y tus grupos activos",
         },
       } satisfies MediaAsset,
 
@@ -135,8 +135,8 @@ export const ASSETS = {
         width: 780,
         height: 1688,
         alt: {
-          en: "Krakount group expenses: Piso Kraków shared expenses, open supermarket receipts, and balances",
-          es: "Gastos de grupo en Krakount: gastos compartidos de Piso Kraków, tickets abiertos del súper y saldos",
+          en: "Wari group expenses: Piso Kraków shared expenses, open supermarket receipts, and balances",
+          es: "Gastos de grupo en Wari: gastos compartidos de Piso Kraków, tickets abiertos del súper y saldos",
         },
       } satisfies MediaAsset,
 
@@ -257,8 +257,8 @@ export const ASSETS = {
         width: 700,
         height: 524,
         alt: {
-          en: "Krakount home card: total money owed to you and personal monthly spending breakdown",
-          es: "Tarjeta de inicio de Krakount: dinero total que te deben y desglose de gasto mensual",
+          en: "Wari home card: total money owed to you and personal monthly spending breakdown",
+          es: "Tarjeta de inicio de Wari: dinero total que te deben y desglose de gasto mensual",
         },
       } satisfies MediaAsset,
 

@@ -594,7 +594,7 @@ export function LauraVoiceScene() {
                 }}
                 className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 font-mono text-[11px] transition-colors ${
                   active
-                    ? "bg-[#10B981] text-[#04130D] font-semibold"
+                    ? "bg-[#F2B36F] text-[#1A1208] font-semibold"
                     : "text-[#B4BAC6] hover:text-white"
                 }`}
               >
@@ -619,7 +619,7 @@ export function LauraVoiceScene() {
                 className={`rounded-full px-2 py-0.5 font-mono text-[10.5px] transition-colors ${
                   step === st
                     ? "bg-white/20 text-white font-medium"
-                    : "text-[#8E95A5] hover:text-white"
+                    : "text-[#8A8F9C] hover:text-white"
                 }`}
               >
                 {st === "listen"
@@ -636,7 +636,7 @@ export function LauraVoiceScene() {
           <button
             type="button"
             onClick={handleReplay}
-            className="inline-flex items-center gap-1.5 rounded-full border border-[#10B981]/40 bg-[#0F1016]/85 px-3 py-1 font-mono text-[11px] font-medium text-[#10B981] backdrop-blur-md hover:border-[#10B981] press-scale"
+            className="inline-flex items-center gap-1.5 rounded-full border border-[#F2B36F]/40 bg-[#0F1016]/85 px-3 py-1 font-mono text-[11px] font-medium text-[#F2B36F] backdrop-blur-md hover:border-[#F2B36F] press-scale"
             title="SUPER+A"
           >
             <Command size={12} weight="bold" />

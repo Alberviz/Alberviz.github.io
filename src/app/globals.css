@@ -1,92 +1,85 @@
 @import "tailwindcss";
 
 @theme {
-  --font-display: var(--font-display), "Space Grotesk", sans-serif;
-  --font-sans: var(--font-sans), "Plus Jakarta Sans", sans-serif;
-  --font-mono: var(--font-mono), "JetBrains Mono", monospace;
-  --font-krakount-ui: var(--font-krakount-ui), "Schibsted Grotesk", sans-serif;
-  --font-krakount-brand: var(--font-krakount-brand), "Archivo", sans-serif;
+  --font-display: var(--f-display), "Bricolage Grotesque", sans-serif;
+  --font-sans: var(--f-sans), "Geist", system-ui, sans-serif;
+  --font-mono: var(--f-mono), "Geist Mono", ui-monospace, monospace;
+  --font-wari: var(--f-wari), "Inter", system-ui, sans-serif;
+  --font-wari-display: var(--f-wari-display), "Inter Tight", "Inter", system-ui, sans-serif;
 
-  --color-canvas: var(--bg-canvas);
-  --color-surface: var(--bg-surface);
-  --color-elevated: var(--bg-elevated);
-  --color-hairline: var(--border-hairline);
-  --color-primary: var(--text-primary);
-  --color-muted: var(--text-muted);
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-elevated: var(--elevated);
+  --color-line: var(--line);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
   --color-accent: var(--accent);
   --color-accent-pressed: var(--accent-pressed);
   --color-on-accent: var(--on-accent);
 
-  --color-kk-paper: var(--kk-paper);
-  --color-kk-sheet: var(--kk-sheet);
-  --color-kk-sheet-alt: var(--kk-sheet-alt);
-  --color-kk-rule: var(--kk-rule);
-  --color-kk-ink: var(--kk-ink);
-  --color-kk-ink-muted: var(--kk-ink-muted);
-  --color-kk-amber: var(--kk-amber);
-  --color-kk-amber-press: var(--kk-amber-press);
-  --color-kk-on-amber: var(--kk-on-amber);
-  --color-kk-owed: var(--kk-owed);
-  --color-kk-owe: var(--kk-owe);
-
   --ease-out-strong: cubic-bezier(0.23, 1, 0.32, 1);
   --ease-in-out-strong: cubic-bezier(0.77, 0, 0.175, 1);
   --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+
+  /* Spacing rhythm for sections (space, not cards) */
+  --spacing-section: clamp(5rem, 9vw, 8.5rem);
 }
 
 :root,
 .dark {
-  /* Surface 1: Obsidian Precision + Emerald Signal */
-  --bg-canvas: #090A0D;
-  --bg-surface: #111318;
-  --bg-elevated: #171A21;
-  --border-hairline: #232732;
-  --text-primary: #ECEEF2;
-  --text-muted: #8E95A5;
-  --accent: #10B981;
-  --accent-pressed: #059669;
-  --on-accent: #04130D;
+  /* Deep-space surface: precision cosmic. Single accent = accretion disk. */
+  --bg: #07080B;
+  --surface: #0E1015;
+  --elevated: #151820;
+  --line: #1F232D;
+  --ink: #ECEDF0;
+  --muted: #8A8F9C; /* 6.2:1 on --bg, 5.9:1 on --surface, 5.5:1 on --elevated */
+  --accent: #F2B36F;
+  --accent-pressed: #E39F55;
+  --on-accent: #1A1208;
 
   /* Emil Kowalski Motion Curves */
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
   --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
   --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
 
-  /* Focus ring follows the active surface accent */
-  --focus-ring: #10B981;
+  --focus-ring: var(--accent);
+  --nav-h: 4rem;
 }
 
-/* Surface 2: Krakount Scoped Surface - Kazimierz de noche */
-[data-surface="krakount"] {
-  --kk-paper: #0E0F13;
-  --kk-sheet: #17181E;
-  --kk-sheet-alt: #1F2027;
-  --kk-rule: #26272F;
-  --kk-ink: #EDEDEF;
-  --kk-ink-muted: #8B8D98;
-  --kk-amber: #F5A524;
-  --kk-amber-press: #E0951A;
-  --kk-on-amber: #16130A;
-  --kk-owed: #3DD68C;
-  --kk-owe: #FF6B5B;
+/*
+ * Wari portal: the only color block on the page. Tokens are scoped to the
+ * section so the dark page tokens above never leak in. Values follow the
+ * Wari "Cristal" light palette (fog + frosted glass).
+ */
+[data-surface="wari"] {
+  --wari-fog-0: #EEF2F8;
+  --wari-fog-1: #D9E1EE;
+  --wari-fog-2: #B4C3DC;
+  --wari-ink: #13213B;
+  --wari-ink-2: #3B4860;
+  --wari-action: #27467A;
+  --wari-on-action: #F6F9FD;
+  --wari-glass: rgb(255 255 255 / 0.62);
+  --wari-glass-edge: rgb(255 255 255 / 0.95);
 
-  --focus-ring: #F5A524;
+  --focus-ring: #27467A;
 }
 
 /* Base Body Styles */
 html {
-  background-color: var(--bg-canvas);
-  color: var(--text-primary);
+  background-color: var(--bg);
+  color: var(--ink);
   color-scheme: dark;
   scroll-behavior: smooth;
-  scroll-padding-top: 5rem;
+  scroll-padding-top: 4rem;
   -webkit-tap-highlight-color: transparent;
 }
 
 body {
   min-height: 100vh;
-  background-color: var(--bg-canvas);
-  color: var(--text-primary);
+  background-color: var(--bg);
+  color: var(--ink);
   font-family: var(--font-sans);
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -95,13 +88,13 @@ body {
 
 /* Browser surfaces themed from the palette */
 ::selection {
-  background-color: rgb(16 185 129 / 0.22);
-  color: #ECEEF2;
+  background-color: rgb(242 179 111 / 0.28);
+  color: #ECEDF0;
 }
 
-[data-surface="krakount"] ::selection {
-  background-color: rgb(245 165 36 / 0.25);
-  color: #EDEDEF;
+[data-surface="wari"] ::selection {
+  background-color: rgb(39 70 122 / 0.22);
+  color: #13213B;
 }
 
 :focus-visible {
@@ -111,7 +104,7 @@ body {
 }
 
 html {
-  scrollbar-color: #232732 transparent;
+  scrollbar-color: #1F232D transparent;
   scrollbar-width: thin;
 }
 
@@ -121,9 +114,9 @@ html {
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #232732;
+  background-color: #1F232D;
   border-radius: 999px;
-  border: 3px solid var(--bg-canvas);
+  border: 3px solid var(--bg);
 }
 
 ::-webkit-scrollbar-track {
@@ -315,4 +308,143 @@ html {
   .rig-spin {
     animation: none !important;
   }
+}
+
+/* ---------------------------------------------------------------------
+ * Hero: poster + live canvas stage, veil, and CSS-only entrance (so the
+ * text is visible without waiting for hydration).
+ * ------------------------------------------------------------------- */
+.hero-stage {
+  background-color: var(--bg);
+}
+
+.hero-poster,
+.hero-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.hero-canvas {
+  opacity: 0;
+  transition: opacity 900ms var(--ease-out);
+}
+
+.hero-canvas[data-on="1"] {
+  opacity: 1;
+}
+
+.hero-veil {
+  background:
+    linear-gradient(to bottom, rgb(7 8 11 / 0.6) 0, rgb(7 8 11 / 0) 16%, rgb(7 8 11 / 0) 74%, var(--bg) 100%),
+    linear-gradient(to bottom, rgb(7 8 11 / 0) 36%, rgb(7 8 11 / 0.82) 60%, rgb(7 8 11 / 0.94) 100%);
+}
+
+@media (min-aspect-ratio: 5/4) {
+  .hero-veil {
+    background:
+      linear-gradient(to bottom, rgb(7 8 11 / 0.6) 0, rgb(7 8 11 / 0) 16%, rgb(7 8 11 / 0) 78%, var(--bg) 100%),
+      linear-gradient(90deg, rgb(7 8 11 / 0.92) 0%, rgb(7 8 11 / 0.8) 30%, rgb(7 8 11 / 0) 60%);
+  }
+}
+
+@keyframes heroRise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero-rise {
+  animation: heroRise 700ms var(--ease-out) both;
+  animation-delay: var(--d, 0ms);
+}
+
+/* ---------------------------------------------------------------------
+ * Wari portal (scoped by [data-surface="wari"]): fog, dawn, glass, phones.
+ * ------------------------------------------------------------------- */
+.wari-portal {
+  background: linear-gradient(180deg, #eef2f8 0, #eef2f8 28rem, #d9e1ee 62%, #b4c3dc 100%);
+  border-bottom-left-radius: 2.5rem;
+  border-bottom-right-radius: 2.5rem;
+}
+
+.wari-dawn {
+  background:
+    radial-gradient(48rem 15rem at 78% 60%, rgb(255 150 110 / 0.5), transparent 70%),
+    linear-gradient(
+      180deg,
+      #07080b 0%,
+      #0b1124 8%,
+      #1a2a4e 24%,
+      #5a72a2 46%,
+      #a8b9d6 66%,
+      #e0e7f2 86%,
+      #eef2f8 100%
+    );
+}
+
+.wari-dawn {
+  -webkit-mask-image: linear-gradient(to bottom, #000 0, #000 80%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 0, #000 80%, transparent 100%);
+}
+
+.wari-stars {
+  -webkit-mask-image: linear-gradient(to bottom, #000 0, rgb(0 0 0 / 0.6) 35%, transparent 72%);
+  mask-image: linear-gradient(to bottom, #000 0, rgb(0 0 0 / 0.6) 35%, transparent 72%);
+}
+
+.wari-halo {
+  border-radius: 9999px;
+}
+
+.wari-halo-peach {
+  right: -14rem;
+  top: 26rem;
+  width: 46rem;
+  height: 46rem;
+  background: radial-gradient(closest-side, rgb(255 140 100 / 0.5), transparent);
+}
+
+.wari-halo-blue {
+  left: -16rem;
+  top: 44rem;
+  width: 44rem;
+  height: 44rem;
+  background: radial-gradient(closest-side, rgb(100 130 250 / 0.38), transparent);
+}
+
+.wari-stage {
+  perspective: 1700px;
+}
+
+.wari-tilt {
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.wari-sheet {
+  border-radius: 2rem;
+  background: linear-gradient(160deg, rgb(255 255 255 / 0.72), rgb(255 255 255 / 0.26));
+  border: 1px solid rgb(255 255 255 / 0.95);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 1),
+    0 40px 80px -40px rgb(19 33 59 / 0.38);
+}
+
+.wari-phone {
+  border-radius: 2.1rem;
+  padding: 6px;
+  background: #0b1226;
+  box-shadow:
+    inset 0 0 0 1px rgb(255 255 255 / 0.16),
+    0 44px 70px -30px rgb(19 33 59 / 0.55),
+    0 14px 26px -14px rgb(19 33 59 / 0.35);
 }
