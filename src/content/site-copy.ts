@@ -19,8 +19,8 @@ export const HERO = {
     es: "Construyo sistemas enteros, de la demostración al hardware.",
   },
   sub: {
-    en: "Maths and CS student in Kraków. I'm taking my own app from beta to the stores, and my life runs on a Raspberry Pi I set up myself.",
-    es: "Estudio Matemáticas e Informática en Cracovia. Estoy llevando mi propia app de la beta a las tiendas, y mi vida corre en una Raspberry Pi que monté yo.",
+    en: "Maths and CS student. I'm taking my own app from beta to the stores, and my life runs on a Raspberry Pi I set up myself.",
+    es: "Estudio Matemáticas e Informática. Estoy llevando mi propia app de la beta a las tiendas, y mi vida corre en una Raspberry Pi que monté yo.",
   },
   casesLabel: { en: "Two things I'm proudest of", es: "Las dos cosas de las que más orgulloso estoy" },
   cases: [
