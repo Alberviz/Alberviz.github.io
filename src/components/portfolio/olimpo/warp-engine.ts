@@ -300,7 +300,9 @@ export class WarpEngine {
   private frame = (now: number) => {
     this.raf = 0;
     if (!this.visible || document.hidden) return;
-    const dt = Math.min(0.05, (now - this.last) / 1000);
+    // A rAF timestamp is the start of the frame, which can be earlier than the performance.now() taken in kick()
+    // (a long shader compile in between): never let time run backwards.
+    const dt = Math.min(0.05, Math.max(0, (now - this.last) / 1000));
     this.last = now;
     this.step(this.still ? 0 : dt);
     this.draw();
