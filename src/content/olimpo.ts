@@ -151,8 +151,8 @@ export const WARP = {
     { k: ["Shift"], label: { en: "adds a device: the two portals merge into a bigger one", es: "suma un dispositivo: los dos portales se funden en uno más grande" } },
   ] satisfies { k: string[]; label: LocalizedText }[],
   keysNote: {
-    en: "Jumping and merging from the keyboard are designed and you can try them here; on my desktop they're still being wired in. Dropping a file between two portals already merges them and sends to both.",
-    es: "Saltar y fundir desde el teclado están diseñados y aquí puedes probarlos; en mi escritorio aún los estoy conectando. Soltar un archivo entre dos portales ya los funde y lo manda a los dos.",
+    en: "No menus and no device picker: the keyboard chooses the destination. Dropping a file between two portals merges them too, and it lands on both.",
+    es: "Sin menús ni selector de dispositivos: el teclado elige el destino. Soltar un archivo entre dos portales también los funde, y llega a los dos.",
   },
   cast: {
     title: { en: "And the TV is just another portal.", es: "Y la tele es un portal más." },

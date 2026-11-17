@@ -27,7 +27,7 @@ Orden en `src/app/page.tsx`: Nav, Hero, Wari, Olimpo, Sistemas, Escritorio, Proy
 | Trayectoria | `#trayectoria` | `BackgroundSection` |
 | Contacto y pie | `#contacto` | `PortfolioFooter` |
 
-`/krakount` es solo un stub estático que apunta a Wari (la app se llamaba Krakount).
+`/wari` es solo un atajo estático (meta refresh) que lleva a la web de Wari.
 
 ## 3. Contenido (`src/content/`)
 

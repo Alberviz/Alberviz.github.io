@@ -27,7 +27,7 @@ Una sola página (`/`), modo `Experience`, con jerarquía en tres niveles:
 2. **Trabajo notable:** Sistemas (lo que corre detrás de Olimpo: Patrimonio, Aurora, Salud, Laura), Escritorio Linux y MyCrohnie contado a través de HackYeah 2026 (24 horas).
 3. **Laboratorio:** Barber Bot, CloShare y el vault de la universidad, compactos. Choppy solo como mención de una línea; gts2-mando como enlace en la ficha de Salud.
 
-Secciones: Nav, Hero, Wari, Olimpo (con Warp), Sistemas, Escritorio, Trabajo, Trayectoria y Contacto. La ruta `/krakount` es un stub que apunta a la web de Wari (nombre antiguo; no aparece en la página principal). El nombre viene de 割り勘 (warikan).
+Secciones: Nav, Hero, Wari, Olimpo (con Warp), Sistemas, Escritorio, Trabajo, Trayectoria y Contacto. La ruta `/wari` es un atajo estático que lleva a la web de Wari. El nombre viene de 割り勘 (warikan).
 
 ## Voice
 

@@ -120,7 +120,7 @@ export function CommandPalette() {
         hint: "wariapp.es",
         category: "navigate",
         icon: <ArrowSquareOut size={15} className="text-accent" aria-hidden="true" />,
-        keywords: "wari warikan krakount gastos expenses split receipt tickets trips viajes app pwa",
+        keywords: "wari warikan gastos expenses split receipt tickets trips viajes app pwa",
         action: () => {
           close();
           openExternal(WARI_URL);
