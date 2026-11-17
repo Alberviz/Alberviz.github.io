@@ -1,76 +1,34 @@
 import type { Metadata } from "next";
-import { KrakountNavbar } from "@/components/krakount/KrakountNavbar";
-import { KrakountHero } from "@/components/krakount/KrakountHero";
-import { KrakountMetricsStrip } from "@/components/krakount/KrakountMetricsStrip";
-import { KrakountFeatureBento } from "@/components/krakount/KrakountFeatureBento";
-import { KrakountEngineeringFooter } from "@/components/krakount/KrakountEngineeringFooter";
+import { WARI_URL } from "@/content/links";
 
+/**
+ * /krakount is now only a pointer: the app was renamed Wari and lives on its
+ * own domain. Static export, so the redirect is a meta refresh (plus a visible
+ * link and a canonical for crawlers).
+ */
 export const metadata: Metadata = {
-  title: "Krakount | Automated Expenses, Receipt OCR & Group Trips",
-  description:
-    "Krakount: automated payment capture, incoming Bizum auto-settlement, Polish supermarket receipt OCR, live 32-currency settlement, and offline travel wallet engineered by Alberto Vizcaíno Ponte.",
-  keywords: [
-    "Krakount",
-    "Expense Sharing",
-    "Automatic Payments",
-    "Bizum Settlement",
-    "Receipt OCR",
-    "Paragon Fiskalny",
-    "NBP Currencies",
-    "Group Trips",
-    "Offline Boarding Pass",
-    "Alberto Vizcaíno Ponte",
-    "Kraków",
-    "Erasmus",
-  ],
-  openGraph: {
-    title: "Krakount | Automated Expenses, Receipt OCR & Group Trips",
-    description:
-      "Automated payment capture, incoming Bizum auto-settle, Polish supermarket receipts split item by item, and offline travel wallet.",
-    url: "https://alberviz.github.io/krakount/",
-    siteName: "Krakount Showcase",
-    images: [
-      {
-        url: "/media/krakount/shot-home.webp",
-        width: 780,
-        height: 1688,
-        alt: "Krakount mobile application interface",
-      },
-    ],
-    locale: "en_US",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Krakount | Automated Expenses, Receipt OCR & Group Trips",
-    description:
-      "Automated payment capture, incoming Bizum auto-settle, Polish supermarket receipts split item by item, and offline travel wallet.",
-    images: ["/media/krakount/shot-home.webp"],
-  },
+  title: "Wari",
+  description: "Krakount is now Wari.",
+  alternates: { canonical: WARI_URL },
+  robots: { index: false, follow: true },
 };
 
-export default function KrakountPage() {
+export default function KrakountRedirectPage() {
   return (
-    <div
-      data-surface="krakount"
-      className="min-h-[100dvh] bg-[#0E0F13] text-[#EDEDEF] selection:bg-[#F5A524]/25 selection:text-[#F5A524]"
-      style={{ fontFamily: "var(--font-krakount-ui)" }}
-    >
-      <KrakountNavbar />
-      <main>
-        <section data-scene="hero">
-          <KrakountHero />
-        </section>
-        <section data-scene="metrics">
-          <KrakountMetricsStrip />
-        </section>
-        <section id="features" data-scene="features">
-          <KrakountFeatureBento />
-        </section>
-        <section data-scene="engineering">
-          <KrakountEngineeringFooter />
-        </section>
+    <>
+      <meta httpEquiv="refresh" content={`0; url=${WARI_URL}`} />
+      <main className="grid min-h-screen place-items-center bg-bg px-6 text-center">
+        <div>
+          <p className="font-display text-3xl font-semibold tracking-[-0.03em] text-ink">Krakount is now Wari.</p>
+          <p className="mt-3 text-muted">Krakount ahora se llama Wari.</p>
+          <a
+            href={WARI_URL}
+            className="press-scale mt-8 inline-flex h-12 items-center rounded-full bg-accent px-6 text-[15px] font-semibold text-on-accent"
+          >
+            {WARI_URL.replace("https://", "")}
+          </a>
+        </div>
       </main>
-    </div>
+    </>
   );
 }

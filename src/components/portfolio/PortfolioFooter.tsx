@@ -1,11 +1,12 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import Link from "next/link";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { ArrowRight, ArrowUpRight, Check, Copy } from "@phosphor-icons/react";
+import { ArrowUpRight, Check, Copy } from "@phosphor-icons/react";
 import { useLocale } from "@/lib/i18n-context";
+import { CONTACT } from "@/content/site-copy";
 import { PROFILE } from "@/content/portfolio-data";
+import { CV_PATH, EMAIL, GITHUB_URL, LINKEDIN_URL, WARI_URL } from "@/content/links";
 import { SPRING_SNAPPY } from "@/lib/motion";
 
 export function PortfolioFooter() {
@@ -14,13 +15,16 @@ export function PortfolioFooter() {
   const [copied, setCopied] = useState(false);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  useEffect(() => () => {
-    if (timer.current) clearTimeout(timer.current);
-  }, []);
+  useEffect(
+    () => () => {
+      if (timer.current) clearTimeout(timer.current);
+    },
+    []
+  );
 
   const copyEmail = async () => {
     try {
-      await navigator.clipboard.writeText(PROFILE.email);
+      await navigator.clipboard.writeText(EMAIL);
     } catch {
       return;
     }
@@ -38,114 +42,99 @@ export function PortfolioFooter() {
       };
 
   const links = [
-    { label: "CV (PDF)", href: PROFILE.cvPath, external: true },
-    { label: "Krakount", href: "/krakount/", external: false },
-    { label: "GitHub", href: PROFILE.githubUrl, external: true },
-    { label: "LinkedIn", href: PROFILE.linkedinUrl, external: true },
+    { label: "GitHub", href: GITHUB_URL },
+    { label: "LinkedIn", href: LINKEDIN_URL },
+    { label: CONTACT.cv[locale], href: CV_PATH },
   ];
 
   const linkClass =
-    "inline-flex items-center gap-1 text-sm text-[#8E95A5] transition-colors duration-150 hover:text-[#ECEEF2] focus-visible:outline-none focus-visible:text-[#ECEEF2] focus-visible:underline underline-offset-4";
+    "inline-flex items-center gap-1.5 text-[15px] text-muted transition-colors duration-150 hover:text-ink focus-visible:text-ink";
 
   return (
-    <footer
-      id="contact"
-      data-scene="contact"
-      className="bg-[#090A0D] pt-16 sm:pt-24 pb-10"
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid gap-10 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] lg:items-end">
-          <div>
-            <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-[-0.02em] leading-[1.05] text-[#ECEEF2]">
-              {locale === "en"
-                ? "Open to founding teams and hard problems."
-                : "Abierto a equipos fundadores y problemas difíciles."}
-            </h2>
-            <p className="mt-4 max-w-[52ch] text-base sm:text-lg leading-relaxed text-[#8E95A5]">
-              {locale === "en"
-                ? "Fellowships, early-stage startups and engineering that needs rigorous math, systems depth and full ownership."
-                : "Fellowships, startups en fase temprana e ingeniería que exija rigor matemático, sistemas y propiedad completa."}
-            </p>
-          </div>
+    <footer id="contacto" data-scene="contact" className="bg-bg pb-10 pt-[var(--spacing-section)]">
+      <div className="mx-auto max-w-7xl px-5 sm:px-8">
+        <h2 className="font-display text-balance text-[clamp(2rem,4.4vw,3.5rem)] font-semibold leading-[1.02] tracking-[-0.035em] text-ink">
+          {CONTACT.heading[locale]}
+        </h2>
+        <p className="mt-4 max-w-[48ch] text-pretty text-base leading-relaxed text-muted sm:text-lg">
+          {CONTACT.sub[locale]}
+        </p>
 
-          <div className="flex flex-wrap items-center gap-3 lg:justify-end">
-            <a
-              href={`mailto:${PROFILE.email}`}
-              className="press-scale inline-flex items-center gap-2 rounded-full bg-[#10B981] px-5 py-3 text-sm font-semibold text-[#04130D] hover:bg-[#059669] sm:text-[15px]"
-            >
-              {PROFILE.nav.cta[locale]}
-              <ArrowRight size={16} weight="bold" />
-            </a>
-
-            <button
-              type="button"
-              onClick={copyEmail}
-              aria-label={locale === "en" ? `Copy ${PROFILE.email}` : `Copiar ${PROFILE.email}`}
-              className="press-scale inline-flex items-center gap-2.5 rounded-full border border-[#232732] bg-[#111318] px-5 py-3 text-[#ECEEF2] hover:bg-[#171A21]"
-            >
-              <span className="relative grid size-4 place-items-center">
-                <AnimatePresence initial={false} mode="popLayout">
-                  <motion.span
-                    key={copied ? "check" : "copy"}
-                    className="grid place-items-center"
-                    {...swap}
-                    transition={SPRING_SNAPPY}
-                  >
-                    {copied ? (
-                      <Check size={16} weight="bold" className="text-[#10B981]" />
-                    ) : (
-                      <Copy size={16} />
-                    )}
-                  </motion.span>
-                </AnimatePresence>
-              </span>
-              {/* Both labels share one grid cell so the button never changes width */}
-              <span className="grid font-mono text-xs sm:text-sm [grid-template-areas:'label']">
-                <span
-                  aria-hidden={copied}
-                  className={`[grid-area:label] transition-opacity duration-150 ${copied ? "opacity-0" : "opacity-100"}`}
+        {/* The email is the call to action: big, a real mailto, and one tap to copy */}
+        <div className="mt-12 flex flex-col items-start gap-5 sm:mt-14">
+          <a
+            href={`mailto:${EMAIL}`}
+            className="link-rule font-display text-[clamp(1.4rem,7vw,4.4rem)] font-semibold leading-none tracking-[-0.035em] text-ink transition-colors duration-150 hover:text-accent"
+          >
+            {EMAIL}
+          </a>
+          <button
+            type="button"
+            onClick={copyEmail}
+            className="press-scale inline-flex h-11 items-center gap-2.5 rounded-full border border-ink/20 px-5 text-sm font-medium text-ink transition-colors duration-150 hover:border-ink/45"
+          >
+            <span className="relative grid size-4 place-items-center">
+              <AnimatePresence initial={false} mode="popLayout">
+                <motion.span
+                  key={copied ? "check" : "copy"}
+                  className="grid place-items-center"
+                  {...swap}
+                  transition={SPRING_SNAPPY}
                 >
-                  {PROFILE.email}
-                </span>
-                <span
-                  aria-hidden={!copied}
-                  className={`[grid-area:label] text-[#10B981] transition-opacity duration-150 ${copied ? "opacity-100" : "opacity-0"}`}
-                >
-                  {locale === "en" ? "Copied" : "Copiado"}
-                </span>
+                  {copied ? <Check size={16} weight="bold" className="text-accent" /> : <Copy size={16} />}
+                </motion.span>
+              </AnimatePresence>
+            </span>
+            {/* Both labels share one grid cell so the button never changes width */}
+            <span className="grid [grid-template-areas:'label']">
+              <span
+                aria-hidden={copied}
+                className={`[grid-area:label] transition-opacity duration-150 ${copied ? "opacity-0" : "opacity-100"}`}
+              >
+                {CONTACT.copy[locale]}
               </span>
-              <span className="sr-only" aria-live="polite">
-                {copied ? (locale === "en" ? "Email copied" : "Email copiado") : ""}
+              <span
+                aria-hidden={!copied}
+                className={`[grid-area:label] text-accent transition-opacity duration-150 ${copied ? "opacity-100" : "opacity-0"}`}
+              >
+                {CONTACT.copied[locale]}
               </span>
-            </button>
-          </div>
+            </span>
+            <span className="sr-only" aria-live="polite">
+              {copied ? CONTACT.copied[locale] : ""}
+            </span>
+          </button>
         </div>
 
-        <div className="mt-16 flex flex-col gap-5 border-t border-[#232732] pt-6 sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-sm text-[#8E95A5]">
-            <span className="font-medium text-[#ECEEF2]">{PROFILE.fullName}</span>
-            <span className="mx-2 text-[#2C3240]">/</span>
-            {PROFILE.currentLocation[locale]}
-          </p>
+        <nav aria-label={locale === "es" ? "Enlaces" : "Links"} className="mt-12">
+          <ul className="flex flex-wrap items-center gap-x-8 gap-y-3">
+            {links.map((link) => (
+              <li key={link.label}>
+                <a href={link.href} target="_blank" rel="noopener noreferrer" className={linkClass}>
+                  {link.label}
+                  <ArrowUpRight size={13} aria-hidden="true" />
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
 
-          <nav aria-label={locale === "en" ? "Footer" : "Pie de página"}>
-            <ul className="flex flex-wrap items-center gap-x-6 gap-y-2">
-              {links.map((link) => (
-                <li key={link.label}>
-                  {link.external ? (
-                    <a href={link.href} target="_blank" rel="noopener noreferrer" className={linkClass}>
-                      {link.label}
-                      <ArrowUpRight size={12} />
-                    </a>
-                  ) : (
-                    <Link href={link.href} className={linkClass}>
-                      {link.label}
-                    </Link>
-                  )}
-                </li>
-              ))}
-            </ul>
-          </nav>
+        <div className="mt-20 flex flex-col gap-3 border-t border-line pt-6 text-[13px] text-muted sm:flex-row sm:items-center sm:justify-between">
+          <p>
+            {CONTACT.signature[locale]}
+            <span aria-hidden="true" className="mx-2 text-line">
+              /
+            </span>
+            <a
+              href={WARI_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="link-rule text-ink"
+            >
+              {CONTACT.signatureLink[locale]}
+            </a>
+          </p>
+          <p className="font-mono text-[11px]">{PROFILE.currentLocation[locale]}</p>
         </div>
       </div>
     </footer>

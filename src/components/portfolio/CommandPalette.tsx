@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
 import {
   ArrowDown,
   ArrowElbowDownLeft,
@@ -18,7 +17,7 @@ import {
 } from "@phosphor-icons/react";
 import { useLocale } from "@/lib/i18n-context";
 import type { Locale } from "@/lib/i18n-context";
-import { PROFILE } from "@/content/portfolio-data";
+import { CV_PATH, EMAIL, GITHUB_URL, LINKEDIN_URL, WARI_URL } from "@/content/links";
 
 type Category = "navigate" | "links" | "actions";
 
@@ -52,7 +51,6 @@ function openExternal(href: string) {
  */
 export function CommandPalette() {
   const { locale, toggleLocale } = useLocale();
-  const router = useRouter();
 
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState("");
@@ -117,23 +115,24 @@ export function CommandPalette() {
 
     return [
       {
-        id: "route-krakount",
-        title: es ? "Abrir la página de Krakount" : "Open the Krakount page",
-        hint: "/krakount",
+        id: "route-wari",
+        title: es ? "Abrir la web de Wari" : "Open the Wari website",
+        hint: "wariapp.es",
         category: "navigate",
-        icon: <ArrowRight size={15} className="text-[#F5A524]" aria-hidden="true" />,
-        keywords: "krakount receipt ocr expenses split trips kazimierz pwa",
+        icon: <ArrowSquareOut size={15} className="text-accent" aria-hidden="true" />,
+        keywords: "wari warikan krakount gastos expenses split receipt tickets trips viajes app pwa",
         action: () => {
           close();
-          router.push("/krakount/");
+          openExternal(WARI_URL);
         },
       },
-      nav("work", es ? "Krakount en resumen" : "Krakount spotlight", "work spotlight krakount flagship"),
-      nav("systems", es ? "Patrimonio en la Raspberry Pi" : "Wealth on the Raspberry Pi", "systems homelab aurora ghostfolio wealth raspberry pi"),
-      nav("health", es ? "Hub de salud" : "Health hub", "health salud gym opengym amazfit gts2 watch reloj telegram comidas creatina"),
-      nav("desktop", es ? "Escritorio Linux con IA" : "AI Linux desktop", "desktop linux hyprland quickshell caelestia gargantua laura shader webgl rgb hidraw reverse engineering cuerpo"),
-      nav("case-studies", es ? "Proyectos seleccionados" : "Selected work", "work mycrohnie hackyeah closhare barber applied ai"),
-      nav("background", es ? "Trayectoria" : "Background", "background stel order education olympiad umu agh"),
+      nav("hero", es ? "Inicio" : "Top", "hero home inicio top gargantua"),
+      nav("wari", es ? "Wari, la app de mi grupo" : "Wari, my group's app", "wari app erasmus portal"),
+      nav("sistemas", es ? "Sistemas en la Raspberry Pi" : "Systems on the Raspberry Pi", "systems sistemas homelab olimpo aurora laura ghostfolio wealth patrimonio salud health raspberry pi"),
+      nav("escritorio", es ? "El escritorio Linux" : "The Linux desktop", "desktop escritorio linux hyprland quickshell caelestia gargantua laura shader webgl rgb hidraw"),
+      nav("proyectos", es ? "Proyectos" : "Projects", "projects proyectos mycrohnie hackyeah closhare barber applied ai"),
+      nav("trayectoria", es ? "Trayectoria" : "Background", "background trayectoria stel order education olympiad umu agh"),
+      nav("contacto", es ? "Contacto" : "Contact", "contact contacto footer email"),
       {
         id: "link-mycrohnie",
         title: es ? "MyCrohnie en vivo" : "MyCrohnie live app",
@@ -176,7 +175,7 @@ export function CommandPalette() {
         keywords: "github code repos source",
         action: () => {
           close();
-          openExternal(PROFILE.githubUrl);
+          openExternal(GITHUB_URL);
         },
       },
       {
@@ -187,7 +186,7 @@ export function CommandPalette() {
         keywords: "linkedin profile connect",
         action: () => {
           close();
-          openExternal(PROFILE.linkedinUrl);
+          openExternal(LINKEDIN_URL);
         },
       },
       {
@@ -199,22 +198,22 @@ export function CommandPalette() {
         keywords: "cv resume pdf curriculum",
         action: () => {
           close();
-          openExternal(PROFILE.cvPath);
+          openExternal(CV_PATH);
         },
       },
       {
         id: "action-copy-email",
         title: copied ? (es ? "Email copiado" : "Email copied") : es ? "Copiar email" : "Copy email",
-        hint: PROFILE.email,
+        hint: EMAIL,
         category: "actions",
         icon: copied ? (
-          <Check size={15} className="text-[#10B981]" aria-hidden="true" />
+          <Check size={15} className="text-accent" aria-hidden="true" />
         ) : (
           <Copy size={15} aria-hidden="true" />
         ),
         keywords: "copy email mail contact",
         action: () => {
-          navigator.clipboard?.writeText(PROFILE.email).then(() => {
+          navigator.clipboard?.writeText(EMAIL).then(() => {
             setCopied(true);
             window.setTimeout(() => setCopied(false), 1800);
           });
@@ -233,7 +232,7 @@ export function CommandPalette() {
         },
       },
     ];
-  }, [locale, router, copied, toggleLocale]);
+  }, [locale, copied, toggleLocale]);
 
   const filteredItems = useMemo(() => {
     const q = query.toLowerCase().trim();
@@ -281,7 +280,7 @@ export function CommandPalette() {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-start justify-center bg-[#090A0D]/70 p-4 pt-[14vh]"
+      className="fixed inset-0 z-50 flex items-start justify-center bg-[#07080B]/70 p-4 pt-[14vh]"
       onMouseDown={close}
       role="presentation"
     >
@@ -289,11 +288,11 @@ export function CommandPalette() {
         role="dialog"
         aria-modal="true"
         aria-label={locale === "es" ? "Paleta de comandos" : "Command palette"}
-        className="flex w-full max-w-[560px] flex-col overflow-hidden rounded-2xl border border-[#232732] bg-[#0F1115] shadow-[0_40px_100px_-30px_rgba(0,0,0,0.95)]"
+        className="flex w-full max-w-[560px] flex-col overflow-hidden rounded-2xl border border-[#1F232D] bg-[#0E1015] shadow-[0_40px_100px_-30px_rgba(0,0,0,0.95)]"
         onMouseDown={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center gap-3 border-b border-[#232732] px-4">
-          <MagnifyingGlass size={16} className="shrink-0 text-[#5D6474]" aria-hidden="true" />
+        <div className="flex items-center gap-3 border-b border-[#1F232D] px-4">
+          <MagnifyingGlass size={16} className="shrink-0 text-[#7B8190]" aria-hidden="true" />
           <input
             ref={inputRef}
             type="text"
@@ -301,24 +300,24 @@ export function CommandPalette() {
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={handleInputKeyDown}
             placeholder={locale === "es" ? "Busca una sección, demo o acción" : "Search a section, demo, or action"}
-            className="h-12 w-full bg-transparent text-[14px] text-[#ECEEF2] placeholder:text-[#5D6474] focus:outline-none focus-visible:outline-none"
+            className="h-12 w-full bg-transparent text-[14px] text-[#ECEDF0] placeholder:text-[#7B8190] focus:outline-none focus-visible:outline-none"
             role="combobox"
             aria-expanded="true"
             aria-controls="command-palette-list"
             aria-activedescendant={filteredItems[selectedIndex] ? `cmd-${filteredItems[selectedIndex].id}` : undefined}
           />
-          <kbd className="rounded-md border border-[#232732] px-1.5 py-0.5 font-mono text-[10px] text-[#8E95A5]">Esc</kbd>
+          <kbd className="rounded-md border border-[#1F232D] px-1.5 py-0.5 font-mono text-[10px] text-[#8A8F9C]">Esc</kbd>
         </div>
 
         <div ref={listRef} id="command-palette-list" role="listbox" className="max-h-[360px] overflow-y-auto p-1.5">
           {groups.length === 0 ? (
-            <p className="px-3 py-10 text-center text-[13px] text-[#8E95A5]">
+            <p className="px-3 py-10 text-center text-[13px] text-[#8A8F9C]">
               {locale === "es" ? "Nada coincide con esa búsqueda." : "Nothing matches that search."}
             </p>
           ) : (
             groups.map((group) => (
               <div key={group.category} className="pb-1">
-                <p className="px-3 pb-1 pt-2.5 font-mono text-[10.5px] text-[#5D6474]">
+                <p className="px-3 pb-1 pt-2.5 font-mono text-[10.5px] text-[#7B8190]">
                   {CATEGORY_LABEL[group.category][locale]}
                 </p>
                 {group.entries.map((item) => {
@@ -336,14 +335,14 @@ export function CommandPalette() {
                       onClick={item.action}
                       onMouseMove={() => setSelectedIndex(idx)}
                       className={`flex w-full items-center justify-between gap-3 rounded-lg px-3 py-2.5 text-left text-[13.5px] ${
-                        isSelected ? "bg-[#171A21] text-[#ECEEF2]" : "text-[#B4BAC6]"
+                        isSelected ? "bg-[#151820] text-[#ECEDF0]" : "text-[#B4BAC6]"
                       }`}
                     >
                       <span className="flex min-w-0 items-center gap-3">
-                        <span className={isSelected ? "text-[#ECEEF2]" : "text-[#5D6474]"}>{item.icon}</span>
+                        <span className={isSelected ? "text-[#ECEDF0]" : "text-[#7B8190]"}>{item.icon}</span>
                         <span className="truncate">{item.title}</span>
                       </span>
-                      {item.hint && <span className="shrink-0 font-mono text-[11px] text-[#5D6474]">{item.hint}</span>}
+                      {item.hint && <span className="shrink-0 font-mono text-[11px] text-[#7B8190]">{item.hint}</span>}
                     </button>
                   );
                 })}
@@ -352,7 +351,7 @@ export function CommandPalette() {
           )}
         </div>
 
-        <div className="flex items-center gap-4 border-t border-[#232732] px-4 py-2.5 font-mono text-[10.5px] text-[#5D6474]">
+        <div className="flex items-center gap-4 border-t border-[#1F232D] px-4 py-2.5 font-mono text-[10.5px] text-[#7B8190]">
           <span className="inline-flex items-center gap-1">
             <ArrowUp size={11} aria-hidden="true" />
             <ArrowDown size={11} aria-hidden="true" />
