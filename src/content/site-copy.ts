@@ -4,19 +4,12 @@ import type { LocalizedText } from "./types";
 
 export const NAV = {
   home: { en: "Home", es: "Inicio" },
-  wari: { en: "Wari", es: "Wari" },
-  olimpo: { en: "Olimpo", es: "Olimpo" },
-  systems: { en: "Systems", es: "Sistemas" },
-  laura: { en: "Laura", es: "Laura" },
-  desktop: { en: "Desktop", es: "Escritorio" },
   projects: { en: "Work", es: "Trabajo" },
-  background: { en: "Background", es: "Trayectoria" },
   contact: { en: "Contact", es: "Contacto" },
   menu: { en: "More", es: "Más" },
   menuTitle: { en: "Pages and sections", es: "Páginas y secciones" },
   close: { en: "Close", es: "Cerrar" },
   search: { en: "Search", es: "Buscar" },
-  language: { en: "Language", es: "Idioma" },
   palette: { en: "Open command palette", es: "Abrir paleta de comandos" },
 } satisfies Record<string, LocalizedText>;
 
@@ -29,8 +22,6 @@ export const HERO = {
     en: "Maths and CS student in Kraków. I'm taking my own app from beta to the stores, and my life runs on a Raspberry Pi I set up myself.",
     es: "Estudio Matemáticas e Informática en Cracovia. Estoy llevando mi propia app de la beta a las tiendas, y mi vida corre en una Raspberry Pi que monté yo.",
   },
-  ctaPrimary: { en: "See the work", es: "Ver el trabajo" },
-  ctaSecondary: { en: "Contact", es: "Contacto" },
   casesLabel: { en: "Two things I'm proudest of", es: "Las dos cosas de las que más orgulloso estoy" },
   cases: [
     {

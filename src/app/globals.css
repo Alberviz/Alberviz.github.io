@@ -205,9 +205,6 @@ html {
   .group:hover .cta-arrow-diag {
     transform: translate(2px, -2px);
   }
-  .group:hover .cta-arrow-down {
-    transform: translateY(2px);
-  }
 }
 
 /* Hotspot pin pulse: a ring that breathes outward. Transform + opacity only. */
