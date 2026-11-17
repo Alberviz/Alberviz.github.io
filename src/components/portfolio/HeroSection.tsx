@@ -220,7 +220,7 @@ export function HeroSection() {
       <div className="relative mx-auto flex w-full max-w-7xl flex-1 flex-col justify-end px-5 pb-16 pt-24 sm:px-8 wide:justify-center wide:pb-20 wide:pt-24">
         <div className="max-w-[40rem] wide:max-w-[36rem] xl:wide:max-w-[40rem]">
           <h1
-            className="hero-rise font-display text-balance text-[clamp(2.4rem,5.2vw,4.5rem)] font-semibold leading-[0.98] tracking-[-0.035em] text-ink"
+            className="hero-rise font-display text-balance text-[clamp(2.15rem,5.2vw+0.6rem,4.5rem)] font-semibold leading-[0.98] tracking-[-0.035em] text-ink"
             style={{ ["--d" as string]: "60ms", fontVariationSettings: '"opsz" 96' }}
           >
             {HERO.headline[locale]}
