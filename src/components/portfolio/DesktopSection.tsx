@@ -18,15 +18,15 @@ export function DesktopSection() {
   const reduce = useReducedMotionSafe();
 
   return (
-    <section id="escritorio" data-scene="desktop" className="relative border-t border-line">
+    <section id="escritorio" data-scene="desktop" className="relative">
       <div className="mx-auto max-w-7xl px-5 py-[var(--spacing-section)] sm:px-8">
         <motion.div {...revealProps(reduce)} className="grid gap-6 lg:grid-cols-12 lg:items-end">
-          <h2
+          <h1
             className="font-display text-balance text-[clamp(2.2rem,4.4vw,3.75rem)] font-semibold leading-[1.02] tracking-[-0.035em] text-ink lg:col-span-7"
             style={{ fontVariationSettings: '"opsz" 80' }}
           >
             {DESKTOP_UI.heading[locale]}
-          </h2>
+          </h1>
           <p className="max-w-[46ch] text-pretty text-[15.5px] leading-relaxed text-muted lg:col-span-5">
             {DESKTOP_UI.lead[locale]}
           </p>

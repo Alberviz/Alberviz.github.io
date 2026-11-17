@@ -13,7 +13,7 @@ export const NAV = {
   background: { en: "Background", es: "Trayectoria" },
   contact: { en: "Contact", es: "Contacto" },
   menu: { en: "More", es: "Más" },
-  menuTitle: { en: "Everything on this page", es: "Todo lo que hay en la página" },
+  menuTitle: { en: "Pages and sections", es: "Páginas y secciones" },
   close: { en: "Close", es: "Cerrar" },
   search: { en: "Search", es: "Buscar" },
   language: { en: "Language", es: "Idioma" },

@@ -71,7 +71,7 @@ const AKKO = [0x07, 0x01, 0x04, 0x04, 0x08, 0xf2, 0xb3, 0x6f];
 const AKKO_SUM = 0xff - (AKKO.reduce((a, b) => a + b, 0) & 0xff);
 const MCHOSE = [0x2b, 0x01, 0x06, 0x00, 0x64, 0x02, 0x03, 0x01, 0x00, 0xf2, 0xb3, 0x6f];
 
-function Decode({ active, locale, still }: { active: boolean; locale: L; still: boolean }) {
+export function Decode({ active, locale, still }: { active: boolean; locale: L; still: boolean }) {
   const [flip, setFlip] = useState(false);
   useEffect(() => {
     if (!active) return setFlip(false);
@@ -333,7 +333,7 @@ export function HardwareStory() {
   }, []);
 
   return (
-    <div className="mt-24 lg:mt-36">
+    <div id="hardware" className="mt-24 scroll-mt-20 lg:mt-36">
       <motion.div {...revealProps(reduce)} className="grid gap-6 lg:grid-cols-12 lg:items-end">
         <h3 className="font-display text-balance text-[clamp(1.9rem,3.6vw,3rem)] font-semibold leading-[1.04] tracking-[-0.035em] text-ink lg:col-span-6">
           {S.heading[locale]}

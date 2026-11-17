@@ -5,7 +5,8 @@ import { useReducedMotionSafe } from "@/lib/motion";
 import React, { useEffect, useRef, useState } from "react";
 import {motion, useScroll, useTransform} from "motion/react";
 import type { MotionValue } from "motion/react";
-import { ArrowDown } from "@phosphor-icons/react";
+import Link from "next/link";
+import { ArrowRight } from "@phosphor-icons/react";
 import { useLocale } from "@/lib/i18n-context";
 import { HERO } from "@/content/site-copy";
 import { HERO_BG, HERO_PALETTE, HERO_VARIANTS, WIDE_QUERY } from "./hero/hero-layout";
@@ -288,8 +289,8 @@ export function HeroSection() {
               <ul className="hero-cases overflow-hidden rounded-[20px] border border-ink/12 bg-bg/45 backdrop-blur-md">
                 {HERO.cases.map((c) => (
                   <li key={c.id} className="border-b border-ink/10 last:border-b-0">
-                    <a
-                      href={`#${c.id}`}
+                    <Link
+                      href={`/${c.id}/`}
                       className="hero-case group grid min-h-[4.25rem] grid-cols-[2.25rem_minmax(0,1fr)_1.25rem] items-center gap-x-3 px-4 py-3.5 sm:px-5"
                     >
                       <span className="font-mono text-[11.5px] tabular-nums text-accent">{c.n}</span>
@@ -299,8 +300,8 @@ export function HeroSection() {
                         </span>
                         <span className="mt-0.5 block text-pretty text-[13.5px] leading-snug text-muted">{c.line[locale]}</span>
                       </span>
-                      <ArrowDown size={16} weight="bold" className="cta-arrow cta-arrow-down text-ink/70" aria-hidden="true" />
-                    </a>
+                      <ArrowRight size={16} weight="bold" className="cta-arrow text-ink/70" aria-hidden="true" />
+                    </Link>
                   </li>
                 ))}
               </ul>

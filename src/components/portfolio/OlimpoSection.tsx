@@ -90,10 +90,10 @@ export function OlimpoSection() {
         <motion.div {...revealProps(reduce)} className="grid gap-8 lg:grid-cols-12 lg:items-end">
           <div className="lg:col-span-7">
             <p className="font-mono text-[12px] uppercase tracking-[0.14em] text-accent">{OLIMPO.eyebrow[locale]}</p>
-            <h2 className="mt-5 flex items-center gap-4 font-display text-[clamp(3.6rem,10vw,8.5rem)] font-semibold leading-[0.9] tracking-[-0.045em] text-ink" style={{ fontVariationSettings: '"opsz" 96' }}>
+            <h1 className="mt-5 flex items-center gap-4 font-display text-[clamp(3.6rem,10vw,8.5rem)] font-semibold leading-[0.9] tracking-[-0.045em] text-ink" style={{ fontVariationSettings: '"opsz" 96' }}>
               <Summit className="size-[0.62em] shrink-0 text-accent" />
               {OLIMPO.title[locale]}
-            </h2>
+            </h1>
             <p className="mt-5 font-display text-[clamp(1.5rem,2.6vw,2.2rem)] font-semibold leading-tight tracking-[-0.03em] text-ink/90">
               {OLIMPO.tagline[locale]}
             </p>

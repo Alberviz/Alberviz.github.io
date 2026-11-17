@@ -1146,3 +1146,63 @@ html {
     animation: none;
   }
 }
+
+/* ---------------------------------------------------------------------
+ * Home: the case previews (#casos) and the "next case" band of each case.
+ * ------------------------------------------------------------------- */
+.case-fog {
+  padding: clamp(1.5rem, 4.5vw, 3.75rem);
+  border-radius: 2.25rem;
+  background:
+    radial-gradient(38rem 16rem at 88% 12%, rgb(255 150 110 / 0.32), transparent 70%),
+    radial-gradient(34rem 20rem at 8% 92%, rgb(150 170 235 / 0.42), transparent 70%),
+    linear-gradient(180deg, #eef2f8, #d9e1ee 62%, #b4c3dc);
+}
+
+.case-preview[data-tone="holo"] .case-visual,
+.next-case[data-to="laura"] .next-visual {
+  border-radius: 28px;
+  background:
+    radial-gradient(60% 45% at 50% 88%, rgb(242 179 111 / 0.13), transparent 72%),
+    radial-gradient(70% 60% at 50% 30%, rgb(120 130 170 / 0.08), transparent 70%),
+    #08090d;
+  box-shadow: inset 0 0 0 1px var(--line);
+}
+
+.case-holo {
+  opacity: 0;
+  transform: translateY(18px) scale(0.96);
+  transform-origin: 50% 100%;
+  transition:
+    opacity 420ms var(--ease-out) 160ms,
+    transform 620ms var(--ease-out) 160ms;
+}
+.case-holo[data-on="1"] {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+.case-beam {
+  background: linear-gradient(to top, rgb(242 179 111 / 0.85), rgb(242 179 111 / 0));
+  transform: scaleY(0);
+  transform-origin: 50% 100%;
+  transition: transform 320ms var(--ease-out);
+}
+.case-beam[data-on="1"] {
+  transform: scaleY(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .case-holo,
+  .case-beam {
+    transition: none;
+  }
+}
+
+.next-visual-inner {
+  transition: transform 320ms var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .next-case .group:hover .next-visual-inner {
+    transform: scale(1.015);
+  }
+}

@@ -5,53 +5,38 @@ import {AnimatePresence, LayoutGroup, motion} from "motion/react";
 import { Command, DotsThree, MagnifyingGlass, X } from "@phosphor-icons/react";
 import { useLocale } from "@/lib/i18n-context";
 import type { Locale } from "@/lib/i18n-context";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { NAV } from "@/content/site-copy";
+import { CASES, CASE_BY_ID, CASES_UI, HOME_SECTIONS, pageFromPath } from "@/content/pages";
+import type { CaseId, PageId } from "@/content/pages";
 import { EASE_DRAWER, SPRING_LAYOUT, useReducedMotionSafe } from "@/lib/motion";
 
-type NavItem = { id: string; label: Record<Locale, string> };
+/**
+ * Top bar and, on phones, the thumb bar and its sheet. The four cases are pages;
+ * the bar marks the page you are on (and, on the home, the section under the
+ * reading line). Links are next/link, so the language and the bar persist.
+ */
 
-const NAV_ITEMS: NavItem[] = [
-  { id: "wari", label: NAV.wari },
-  { id: "olimpo", label: NAV.olimpo },
-  { id: "sistemas", label: NAV.systems },
-  { id: "laura", label: NAV.laura },
-  { id: "proyectos", label: NAV.projects },
-  { id: "trayectoria", label: NAV.background },
-];
+type NavItem = { id: string; href: string; label: Record<Locale, string> };
 
-/** Thumb bar on phones: the two cases, the rest of the work and contact. */
-const THUMB_ITEMS: NavItem[] = [
-  { id: "wari", label: NAV.wari },
-  { id: "olimpo", label: NAV.olimpo },
-  { id: "proyectos", label: NAV.projects },
-  { id: "contacto", label: NAV.contact },
-];
+const CASE_ITEMS: NavItem[] = CASES.map((c) => ({ id: c.id, href: c.path, label: c.nav }));
+const WORK_ITEM: NavItem = { id: "proyectos", href: "/#proyectos", label: NAV.projects };
 
-/** Everything, in page order, for the bottom sheet. */
-const SHEET_ITEMS: NavItem[] = [
-  { id: "hero", label: NAV.home },
-  { id: "wari", label: NAV.wari },
-  { id: "olimpo", label: NAV.olimpo },
-  { id: "sistemas", label: NAV.systems },
-  { id: "laura", label: NAV.laura },
-  { id: "escritorio", label: NAV.desktop },
-  { id: "proyectos", label: NAV.projects },
-  { id: "trayectoria", label: NAV.background },
-  { id: "contacto", label: NAV.contact },
-];
+/** Sections of the home tracked under the reading line. */
+const HOME_TRACKED = ["proyectos", "trayectoria", "contacto"];
 
-const SECTION_IDS = ["wari", "olimpo", "sistemas", "laura", "escritorio", "proyectos", "trayectoria", "contacto"];
-
-/** True while most of the hero is on screen (the thumb bar stays out of its way). */
-function useHeroVisible() {
-  const [visible, setVisible] = useState(true);
+/** True while most of the hero is on screen (the thumb bar stays out of its way). Pages without a hero: false. */
+function useHeroVisible(page: PageId) {
+  const [visible, setVisible] = useState(false);
   useEffect(() => {
     const el = document.getElementById("hero");
+    setVisible(!!el);
     if (!el) return;
     const io = new IntersectionObserver(([e]) => setVisible(e.intersectionRatio > 0.55), { threshold: [0, 0.55, 1] });
     io.observe(el);
     return () => io.disconnect();
-  }, []);
+  }, [page]);
   return visible;
 }
 
@@ -96,15 +81,20 @@ function useScrolled(ref: React.RefObject<HTMLElement | null>) {
   return scrolled;
 }
 
+const NO_IDS: string[] = [];
+
 export function PortfolioNavbar() {
+  const page = pageFromPath(usePathname());
   const { locale, setLocale } = useLocale();
   const reduce = useReducedMotionSafe();
   const [sheetOpen, setSheetOpen] = useState(false);
-  const heroVisible = useHeroVisible();
+  const heroVisible = useHeroVisible(page);
   const [hovered, setHovered] = useState<string | null>(null);
-  const active = useActiveSection(SECTION_IDS);
+  const section = useActiveSection(page === "home" ? HOME_TRACKED : NO_IDS);
+  const active = page === "home" ? section : page;
   const sentinelRef = useRef<HTMLSpanElement>(null);
   const scrolled = useScrolled(sentinelRef);
+  const items = [...CASE_ITEMS, WORK_ITEM];
 
   return (
     <>
@@ -118,8 +108,8 @@ export function PortfolioNavbar() {
     >
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-5 sm:px-8">
         {/* Identity */}
-        <a
-          href="#hero"
+        <Link
+          href={page === "home" ? "#hero" : "/"}
           className="group press-scale flex items-center gap-2.5"
           aria-label={locale === "es" ? "Alberto Vizcaíno Ponte, inicio" : "Alberto Vizcaíno Ponte, home"}
         >
@@ -132,9 +122,9 @@ export function PortfolioNavbar() {
           <span className="font-display text-[15px] font-semibold tracking-[-0.02em] text-ink">
             Alberto Vizcaíno
           </span>
-        </a>
+        </Link>
 
-        {/* Section navigation with shared hover pill + active section mark */}
+        {/* Pages, with a shared hover pill and the mark of the page (or home section) you are on */}
         <LayoutGroup id="portfolio-nav">
           <nav
             aria-label={locale === "es" ? "Navegación principal" : "Main navigation"}
@@ -142,16 +132,17 @@ export function PortfolioNavbar() {
             onPointerLeave={() => setHovered(null)}
           >
             <ul className="flex items-center gap-0.5">
-              {NAV_ITEMS.map((item) => {
+              {items.map((item) => {
                 const isActive = active === item.id;
+                const href = page === "home" && item.id === "proyectos" ? "#proyectos" : item.href;
                 return (
                   <li key={item.id} className="relative">
-                    <a
-                      href={`#${item.id}`}
+                    <Link
+                      href={href}
                       onPointerEnter={() => setHovered(item.id)}
                       onFocus={() => setHovered(item.id)}
                       onBlur={() => setHovered(null)}
-                      aria-current={isActive ? "true" : undefined}
+                      aria-current={isActive ? (item.id === page ? "page" : "true") : undefined}
                       className={`relative isolate block rounded-full px-3.5 py-2 text-[13px] font-medium transition-colors duration-150 ${
                         isActive || hovered === item.id ? "text-ink" : "text-muted"
                       }`}
@@ -173,7 +164,7 @@ export function PortfolioNavbar() {
                           transition={reduce ? { duration: 0 } : SPRING_LAYOUT}
                         />
                       )}
-                    </a>
+                    </Link>
                   </li>
                 );
               })}
@@ -207,27 +198,27 @@ export function PortfolioNavbar() {
 
     </header>
 
-    {/* Thumb bar (phones): out of the way while the hero fills the screen */}
+    {/* Thumb bar (phones): the four cases and "More"; out of the way while the hero fills the screen */}
     <nav
       aria-label={locale === "es" ? "Navegación rápida" : "Quick navigation"}
       data-hidden={heroVisible && !sheetOpen ? "1" : "0"}
       className="thumb-bar fixed inset-x-0 z-40 flex justify-center px-3 md:hidden"
     >
       <ul className="flex w-full min-w-0 max-w-[26rem] items-center gap-0.5 rounded-full border border-ink/12 bg-[#0E1015]/85 p-1.5 shadow-[0_20px_40px_-12px_rgb(0_0_0/0.8)] backdrop-blur-xl">
-        {THUMB_ITEMS.map((item) => {
+        {CASE_ITEMS.map((item) => {
           const on = active === item.id;
           return (
             <li key={item.id} className="min-w-0 flex-1">
-              <a
-                href={`#${item.id}`}
-                aria-current={on ? "true" : undefined}
-                className={`thumb-link relative flex h-11 items-center justify-center rounded-full px-0.5 text-[12.5px] font-medium min-[380px]:text-[13px] ${
+              <Link
+                href={item.href}
+                aria-current={on ? "page" : undefined}
+                className={`thumb-link relative flex h-11 items-center justify-center rounded-full px-0.5 text-[12px] font-medium min-[380px]:text-[13px] ${
                   on ? "bg-ink/[0.1] text-ink" : "text-muted"
                 }`}
               >
-                {item.label[locale]}
+                <span className="truncate">{item.label[locale]}</span>
                 {on && <span aria-hidden="true" className="absolute bottom-1.5 h-1 w-1 rounded-full bg-accent" />}
-              </a>
+              </Link>
             </li>
           );
         })}
@@ -246,7 +237,7 @@ export function PortfolioNavbar() {
       </ul>
     </nav>
 
-    <NavSheet open={sheetOpen} onClose={() => setSheetOpen(false)} active={active} locale={locale} setLocale={setLocale} reduce={reduce} />
+    <NavSheet open={sheetOpen} onClose={() => setSheetOpen(false)} page={page} active={active} locale={locale} setLocale={setLocale} reduce={reduce} />
     </>
   );
 }
@@ -307,6 +298,7 @@ function LanguageSwitch({
 function NavSheet({
   open,
   onClose,
+  page,
   active,
   locale,
   setLocale,
@@ -314,6 +306,7 @@ function NavSheet({
 }: {
   open: boolean;
   onClose: () => void;
+  page: PageId;
   active: string | null;
   locale: Locale;
   setLocale: (locale: Locale) => void;
@@ -388,15 +381,33 @@ function NavSheet({
                 <X size={16} aria-hidden="true" />
               </button>
             </div>
-            <ul className="mt-3 grid grid-cols-2 gap-2">
-              {SHEET_ITEMS.map((item) => (
+            <p className="mt-4 font-mono text-[11px] text-muted">{CASES_UI.pages[locale]}</p>
+            <ul className="mt-2 grid grid-cols-2 gap-2">
+              {[{ id: "home", href: "/", label: NAV.home }, ...CASE_ITEMS].map((item) => (
+                <li key={item.id}>
+                  <Link
+                    href={item.href}
+                    onClick={onClose}
+                    aria-current={page === item.id ? "page" : undefined}
+                    className={`press-scale flex h-12 items-center rounded-2xl border px-4 text-[15px] font-medium ${
+                      page === item.id ? "border-accent/60 bg-accent/10 text-ink" : "border-line bg-bg/40 text-ink/90"
+                    }`}
+                  >
+                    {item.label[locale]}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+            <p className="mt-4 font-mono text-[11px] text-muted">{CASES_UI.onThisPage[locale]}</p>
+            <ul className="mt-2 flex flex-wrap gap-2">
+              {sheetSections(page).map((item) => (
                 <li key={item.id}>
                   <a
                     href={`#${item.id}`}
                     onClick={onClose}
                     aria-current={active === item.id ? "true" : undefined}
-                    className={`press-scale flex h-14 items-center rounded-2xl border px-4 text-[15px] font-medium ${
-                      active === item.id ? "border-accent/60 bg-accent/10 text-ink" : "border-line bg-bg/40 text-ink/90"
+                    className={`press-scale inline-flex h-11 items-center rounded-full border px-4 text-[14px] ${
+                      active === item.id ? "border-accent/60 bg-accent/10 text-ink" : "border-line text-ink/85"
                     }`}
                   >
                     {item.label[locale]}
@@ -423,4 +434,13 @@ function NavSheet({
       )}
     </AnimatePresence>
   );
+}
+
+/** The sections listed under "On this page" in the sheet (contact is on every page). */
+function sheetSections(page: PageId): { id: string; label: Record<Locale, string> }[] {
+  const contact = { id: "contacto", label: NAV.contact };
+  if (page === "home") {
+    return [...HOME_SECTIONS.filter((s) => s.id !== "hero" && s.id !== "casos").map((s) => ({ id: s.id, label: s.short })), contact];
+  }
+  return [...CASE_BY_ID[page as CaseId].sections.map((s) => ({ id: s.id, label: s.short })), contact];
 }

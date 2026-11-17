@@ -134,9 +134,9 @@ export function WariPortal() {
             </p>
           </div>
 
-          <h2 className="mt-8 font-wari-display text-balance text-[clamp(2.25rem,4.6vw,3.9rem)] font-semibold leading-[1.02] tracking-[-0.035em]">
+          <h1 className="mt-8 font-wari-display text-balance text-[clamp(2.25rem,4.6vw,3.9rem)] font-semibold leading-[1.02] tracking-[-0.035em]">
             {WARI.title[locale]}
-          </h2>
+          </h1>
 
           <p className="mt-6 max-w-[44ch] text-pretty text-[1.0625rem] leading-relaxed text-[color:var(--wari-ink-2)]">
             {WARI.lead[locale]}
@@ -264,7 +264,7 @@ function WariStory({ locale, reduce }: { locale: "en" | "es"; reduce: boolean | 
   const chapters = WARI.chapters;
 
   return (
-    <div className="relative mx-auto w-full max-w-7xl pb-24 lg:px-8 lg:pb-36">
+    <div id="wari-historia" className="relative mx-auto w-full max-w-7xl scroll-mt-16 pb-24 lg:px-8 lg:pb-36">
       <h3 className="px-5 font-wari-display text-[clamp(1.6rem,3vw,2.3rem)] font-semibold tracking-[-0.03em] sm:px-8 lg:px-0">
         {WARI.storyLabel[locale]}
       </h3>

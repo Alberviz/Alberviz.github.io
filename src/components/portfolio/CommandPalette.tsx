@@ -17,9 +17,11 @@ import {
 } from "@phosphor-icons/react";
 import { useLocale } from "@/lib/i18n-context";
 import type { Locale } from "@/lib/i18n-context";
+import { usePathname, useRouter } from "next/navigation";
 import { CV_PATH, EMAIL, GITHUB_URL, LINKEDIN_URL, WARI_URL } from "@/content/links";
+import { CASES, HOME_SECTIONS } from "@/content/pages";
 
-type Category = "navigate" | "links" | "actions";
+type Category = "pages" | "navigate" | "links" | "actions";
 
 interface PaletteItem {
   id: string;
@@ -32,14 +34,18 @@ interface PaletteItem {
 }
 
 const CATEGORY_LABEL: Record<Category, Record<Locale, string>> = {
-  navigate: { en: "Navigate", es: "Navegar" },
+  pages: { en: "Pages", es: "Páginas" },
+  navigate: { en: "Sections", es: "Secciones" },
   links: { en: "Demos and links", es: "Demos y enlaces" },
   actions: { en: "Actions", es: "Acciones" },
 };
 
 function scrollToSection(id: string) {
-  document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  const smooth = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  document.getElementById(id)?.scrollIntoView({ behavior: smooth ? "smooth" : "auto", block: "start" });
 }
+
+const norm = (p: string) => (p.endsWith("/") ? p : `${p}/`);
 
 function openExternal(href: string) {
   window.open(href, "_blank", "noopener,noreferrer");
@@ -51,6 +57,8 @@ function openExternal(href: string) {
  */
 export function CommandPalette() {
   const { locale, toggleLocale } = useLocale();
+  const router = useRouter();
+  const pathname = usePathname();
 
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState("");
@@ -100,42 +108,65 @@ export function CommandPalette() {
 
   const items: PaletteItem[] = useMemo(() => {
     const es = locale === "es";
-    const nav = (id: string, title: string, keywords: string): PaletteItem => ({
-      id: `nav-${id}`,
+    const here = norm(pathname || "/");
+    /** Same page: scroll. Another page: a client navigation (the language and the bar persist). */
+    const go = (path: string, hash?: string) => {
+      close();
+      if (norm(path) === here) {
+        if (hash) scrollToSection(hash);
+        else window.scrollTo({ top: 0, behavior: "auto" });
+      } else {
+        router.push(hash ? `${path}#${hash}` : path);
+      }
+    };
+    const pageItem = (id: string, path: string, title: string, keywords: string): PaletteItem => ({
+      id: `page-${id}`,
       title,
-      hint: `#${id}`,
+      hint: path,
+      category: "pages",
+      icon: <ArrowRight size={15} aria-hidden="true" />,
+      keywords,
+      action: () => go(path),
+    });
+    const sectionItem = (path: string, id: string, title: string, keywords: string): PaletteItem => ({
+      id: `nav-${path}-${id}`,
+      title,
+      hint: `${path === "/" ? "" : path.replace(/\/$/, "")}#${id}`,
       category: "navigate",
       icon: <ArrowRight size={15} aria-hidden="true" />,
       keywords,
-      action: () => {
-        close();
-        scrollToSection(id);
-      },
+      action: () => go(path, id),
     });
 
     return [
+      pageItem("home", "/", es ? "Inicio" : "Home", "home inicio start hero"),
+      ...CASES.map((c) => pageItem(c.id, c.path, `${c.name}: ${c.headline[locale]}`, c.keywords)),
+      ...HOME_SECTIONS.filter((x) => x.id !== "hero").map((x) => sectionItem("/", x.id, x.title[locale], x.keywords)),
+      ...CASES.flatMap((c) => c.sections.filter((x) => x.id !== c.id).map((x) => sectionItem(c.path, x.id, x.title[locale], x.keywords))),
+      {
+        id: "nav-contact",
+        title: es ? "Contacto" : "Contact",
+        hint: "#contacto",
+        category: "navigate",
+        icon: <ArrowRight size={15} aria-hidden="true" />,
+        keywords: "contact contacto footer email",
+        action: () => {
+          close();
+          scrollToSection("contacto");
+        },
+      },
       {
         id: "route-wari",
         title: es ? "Abrir la web de Wari" : "Open the Wari website",
         hint: "wariapp.es",
-        category: "navigate",
+        category: "links",
         icon: <ArrowSquareOut size={15} className="text-accent" aria-hidden="true" />,
-        keywords: "wari warikan gastos expenses split receipt tickets trips viajes app pwa",
+        keywords: "wari warikan web website app pwa",
         action: () => {
           close();
           openExternal(WARI_URL);
         },
       },
-      nav("hero", es ? "Inicio" : "Top", "hero home inicio top gargantua"),
-      nav("wari", es ? "Wari, mi producto en beta" : "Wari, my product in beta", "wari app beta product producto gastos expenses tickets viajes trips"),
-      nav("olimpo", es ? "Olimpo, el sistema operativo de mi vida" : "Olimpo, the operating system of my life", "olimpo svelte pwa raspberry pi horas firmamento cielo agents agentes"),
-      nav("warp", es ? "Warp, archivos entre dispositivos" : "Warp, files between devices", "warp portal black hole agujero super space espacio files archivos clipboard portapapeles"),
-      nav("sistemas", es ? "Lo que corre detrás de Olimpo" : "What runs behind Olimpo", "systems sistemas homelab aurora laura ghostfolio wealth patrimonio salud health raspberry pi"),
-      nav("laura", es ? "Ir a Laura" : "Go to Laura", "laura voice voz assistant asistente holograms hologramas holo warp whisper qwen kokoro ollama local tools herramientas"),
-      nav("escritorio", es ? "El escritorio Linux" : "The Linux desktop", "desktop escritorio linux hyprland quickshell caelestia gargantua laura shader webgl rgb hidraw"),
-      nav("proyectos", es ? "Más trabajo: hackathon y laboratorio" : "More work: hackathon and lab", "projects proyectos trabajo work mycrohnie hackyeah closhare barber lab laboratorio"),
-      nav("trayectoria", es ? "Trayectoria" : "Background", "background trayectoria stel order education olympiad umu agh"),
-      nav("contacto", es ? "Contacto" : "Contact", "contact contacto footer email"),
       {
         id: "link-mycrohnie",
         title: es ? "MyCrohnie en vivo" : "MyCrohnie live app",
@@ -235,7 +266,8 @@ export function CommandPalette() {
         },
       },
     ];
-  }, [locale, copied, toggleLocale]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [locale, copied, toggleLocale, pathname]);
 
   const filteredItems = useMemo(() => {
     const q = query.toLowerCase().trim();

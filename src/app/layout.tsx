@@ -9,6 +9,9 @@ import {
 } from "next/font/google";
 import { LanguageProvider } from "@/lib/i18n-context";
 import { SITE_URL } from "@/content/links";
+import { PortfolioNavbar } from "@/components/portfolio/PortfolioNavbar";
+import { PortfolioFooter } from "@/components/portfolio/PortfolioFooter";
+import { CommandPalette } from "@/components/portfolio/CommandPalette";
 import "./globals.css";
 
 const fontDisplay = Bricolage_Grotesque({
@@ -60,8 +63,9 @@ const DESCRIPTION =
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: TITLE,
+  title: { default: TITLE, template: `%s · ${TITLE}` },
   description: DESCRIPTION,
+  alternates: { canonical: "/" },
   keywords: [
     "Alberto Vizcaíno Ponte",
     "Software Engineer",
@@ -126,7 +130,14 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="min-h-screen bg-bg font-sans text-ink antialiased selection:bg-accent/25">
-        <LanguageProvider>{children}</LanguageProvider>
+        <LanguageProvider>
+          <div className="relative flex min-h-screen flex-col bg-bg text-ink">
+            <PortfolioNavbar />
+            <main className="flex w-full flex-1 flex-col">{children}</main>
+            <PortfolioFooter />
+            <CommandPalette />
+          </div>
+        </LanguageProvider>
       </body>
     </html>
   );

@@ -44,20 +44,20 @@ export function LauraSection() {
   const reduce = useReducedMotionSafe();
 
   return (
-    <section id="laura" data-scene="laura" className="laura-section relative isolate overflow-clip border-t border-line">
+    <section id="laura" data-scene="laura" className="laura-section relative isolate overflow-clip">
       <div aria-hidden="true" className="laura-glow pointer-events-none absolute inset-0 -z-10" />
 
       <div className="mx-auto max-w-7xl px-5 pt-[var(--spacing-section)] sm:px-8">
         {/* Header */}
         <motion.div {...revealProps(reduce)} className="grid gap-8 lg:grid-cols-12 lg:items-end">
           <div className="lg:col-span-7">
-            <h2
+            <h1
               className="flex items-center gap-[0.18em] font-display text-[clamp(3.6rem,10vw,8.5rem)] font-semibold leading-[0.9] tracking-[-0.045em] text-ink"
               style={{ fontVariationSettings: '"opsz" 96' }}
             >
               {LAURA_HEAD.title[locale]}
               <Voice className="h-[0.52em] text-[clamp(3.6rem,10vw,8.5rem)]" reduce={reduce} />
-            </h2>
+            </h1>
             <p className="mt-5 max-w-[22ch] text-balance font-display text-[clamp(1.5rem,2.6vw,2.2rem)] font-semibold leading-tight tracking-[-0.03em] text-ink/90">
               {LAURA_HEAD.tagline[locale]}
             </p>

@@ -1,31 +1,23 @@
-import { PortfolioNavbar } from "@/components/portfolio/PortfolioNavbar";
 import { HeroSection } from "@/components/portfolio/HeroSection";
-import { WariPortal } from "@/components/portfolio/WariPortal";
-import { OlimpoSection } from "@/components/portfolio/OlimpoSection";
-import { SystemsSection } from "@/components/portfolio/SystemsSection";
-import { LauraSection } from "@/components/portfolio/LauraSection";
-import { DesktopSection } from "@/components/portfolio/DesktopSection";
+import { CaseReel } from "@/components/portfolio/CaseReel";
 import { ProjectsSection } from "@/components/portfolio/ProjectsSection";
 import { BackgroundSection } from "@/components/portfolio/BackgroundSection";
-import { PortfolioFooter } from "@/components/portfolio/PortfolioFooter";
-import { CommandPalette } from "@/components/portfolio/CommandPalette";
+import { OLD_ANCHORS } from "@/content/pages";
+
+/**
+ * Old links to the single page (/#wari, /#warp...) now live on their own pages.
+ * Runs before anything paints, so the visitor never sees the home first.
+ */
+const REDIRECT_OLD_ANCHORS = `(function(){try{var m=${JSON.stringify(OLD_ANCHORS)};var h=decodeURIComponent(location.hash.slice(1));if(h&&m[h])location.replace(m[h]);}catch(e){}})();`;
 
 export default function HomePage() {
   return (
-    <div className="relative flex min-h-screen flex-col bg-bg text-ink">
-      <PortfolioNavbar />
-      <main className="flex w-full flex-1 flex-col">
-        <HeroSection />
-        <WariPortal />
-        <OlimpoSection />
-        <SystemsSection />
-        <LauraSection />
-        <DesktopSection />
-        <ProjectsSection />
-        <BackgroundSection />
-      </main>
-      <PortfolioFooter />
-      <CommandPalette />
-    </div>
+    <>
+      <script dangerouslySetInnerHTML={{ __html: REDIRECT_OLD_ANCHORS }} />
+      <HeroSection />
+      <CaseReel />
+      <ProjectsSection />
+      <BackgroundSection />
+    </>
   );
 }
