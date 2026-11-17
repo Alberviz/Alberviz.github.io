@@ -53,9 +53,19 @@ export const WARI = {
   },
   stats: [
     { value: "32", valueEs: "32", label: { en: "currencies, exact to the cent", es: "monedas, exactas al céntimo" } },
-    { value: "2,780", valueEs: "2.780", label: { en: "automated tests", es: "tests automáticos" } },
-    { value: "87", valueEs: "87", label: { en: "database migrations", es: "migraciones de base de datos" } },
-  ] satisfies { value: string; valueEs: string; label: LocalizedText }[],
+    {
+      value: "2,700+",
+      valueEs: "2.700",
+      preEs: "más de",
+      label: { en: "automated tests", es: "tests automáticos" },
+    },
+    {
+      value: "80+",
+      valueEs: "80",
+      preEs: "más de",
+      label: { en: "database migrations", es: "migraciones de base de datos" },
+    },
+  ] satisfies { value: string; valueEs: string; preEs?: string; label: LocalizedText }[],
   cta: { en: "Open the Wari website", es: "Abrir la web de Wari" },
   caption: { en: "Screens from the real app", es: "Capturas de la app real" },
 } satisfies Record<string, unknown>;

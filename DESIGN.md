@@ -1,87 +1,58 @@
-# DESIGN SYSTEM — Alberviz Portfolio & Krakount Showcase
+# DESIGN: portfolio de Alberto Vizcaíno Ponte
 
-> **Design Read (`/`):** Solo design-engineer & systems-builder portfolio for startup founders, fellowship reviewers, and technical leaders, with an architectural dark-precision language (`Obsidian + Emerald Signal`), high-craft typography, real media artifacts, and purposeful spring/scroll choreography.
-> **Design Read (`/krakount`):** Mobile fintech & group-travel product showcase in Krakount's authentic **«Kazimierz de noche»** language (`#0E0F13` night paper + `#F5A524` streetlamp amber + `Schibsted Grotesk` & `Archivo`).
+> **Lectura de diseño:** portfolio de ingeniero y design engineer para founders, fellowships y equipos tempranos. Lenguaje "precisión cósmica" sacado de su propio escritorio: espacio profundo, un agujero negro calculado a mano y una Raspberry Pi como estrella. Sobre Next.js 15, Tailwind v4, Motion y WebGL real.
 
----
+Diales: `DESIGN_VARIANCE 8`, `MOTION_INTENSITY 6`, `VISUAL_DENSITY 3`. Sin tarjetas por defecto: se agrupa con espacio y líneas finas.
 
-## 1. The Three Dials (`design-taste-frontend` Calibration)
+## 1. Color (tokens en `src/app/globals.css`)
 
-* **`DESIGN_VARIANCE: 8`** - Asymmetric hero splits, varied editorial/architectural bento ratios, zero 3-equal-card rows, zero repeated consecutive layout families.
-* **`MOTION_INTENSITY: 7`** - Crisp hardware-accelerated `transform`/`opacity`/`clip-path` choreography, tactile `:active` press (`scale(0.97)`), spring physics for interactive elements, GSAP ScrollTrigger reserved strictly for motivated pinned storytelling, and instant `0ms` keyboard command palette (`⌘K`).
-* **`VISUAL_DENSITY: 4`** - Generous gallery breathing room around real videos and shader renders, balanced with crisp 1px hairline technical diagrams for systems/wealth architecture.
+| Token | Valor | Uso |
+| --- | --- | --- |
+| `--bg` | `#07080B` | Fondo espacio |
+| `--surface` | `#0E1015` | Superficie |
+| `--elevated` | `#151820` | Chips, controles |
+| `--line` | `#1F232D` | Hairlines de 1px |
+| `--ink` | `#ECEDF0` | Texto principal |
+| `--muted` | `#8A8F9C` | Texto secundario (AA sobre bg y surface) |
+| `--accent` | `#F2B36F` | Único acento, "disco de acreción" |
+| `--accent-pressed` | `#E39F55` | Estado pulsado |
+| `--on-accent` | `#1A1208` | Texto sobre el acento |
 
----
+El acento se reserva para el CTA primario, el foco, el elemento activo y detalles mínimos. Nada de esmeralda ni de morado neón.
 
-## 2. Surface Tokens & Color Consistency Lock
+**Excepción documentada:** la sección Wari (`[data-surface="wari"]`) usa la paleta "Cristal" de Wari (niebla clara `#EEF2F8 -> #D9E1EE -> #B4C3DC`, tinta `#13213B`, acción `#27467A`) como único bloque de color de la página. El espacio se disuelve en la niebla al entrar y vuelve a oscuro al salir.
 
-> **Strict Bans:** Never use pure `#000000` or pure `#FFFFFF`. Never use AI-purple/violet neon glows. Never invert themes mid-page (Page Theme Lock).
+## 2. Tipografía
 
-### Surface A: `/` — Root Portfolio («Obsidian Precision + Emerald Signal»)
-- `--bg-canvas`: `#090A0D` (Deep cool obsidian canvas)
-- `--bg-surface`: `#111318` (Primary elevated sheet/tile)
-- `--bg-elevated`: `#171A21` (Interactive chip, input, code/spec surface)
-- `--border-hairline`: `#232732` (1px structural grid & divider rules)
-- `--text-primary`: `#ECEEF2` (Crisp off-white primary ink)
-- `--text-muted`: `#8E95A5` (Secondary metadata & body prose)
-- `--accent`: `#10B981` (Locked singular Emerald signal across the entire `/` surface)
-- `--accent-pressed`: `#059669`
-- `--on-accent`: `#04130D` (High-contrast dark label on emerald primary CTA, ratio > 8:1)
+- Display: **Bricolage Grotesque** (`--font-display`), peso 600, tracking `-0.035em`, `opsz` alto en titulares.
+- Texto: **Geist** (`--font-sans`).
+- Datos y metadatos: **Geist Mono** (`--font-mono`).
+- Solo en el portal de Wari: **Inter Tight / Inter** (`--font-wari-display`, `--font-wari`), para que se sienta otro mundo.
+- Cifras siempre con `tabular-nums`. El énfasis se hace con peso o color de la misma familia.
 
-### Surface B: `/krakount` — Product Showcase («Kazimierz de noche»)
-Scoped via `[data-surface="krakount"]` to honor `/home/alberviz/proyectos/krakount/DESIGN.md` verbatim:
-- `--kk-paper`: `#0E0F13` (Cold night street background)
-- `--kk-sheet`: `#17181E` (Continuous single-sheet surface)
-- `--kk-sheet-alt`: `#1F2027` (Segmented tracks, chips, controls)
-- `--kk-rule`: `#26272F` (1px list hairlines)
-- `--kk-ink`: `#EDEDEF`
-- `--kk-ink-muted`: `#8B8D98`
-- `--kk-amber`: `#F5A524` (Streetlamp amber - the ONLY accent on `/krakount`)
-- `--kk-amber-press`: `#E0951A`
-- `--kk-on-amber`: `#16130A` (9:1 contrast text on amber pill CTAs)
-- `--kk-owed`: `#3DD68C` (Mint - strictly positive money balances)
-- `--kk-owe`: `#FF6B5B` (Coral - strictly negative money balances)
+## 3. Forma y composición
 
----
+- Botones, filtros y chips: píldora (`999px`). Medios y marcos: `20px`.
+- Iconos: Phosphor, trazo uniforme.
+- Secciones separadas por `border-t border-line` y el espaciado `--spacing-section`; cabecera de sección = titular display a la izquierda y entradilla a la derecha.
+- Eyebrows: máximo 3 en toda la página (hoy 0). Las etiquetas de columna son titulares, no eyebrows.
+- Una sola etiqueta de contacto: "Contacto" en nav y pie.
 
-## 3. Typography & Numeric Discipline
+## 4. Momentos firma
 
-- **Root `/` Display Headlines:** `Space Grotesk` (`var(--font-display)`), tight tracking (`-0.03em`), `leading-[1.05]`.
-- **Root `/` Body & UI:** `Plus Jakarta Sans` (`var(--font-sans)`), `max-w-[65ch]`, relaxed reading rhythm.
-- **Technical Metadata / Architecture Specs:** `JetBrains Mono` (`var(--font-mono)`).
-- **`/krakount` Brand Wordmark:** `Archivo` (`var(--font-krakount-brand)`), weight `800-900`, exclusively for brand wordmarks/stamps.
-- **`/krakount` UI & Copy:** `Schibsted Grotesk` (`var(--font-krakount-ui)`).
-- **Mandatory `tabular-nums`:** Every monetary amount, counter, metric, and receipt figure MUST apply `font-variant-numeric: tabular-nums`.
-- **Emphasis Rule:** Never inject a random serif word inside a sans headline. Use bold/color/italic of the same family (respecting descender clearance `leading-[1.1]` + `pb-1`).
+1. **Hero:** Gargantua en WebGL en vivo (renderer en `desktop/live/gargantua-renderer.ts`), con poster como LCP y fallback para reduced motion, sin WebGL y móviles flojos. Se pausa fuera de viewport.
+2. **Sistemas:** mapa orbital. La Raspberry Pi 5 es la estrella y cada sistema es un planeta (un `<button>` real) en su órbita. Hover, foco o toque abren su ficha. Las órbitas se escriben al DOM desde un único `requestAnimationFrame` (sin estado por fotograma) y se paran con reduced motion, fuera de viewport, con el ratón encima, con foco dentro y unos segundos tras un toque.
+3. **Proyectos:** índice tipográfico. Una única tarjeta flotante sigue al puntero con springs de `useMotionValue` (solo puntero fino); en móvil hay una miniatura en línea.
 
----
+## 5. Movimiento
 
-## 4. Shape, Icons & Layout Rules
+- Curvas: `--ease-out: cubic-bezier(0.23, 1, 0.32, 1)` (entradas y recuperaciones), `--ease-in-out: cubic-bezier(0.77, 0, 0.175, 1)`, `--ease-drawer: cubic-bezier(0.32, 0.72, 0, 1)`. Nunca `ease-in`.
+- Duraciones: pulsación 140 ms, microinteracciones 180 ms, transiciones de UI 220-320 ms, reveals de sección 700 ms.
+- Solo `transform`, `opacity` y `clip-path`. Nunca `transition: all`, nunca entradas desde `scale(0)` (se usa `0.96`).
+- Todo hover vive tras `@media (hover: hover) and (pointer: fine)`; todo componente con movimiento respeta `useReducedMotion()`.
+- La paleta de comandos y el cambio EN/ES son instantáneos.
+- Nada de listeners de `scroll`; se usa `useScroll`/`useInView` de Motion o `IntersectionObserver`.
 
-- **Shape Consistency Lock:**
-  - Interactive buttons, language switch, and filter chips: `rounded-full` (`999px` pill).
-  - Structural containers, video frames, and sheets: `rounded-2xl` (`16px`).
-  - Nested inner controls / code blocks: `rounded-xl` (`12px`).
-- **Icons:** Exclusively `@phosphor-icons/react` (regular weight `1.5`/default, `fill` for active states). Zero hand-rolled SVG icons, zero emojis in UI chrome.
-- **Hero Discipline:** Fits `min-h-[100dvh]`, top padding `<= pt-24`, max 4 text stack elements (1 eyebrow, 2-line max headline, `<= 20`-word subtext, 2 CTAs), real visual artifact on the right.
-- **Eyebrow Restraint:** Maximum `ceil(sectionCount / 3)` uppercase tracking eyebrows per page. Most sections lead directly with a strong display heading.
-- **No Duplicate CTA Intent:** Primary contact CTA uses `"Get in touch"` / `"Contactar"` consistently across nav and footer.
+## 6. Accesibilidad y rendimiento
 
----
-
-## 5. Motion Engineering Rules (`emil-design-eng` + `animate` + `gsap-*`)
-
-1. **Custom Curves Only (never CSS built-in `ease-in`):**
-   - `--ease-out`: `cubic-bezier(0.23, 1, 0.32, 1)` (entrances, press recovery, popovers)
-   - `--ease-in-out`: `cubic-bezier(0.77, 0, 0.175, 1)` (on-screen morphs & layout shifts)
-   - `--ease-drawer`: `cubic-bezier(0.32, 0.72, 0, 1)` (sheets & modals)
-2. **Frequency Gate:**
-   - `⌘K` Command Menu & `EN/ES` switch: **0ms / instant** (or crisp 120ms opacity blur crossfade on copy, zero sluggish modal zoom).
-   - Buttons & interactive pills: `140ms var(--ease-out)` with `:active { transform: scale(0.97) }`.
-   - Scroll reveals & showcase choreography: GPU-only `transform`, `opacity`, and `clip-path: inset(...)`. Never animate `width`, `height`, `top`, `left`, or `margin`. Never start from `scale(0)` (use `scale(0.96)` + `opacity: 0`).
-3. **Library Isolation:**
-   - Never mix GSAP `ScrollTrigger` and `motion/react` on the same DOM node. Isolate GSAP scroll scenes in dedicated `'use client'` leaf components using `useGSAP()` / `gsap.context()` with full revert cleanup.
-   - Never attach `window.addEventListener("scroll", ...)`.
-4. **Mandatory Gating:**
-   - Every hover transform lives inside `@media (hover: hover) and (pointer: fine)`.
-   - Every non-trivial motion component checks `useReducedMotion()` and degrades to calm opacity transitions.
+Contraste AA en todo, foco visible con `--focus-ring`, objetivos táctiles de 40 px o más, sin scroll horizontal a 390 px, `min-h-[100dvh]` en el hero, CLS cercano a 0 (medios con dimensiones exactas), LCP con el poster del hero.

@@ -2,46 +2,48 @@
 
 <!-- impeccable:product-schema 1 -->
 
-> Source of truth for Alberto Vizcaíno Ponte's permanent portfolio (`https://alberviz.github.io/`) and flagship product showcase (`https://alberviz.github.io/krakount/`). All facts, metrics, and media come from verified repositories and live Raspberry Pi 5 home-lab audits. Nothing may be fabricated.
+> Fuente de verdad del portfolio de Alberto Vizcaíno Ponte (`https://alberviz.github.io/`). Hechos, cifras y medios salen de repositorios y de la configuración real de sus sistemas. Nada puede inventarse.
 
 ## Platform
 
-web (static export on GitHub Pages via Next.js App Router, desktop + mobile responsive)
+Web estática (Next.js App Router, `output: "export"`, GitHub Pages), responsive de escritorio a móvil.
 
 ## Users
 
-1. **Primary high-signal audience:** Fellowship reviewers, startup founders, CTOs, and VCs evaluating Alberto's application to **The Exponential Fellowship / Go Exponential** (`goexponential.org`), as well as early-stage engineering teams in San Francisco, New York, Spain, and Europe.
-2. **Secondary permanent audience:** Technical recruiters, hackathon teammates, collaborators, and visitors exploring **Krakount** (`/krakount`).
+1. **Audiencia principal:** revisores de fellowships (Go Exponential), founders, CTOs y equipos tempranos en Europa y Estados Unidos.
+2. **Secundaria:** reclutadores técnicos, compañeros de hackathon y quien llega desde la web de Wari.
 
-Visitors scan fast (15-30 seconds on desktop or phone). Within the first two scrolls they must immediately see: formal mathematical rigor + relentless habit of shipping complete, real-world systems end to end.
+Escanean rápido (15-30 s). En dos scrolls tienen que ver rigor matemático y el hábito de entregar sistemas completos de principio a fin.
 
 ## Product Purpose
 
-Prove through real artifacts, live architecture, video proof, and interactive software craft that **Alberto Vizcaíno Ponte** (Double B.S. Mathematics & Computer Science, Universidad de Murcia, Erasmus+ at AGH University of Kraków) is an outlier high-agency builder who operates across the full stack: from integer-exact financial engines, WebGPU PWAs, and cloud ERP POS modules down to autonomous 24/7 AI agents on self-hosted Linux, raymarched GLSL shaders, and raw USB/BLE/NFC hardware reverse engineering.
+Demostrar con artefactos reales que Alberto (Doble Grado en Matemáticas e Ingeniería Informática, Universidad de Murcia; Erasmus+ en AGH Kraków 2026-2027) construye sistemas enteros: de la demostración al driver USB, de la app que su grupo usa a diario a la IA que corre en su propia Raspberry Pi.
 
 ## Positioning
 
-Two distinct, cohesive surfaces inside one fast static site:
-1. **`/` (Portfolio - Mode: `Experience`):** Design-engineer & systems-builder showcase inspired by the craft standard of Rauno Freiberg, Emil Kowalski, Paco Coursey, and Dennis Snellenberg. Clean typographic hierarchy, real product videos and shader renders, live architecture topology of his Raspberry Pi 5 home lab + interconnected Ghostfolio wealth system, and instant `⌘K` keyboard navigation.
-2. **`/krakount` (Flagship Product Landing - Mode: `Persuade`):** Dedicated product showcase in Krakount's authentic **«Kazimierz de noche»** design language (`#0E0F13` night paper, `#F5A524` streetlamp amber, `Schibsted Grotesk` + variable `Archivo`), featuring real mobile reels, 30+ real screenshots, Android `Krakount Captura` details, and a live interactive *Paragon Fiskalny* receipt-splitting + debt-simplification simulator.
+Una sola página (`/`), modo `Experience`, con ocho secciones: Nav, Hero (agujero negro Gargantua en vivo), Wari (la app que mantiene y usan sus amigos), Sistemas (mapa orbital de su infraestructura personal), Escritorio (Linux hecho a medida), Proyectos (índice tipográfico), Trayectoria y Contacto.
 
-## Operating Context
+Wari es el producto principal. Antes se llamaba Krakount; la ruta `/krakount` es un stub que apunta a la web de Wari. El nombre viene de 割り勘 (warikan).
 
-Bilingual (`EN` default for international founders/Go Exponential, instant `EN/ES` client toggle without reload). Hosted permanently at `https://alberviz.github.io` as a static export (`output: 'export'`). Zero backend servers required; interactive simulations run deterministically in the browser.
+## Voice
+
+Primera persona, directo, humano, sin humo. Se explica qué hace cada cosa y qué dato lo prueba. Bilingüe: EN por defecto, ES con cambio instantáneo sin recargar.
 
 ## Hard Content & Privacy Constraints
 
-1. **Personal commerce venture anonymity:** When describing the live Ghostfolio business sync bridge (`Supabase -> Ghostfolio`), always describe it strictly as a **personal product-selling business** (*negocio personal de venta de productos* tracking stock, sales, margins, and real-time net profit), without naming internal store brands.
-2. **Never expose private network endpoints or personal micro-apps:** Do NOT publish private mesh URLs, internal LAN IP addresses, internal port numbers, or private non-portfolio micro-apps.
-3. **Public contact & CV:** Expose `albvizpon@gmail.com`, `https://github.com/Alberviz`, `https://www.linkedin.com/in/alberto-vizca%C3%ADno-ponte`, and verbatim downloadable CV `/cv/Alberto_Vizcaino_Ponte_CV.pdf`.
-4. **Zero AI-slop copy & zero em-dashes:** The characters `—` (em-dash) and `–` (en-dash) are strictly banned across every string, caption, and comment. Use standard ASCII `-` only.
+1. **Negocio personal:** se describe solo como *personal product-selling business* / *negocio personal de venta de productos*, sin marca ni detalles comerciales.
+2. **Nada privado:** ni IPs, puertos, rutas de API, URLs de red privada ni apps personales no listadas. Sin nombres reales de amigos o terceros.
+3. **Fuera del portfolio:** auditorías de hardware ajeno, proyectos personales de pareja, servidores de juego y repos de terceros.
+4. **Enlaces:** solo los verificados como públicos. Un repo privado no se enlaza.
+5. **Contacto y CV públicos:** `albvizpon@gmail.com`, `https://github.com/Alberviz`, LinkedIn y el CV en `/cv/`.
+6. **Cero rayas largas y medias** en todo texto, alt y metadato. Solo `-` ASCII.
+7. **Cifras robustas:** se publican redondeadas hacia abajo cuando cambian a menudo (por ejemplo "2,700+ tests", "80+ migraciones").
 
 ## Evidence on Hand
 
-- Real MP4 videos and high-DPI WebP captures in `public/media/` (`krakount`, `mycrohnie`, `systems`, `closhare`, `aurora`) mapped with exact pixel dimensions in `src/content/assets.ts`.
-- Verified bilingual copy in `src/content/portfolio-data.ts` and `src/content/krakount-data.ts`.
-- Live public demos (`https://krakount.vercel.app`, `https://mycrohnie.vercel.app`, `https://closhare-indol.vercel.app`, `https://barber-bot-zeta.vercel.app`) and public GitHub repositories (`JoseoKings-Hackyeah`, `LinuxRicing`, `gts2-mando`, `competitiva`).
+- Capturas reales de Wari (tema Cristal) en `public/media/wari/`, medios de MyCrohnie y CloShare, y capturas del escritorio en `public/media/systems/`, con dimensiones exactas en `src/content/`.
+- Demos públicas: Wari, MyCrohnie, CloShare, Barber Bot. Repos públicos: LinuxRicing, gts2-mando, MyCrohnie.
 
 ## Accessibility & Performance Floor
 
-WCAG AA contrast minimum across all surfaces, `prefers-reduced-motion` respected on every animation, hover animations gated behind `@media (hover: hover) and (pointer: fine)`, `min-h-[100dvh]` viewport stability, `tabular-nums` on all numeric/financial figures, CLS < 0.05, LCP < 2.0s.
+Contraste AA, `prefers-reduced-motion` respetado (el mapa orbital se para), hover solo en puntero fino, teclado completo en el mapa orbital y la paleta, `tabular-nums` en cifras, sin scroll horizontal a 390 px.

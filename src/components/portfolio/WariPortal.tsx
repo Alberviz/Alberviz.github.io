@@ -140,6 +140,9 @@ export function WariPortal() {
             {WARI.stats.map((stat) => (
               <div key={stat.value}>
                 <dt className="font-wari-display text-[1.9rem] font-semibold leading-none tracking-[-0.03em] tabular-nums sm:text-[2.2rem]">
+                  <span className="mb-1.5 block h-[13px] font-wari text-[12.5px] font-normal leading-none tracking-normal text-[color:var(--wari-ink-2)]">
+                    {locale === "es" ? stat.preEs : ""}
+                  </span>
                   {locale === "es" ? stat.valueEs : stat.value}
                 </dt>
                 <dd className="mt-2 text-[12.5px] leading-snug text-[color:var(--wari-ink-2)]">

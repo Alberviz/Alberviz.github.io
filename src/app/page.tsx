@@ -1,9 +1,10 @@
 import { PortfolioNavbar } from "@/components/portfolio/PortfolioNavbar";
 import { HeroSection } from "@/components/portfolio/HeroSection";
 import { WariPortal } from "@/components/portfolio/WariPortal";
-import { HomeLabWealthSection } from "@/components/portfolio/HomeLabWealthSection";
-import { DesktopSection, ProjectsSection } from "@/components/portfolio/SelectedWorkSection";
-import { ExperienceAndAcademic } from "@/components/portfolio/ExperienceAndAcademic";
+import { SystemsSection } from "@/components/portfolio/SystemsSection";
+import { DesktopSection } from "@/components/portfolio/DesktopSection";
+import { ProjectsSection } from "@/components/portfolio/ProjectsSection";
+import { BackgroundSection } from "@/components/portfolio/BackgroundSection";
 import { PortfolioFooter } from "@/components/portfolio/PortfolioFooter";
 import { CommandPalette } from "@/components/portfolio/CommandPalette";
 
@@ -14,10 +15,10 @@ export default function HomePage() {
       <main className="flex w-full flex-1 flex-col">
         <HeroSection />
         <WariPortal />
-        <HomeLabWealthSection />
+        <SystemsSection />
         <DesktopSection />
         <ProjectsSection />
-        <ExperienceAndAcademic />
+        <BackgroundSection />
       </main>
       <PortfolioFooter />
       <CommandPalette />
