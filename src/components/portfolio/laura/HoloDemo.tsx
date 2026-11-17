@@ -104,6 +104,8 @@ export function HoloDemo({ locale }: { locale: Locale }) {
   const [announce, setAnnounce] = useState("");
   const [gl, setGl] = useState<"pending" | "on" | "off">("pending");
   const [hole, setHole] = useState(false);
+  /** The overlay canvas is only visible while the portal is in use, so no stray frame can ever show. */
+  const [portalOn, setPortalOn] = useState(false);
   const [binPulse, setBinPulse] = useState(0);
   const [tick, setTick] = useState(0);
 
@@ -206,6 +208,10 @@ export function HoloDemo({ locale }: { locale: Locale }) {
     intervals.current.forEach((t) => window.clearInterval(t));
     timers.current = [];
     intervals.current = [];
+    /* A new run never leaves the portal open behind it. */
+    engineRef.current?.open(false);
+    setHole(false);
+    setPortalOn(false);
     return runRef.current;
   }, []);
 
@@ -318,6 +324,7 @@ export function HoloDemo({ locale }: { locale: Locale }) {
     (viewerKey: string, n: number | undefined) => {
       const engine = engineRef.current;
       setItems((prev) => prev.map((i) => (i.key === viewerKey ? { ...i, exit: "send" as Exit, exitDelay: 0 } : i)));
+      setPortalOn(true);
       if (engine) engine.open(true, ["movil"]);
       else setHole(true);
       later(() => engine?.swallow("movil"), reduce ? 0 : 300);
@@ -328,6 +335,7 @@ export function HoloDemo({ locale }: { locale: Locale }) {
         engine?.open(false);
         setHole(false);
       }, reduce ? 260 : 900);
+      later(() => setPortalOn(false), reduce ? 1400 : 1900);
       later(() => setToast((t) => (t === "sent" ? null : t)), reduce ? 4000 : 5600);
     },
     [setItems, later, reduce]
@@ -668,7 +676,7 @@ export function HoloDemo({ locale }: { locale: Locale }) {
   );
 
   const canvas = (
-    <canvas ref={canvasRef} aria-hidden="true" className="pointer-events-none absolute inset-0 z-30 h-full w-full" />
+    <canvas ref={canvasRef} aria-hidden="true" className="pointer-events-none absolute inset-0 z-30 h-full w-full" style={{ opacity: portalOn ? 1 : 0 }} />
   );
 
   const portalAnchor = (
