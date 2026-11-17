@@ -8,8 +8,8 @@ const SITE = "Alberto Vizcaíno Ponte";
 const OG_ALT: Record<CaseId, string> = {
   wari: "The Wari page: real screens of the app in phone frames over a light blue fog",
   olimpo: "The Olimpo page: a recreated star map interface with the phone sky in front",
-  laura: "The Laura page: the title next to a glowing voice wave, on a dark sky",
-  escritorio: "The desktop page: a Linux desktop with a black hole wallpaper",
+  laura: "The Laura page: the title next to a glowing voice wave, above her verified numbers",
+  escritorio: "The desktop page: the title above a live recreation of a Linux desktop with a black hole",
 };
 
 export function caseMetadata(id: CaseId): Metadata {
