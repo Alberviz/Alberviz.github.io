@@ -66,17 +66,17 @@ export const SYSTEM_PLANETS: SystemPlanet[] = [
     stack: ["Svelte 5", "TypeScript", "Python", "FastAPI", "SQLite", "Docker"],
     facts: [
       {
-        value: "36",
+        value: "v2",
         label: {
-          en: "versions on the roadmap, v2.19 already in production",
-          es: "versiones en el roadmap, la v2.19 ya en producción",
+          en: "in daily use, shipped release by release from its own roadmap",
+          es: "en uso diario, publicada versión a versión desde su propio roadmap",
         },
       },
       {
-        value: "15 min",
+        value: "SHA-256",
         label: {
-          en: "lockout after 10 bad tokens. Tokens are stored only as SHA-256 hashes",
-          es: "de bloqueo tras 10 tokens erróneos. Los tokens solo se guardan como hashes SHA-256",
+          en: "is all the gateway keeps of each access token, never the token itself",
+          es: "es todo lo que guarda la pasarela de cada token de acceso, nunca el token",
         },
       },
     ],
