@@ -129,8 +129,8 @@ export const WARI = {
       id: "viaje",
       title: { en: "And the trip, in the same app.", es: "Y el viaje, en la misma app." },
       body: {
-        en: "Stops, times and tickets for each day, with the next step always on top. Splitwise and Tricount only do the money; Wari keeps both together.",
-        es: "Paradas, horas y billetes de cada día, con el siguiente paso siempre arriba. Splitwise y Tricount solo llevan el dinero; Wari junta las dos cosas.",
+        en: "Stops, times and tickets for each day, with the next step always on top. Other apps only do the money; Wari keeps both together.",
+        es: "Paradas, horas y billetes de cada día, con el siguiente paso siempre arriba. Las demás apps solo llevan el dinero; Wari junta las dos cosas.",
       },
     },
   ] satisfies { id: string; title: LocalizedText; body: LocalizedText }[],
