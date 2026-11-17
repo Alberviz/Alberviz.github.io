@@ -1,53 +1,270 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion, useInView, useReducedMotion } from "motion/react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { motion, useMotionValueEvent, useReducedMotion, useScroll } from "motion/react";
 import { ArrowUpRight, GithubLogo } from "@phosphor-icons/react";
 import { useLocale } from "@/lib/i18n-context";
-import { SYSTEMS_UI, SYSTEM_PLANETS } from "@/content/systems";
-import type { SystemPlanet } from "@/content/systems";
-import { EASE_OUT, revealProps } from "@/lib/motion";
+import { FLOW_EDGES, FLOW_NODES, SYSTEMS_UI, SYSTEM_PLANETS } from "@/content/systems";
+import type { FlowNode, SystemPlanet } from "@/content/systems";
+import { revealProps } from "@/lib/motion";
 
 /**
- * Orbital map of the home setup. The Raspberry Pi 5 is the star; each system is
- * a real <button> on its own ring. Positions are written straight to the DOM
- * from one rAF loop (no React state per frame) and use container query units,
- * so the server-rendered layout already matches the first client frame.
- *
- * The loop stops under reduced motion, off screen, while the mouse is over the
- * map, while anything inside has focus, and for a few seconds after a touch, so
- * a target never drifts away from the cursor or the focus ring.
+ * #sistemas: a data-flow diagram of everything that crosses the Raspberry Pi.
+ * Sources on the left, the services on the Pi in the middle, outputs on the
+ * right (on phones: top to bottom). The edges are drawn by the scroll in three
+ * phases and, once drawn, data packets ride them. On wide screens the diagram
+ * is pinned while it draws; on phones it simply scrolls. Hover, focus or tap a
+ * node to light its connections and read what crosses it. Below, the systems
+ * one by one. Packets run from one rAF loop that only writes SVG transforms,
+ * only while the diagram is on screen, and never under reduced motion.
  */
 
-const TAU = Math.PI * 2;
-const TOUCH_HOLD_MS = 6000;
+type Layout = "wide" | "tall";
+const BOX = { wide: { w: 210, h: 52, W: 1200, H: 600 }, tall: { w: 172, h: 50, W: 390, H: 820 } } as const;
 
-/** Fixed decimals so server and client render the same style string. */
-const pos = (planet: SystemPlanet, angle: number) => {
-  const x = (Math.cos(angle) * planet.orbit.r).toFixed(3);
-  const y = (Math.sin(angle) * planet.orbit.r).toFixed(3);
-  return `translate(calc(${x}cqw - 50%), calc(${y}cqw - 50%))`;
+const byId = Object.fromEntries(FLOW_NODES.map((n) => [n.id, n])) as Record<string, FlowNode>;
+
+function edgePath(from: FlowNode, to: FlowNode, layout: Layout) {
+  const b = BOX[layout];
+  const [x1, y1] = from[layout];
+  const [x2, y2] = to[layout];
+  if (layout === "wide") {
+    if (from.col === to.col) {
+      // Between two services: a bulge on the right of the Pi column.
+      const x = x1 + b.w / 2;
+      const k = 40 + Math.abs(y2 - y1) * 0.22;
+      return `M ${x} ${y1} C ${x + k} ${y1}, ${x + k} ${y2}, ${x} ${y2}`;
+    }
+    const sx = x1 + b.w / 2;
+    const ex = x2 - b.w / 2;
+    const mx = (sx + ex) / 2;
+    return `M ${sx} ${y1} C ${mx} ${y1}, ${mx} ${y2}, ${ex} ${y2}`;
+  }
+  if (from.col === to.col) return `M ${x1} ${y1} L ${x2} ${y2}`;
+  const sy = y1 + b.h / 2;
+  const ey = y2 - b.h / 2;
+  const my = (sy + ey) / 2;
+  return `M ${x1} ${sy} C ${x1} ${my}, ${x2} ${my}, ${x2} ${ey}`;
+}
+
+const smooth = (a: number, b: number, x: number) => {
+  const t = Math.min(1, Math.max(0, (x - a) / (b - a)));
+  return t * t * (3 - 2 * t);
 };
+const PHASE: [number, number][] = [
+  [0.02, 0.36],
+  [0.34, 0.6],
+  [0.58, 0.92],
+];
 
-/** Planet sizes in px (visual dot, the hit area is always 44px). */
-const DOT: Record<string, number> = { networth: 15, aurora: 12, health: 11, laura: 14 };
+function Diagram({ layout, locale, reduce }: { layout: Layout; locale: "en" | "es"; reduce: boolean | null }) {
+  const b = BOX[layout];
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const pathRefs = useRef<(SVGPathElement | null)[]>([]);
+  const dotRefs = useRef<(SVGCircleElement | null)[]>([]);
+  const drawn = useRef<number[]>(FLOW_EDGES.map(() => (reduce ? 1 : 0)));
+  const [active, setActive] = useState<string | null>(null);
+  const [phase, setPhase] = useState(reduce ? 2 : -1);
+  const visible = useRef(false);
 
-/** Deterministic star dust (no Math.random: same on server and client). */
-const DUST = Array.from({ length: 34 }, (_, i) => {
-  const f = (n: number) => n - Math.floor(n);
-  const a = f(Math.sin(i * 12.9898) * 43758.5453);
-  const b = f(Math.sin(i * 78.233) * 12543.113);
-  const c = f(Math.sin(i * 39.425) * 9871.37);
-  return { x: +(a * 100).toFixed(2), y: +(b * 100).toFixed(2), r: +(0.12 + c * 0.2).toFixed(2), o: +(0.25 + c * 0.45).toFixed(2) };
-});
+  const { scrollYProgress } = useScroll(
+    layout === "wide"
+      ? { target: wrapRef, offset: ["start start", "end end"] }
+      : { target: wrapRef, offset: ["start 85%", "end 70%"] }
+  );
+
+  const apply = (v: number) => {
+    FLOW_EDGES.forEach((e, i) => {
+      const [a, z] = PHASE[e.phase];
+      const n = FLOW_EDGES.filter((x) => x.phase === e.phase).indexOf(e);
+      const total = FLOW_EDGES.filter((x) => x.phase === e.phase).length;
+      const span = (z - a) * 0.55;
+      const start = a + ((z - a - span) * n) / Math.max(1, total - 1);
+      const t = reduce ? 1 : smooth(start, start + span, v);
+      drawn.current[i] = t;
+      const p = pathRefs.current[i];
+      if (p) p.style.strokeDashoffset = String(1 - t);
+    });
+    const ph = reduce ? 2 : v < PHASE[0][0] ? -1 : v < PHASE[1][0] ? 0 : v < PHASE[2][0] ? 1 : 2;
+    setPhase((old) => (old === ph ? old : ph));
+  };
+
+  useMotionValueEvent(scrollYProgress, "change", apply);
+  useEffect(() => {
+    apply(scrollYProgress.get());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [reduce]);
+
+  /* Packets: one per edge, riding it once it is drawn. */
+  useEffect(() => {
+    if (reduce) return;
+    const el = wrapRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(([e]) => (visible.current = e.isIntersecting), { rootMargin: "60px" });
+    io.observe(el);
+    let raf = 0;
+    const lens = FLOW_EDGES.map((_, i) => pathRefs.current[i]?.getTotalLength() ?? 0);
+    const tick = (now: number) => {
+      raf = requestAnimationFrame(tick);
+      if (!visible.current || document.hidden) return;
+      FLOW_EDGES.forEach((e, i) => {
+        const p = pathRefs.current[i];
+        const d = dotRefs.current[i];
+        if (!p || !d) return;
+        const ok = drawn.current[i] > 0.98;
+        d.style.opacity = ok ? "1" : "0";
+        if (!ok) return;
+        const L = lens[i] || p.getTotalLength();
+        const period = 1800 + L * 6;
+        const t = ((now + i * 433) % period) / period;
+        const pt = p.getPointAtLength(L * t);
+        d.setAttribute("transform", `translate(${pt.x.toFixed(1)} ${pt.y.toFixed(1)})`);
+      });
+    };
+    raf = requestAnimationFrame(tick);
+    return () => {
+      cancelAnimationFrame(raf);
+      io.disconnect();
+    };
+  }, [reduce, layout]);
+
+  const linked = useMemo(() => {
+    if (!active) return null;
+    const set = new Set<string>([active]);
+    FLOW_EDGES.forEach((e) => {
+      if (e.from === active) set.add(e.to);
+      if (e.to === active) set.add(e.from);
+    });
+    return set;
+  }, [active]);
+
+  const node = active ? byId[active] : null;
+  const services = FLOW_NODES.filter((n) => n.col === "service");
+  const piTop = Math.min(...services.map((n) => n[layout][1])) - b.h / 2 - (layout === "wide" ? 44 : 40);
+  const piBot = Math.max(...services.map((n) => n[layout][1])) + b.h / 2 + 22;
+  const piX0 = layout === "wide" ? 600 - b.w / 2 - 34 : 12;
+  const piX1 = layout === "wide" ? 600 + b.w / 2 + 34 : 378;
+
+  const stage = (
+    <div className="relative w-full" style={{ aspectRatio: `${b.W} / ${b.H}`, containerType: "inline-size" }}>
+      <svg viewBox={`0 0 ${b.W} ${b.H}`} className="absolute inset-0 h-full w-full" aria-hidden="true">
+        <rect x={piX0} y={piTop} width={piX1 - piX0} height={piBot - piTop} rx={22} className="flow-pi" />
+        {FLOW_EDGES.map((e, i) => {
+          const on = !linked || (linked.has(e.from) && linked.has(e.to) && (e.from === active || e.to === active));
+          return (
+            <g key={`${e.from}-${e.to}`} style={{ opacity: on ? 1 : 0.14, transition: "opacity 200ms var(--ease-out)" }}>
+              <path d={edgePath(byId[e.from], byId[e.to], layout)} className="flow-track" />
+              <path
+                ref={(el) => {
+                  pathRefs.current[i] = el;
+                }}
+                d={edgePath(byId[e.from], byId[e.to], layout)}
+                pathLength={1}
+                className="flow-edge"
+                style={{ strokeDasharray: 1, strokeDashoffset: reduce ? 0 : 1 }}
+              />
+              {!reduce && (
+                <circle
+                  ref={(el) => {
+                    dotRefs.current[i] = el;
+                  }}
+                  r={layout === "wide" ? 3.2 : 2.8}
+                  className="flow-dot"
+                  style={{ opacity: 0 }}
+                />
+              )}
+            </g>
+          );
+        })}
+      </svg>
+      <p
+        className="pointer-events-none absolute font-mono text-accent"
+        style={{ left: `${((piX0 + 16) / b.W) * 100}%`, top: `${((piTop + 12) / b.H) * 100}%`, fontSize: layout === "wide" ? "max(10px, 0.95cqw)" : "max(10px, 2.8cqw)" }}
+      >
+        {SYSTEMS_UI.pi[locale]}
+      </p>
+      <ul role="list" aria-label={SYSTEMS_UI.diagramLabel[locale]}>
+        {FLOW_NODES.map((n) => {
+          const [x, y] = n[layout];
+          const dim = linked && !linked.has(n.id);
+          return (
+            <li
+              key={n.id}
+              className="absolute"
+              style={{ left: `${((x - b.w / 2) / b.W) * 100}%`, top: `${((y - b.h / 2) / b.H) * 100}%`, width: `${(b.w / b.W) * 100}%`, height: `${(b.h / b.H) * 100}%` }}
+            >
+              <button
+                type="button"
+                className={`flow-node press-scale ${n.col === "service" ? "is-service" : ""} ${active === n.id ? "is-active" : ""}`}
+                style={{ opacity: dim ? 0.35 : 1 }}
+                onPointerEnter={(e) => e.pointerType !== "touch" && setActive(n.id)}
+                onPointerLeave={(e) => e.pointerType !== "touch" && setActive(null)}
+                onFocus={() => setActive(n.id)}
+                onBlur={() => setActive(null)}
+                onClick={() => setActive((a) => (a === n.id ? null : n.id))}
+                aria-describedby={active === n.id ? `flow-detail-${layout}` : undefined}
+              >
+                <span className="block truncate font-medium text-ink" style={{ fontSize: layout === "wide" ? "max(11px, 1.12cqw)" : "max(11px, 3.3cqw)" }}>
+                  {n.name[locale]}
+                </span>
+                <span className="block truncate font-mono text-muted" style={{ fontSize: layout === "wide" ? "max(9.5px, 0.85cqw)" : "max(9px, 2.55cqw)" }}>
+                  {n.sub[locale]}
+                </span>
+              </button>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
+
+  const caption = (
+    <div className="flex min-h-[4.5rem] flex-col justify-start gap-2 sm:flex-row sm:items-start sm:justify-between sm:gap-8">
+      <ol className="flex flex-wrap gap-x-5 gap-y-1 font-mono text-[11.5px]">
+        {SYSTEMS_UI.phases.map((p, i) => (
+          <li key={i} className={`transition-colors duration-200 ${i <= phase ? "text-accent" : "text-muted/60"}`}>
+            0{i + 1} · {p[locale]}
+          </li>
+        ))}
+      </ol>
+      <p id={`flow-detail-${layout}`} className="max-w-[56ch] text-pretty text-[13.5px] leading-snug text-muted sm:text-right" aria-live="polite">
+        {node ? (
+          <>
+            <span className="text-ink">{node.name[locale]}: </span>
+            {node.detail[locale]}
+          </>
+        ) : (
+          SYSTEMS_UI.hint[locale]
+        )}
+      </p>
+    </div>
+  );
+
+  if (layout === "wide") {
+    return (
+      <div ref={wrapRef} className="flow-track-wide relative" data-reduce={reduce ? "1" : "0"}>
+        <div className="flow-pin flex flex-col justify-center gap-5">
+          {caption}
+          {stage}
+        </div>
+      </div>
+    );
+  }
+  return (
+    <div ref={wrapRef} className="space-y-5">
+      {caption}
+      {stage}
+    </div>
+  );
+}
 
 function Fact({ fact, locale }: { fact: SystemPlanet["facts"][number]; locale: "en" | "es" }) {
   return (
     <div className="min-w-0">
-      <dt className="font-display text-[clamp(1.5rem,2.4vw,2rem)] font-semibold leading-none tracking-[-0.03em] tabular-nums text-ink">
+      <dt className="font-display text-[1.6rem] font-semibold leading-none tracking-[-0.03em] tabular-nums text-ink">
         {locale === "es" && fact.valueEs ? fact.valueEs : fact.value}
       </dt>
-      <dd className="mt-2 max-w-[30ch] text-[13.5px] leading-snug text-muted">{fact.label[locale]}</dd>
+      <dd className="mt-2 max-w-[30ch] text-[13px] leading-snug text-muted">{fact.label[locale]}</dd>
     </div>
   );
 }
@@ -55,267 +272,69 @@ function Fact({ fact, locale }: { fact: SystemPlanet["facts"][number]; locale: "
 export function SystemsSection() {
   const { locale } = useLocale();
   const reduce = useReducedMotion();
-  const [activeId, setActiveId] = useState(SYSTEM_PLANETS[0].id);
-  const active = SYSTEM_PLANETS.find((p) => p.id === activeId) ?? SYSTEM_PLANETS[0];
-
-  const stageRef = useRef<HTMLDivElement>(null);
-  const planetRefs = useRef<Record<string, HTMLButtonElement | null>>({});
-  const inView = useInView(stageRef, { margin: "80px" });
-
-  /* Loop gates, kept in refs so flipping them never re-renders. */
-  const flags = useRef({ hover: false, focus: false, holdUntil: 0, inView: false });
-  useEffect(() => {
-    flags.current.inView = inView;
-  }, [inView]);
-
-  useEffect(() => {
-    if (reduce) return;
-    let raf = 0;
-    let last = performance.now();
-    const angles: Record<string, number> = Object.fromEntries(SYSTEM_PLANETS.map((p) => [p.id, p.orbit.phase]));
-
-    const tick = (now: number) => {
-      const dt = Math.min(0.1, (now - last) / 1000);
-      last = now;
-      const f = flags.current;
-      const paused = f.hover || f.focus || now < f.holdUntil || !f.inView;
-      if (!paused) {
-        for (const p of SYSTEM_PLANETS) {
-          angles[p.id] = (angles[p.id] + (TAU / p.orbit.period) * dt) % TAU;
-          const el = planetRefs.current[p.id];
-          if (el) el.style.transform = pos(p, angles[p.id]);
-        }
-      }
-      raf = requestAnimationFrame(tick);
-    };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
-  }, [reduce]);
 
   return (
     <section id="sistemas" data-scene="systems" className="relative border-t border-line">
-      <div className="mx-auto max-w-7xl px-5 py-[var(--spacing-section)] sm:px-8">
+      <div className="mx-auto max-w-7xl px-5 pt-[var(--spacing-section)] sm:px-8">
         <motion.div {...revealProps(reduce)} className="grid gap-6 lg:grid-cols-12 lg:items-end">
           <h2
-            className="font-display text-balance text-[clamp(2.2rem,4.4vw,3.75rem)] font-semibold leading-[1.02] tracking-[-0.035em] text-ink lg:col-span-7"
+            className="font-display text-balance text-[clamp(2.2rem,4.4vw,3.75rem)] font-semibold leading-[1.02] tracking-[-0.035em] text-ink lg:col-span-6"
             style={{ fontVariationSettings: '"opsz" 80' }}
           >
             {SYSTEMS_UI.heading[locale]}
           </h2>
-          <p className="max-w-[46ch] text-pretty text-[15.5px] leading-relaxed text-muted lg:col-span-5">
-            {SYSTEMS_UI.lead[locale]}
-          </p>
+          <p className="max-w-[54ch] text-pretty text-[15.5px] leading-relaxed text-muted lg:col-span-6">{SYSTEMS_UI.lead[locale]}</p>
         </motion.div>
 
-        <div className="mt-14 grid grid-cols-1 gap-12 lg:mt-20 lg:grid-cols-[minmax(0,1.08fr)_minmax(0,1fr)] lg:items-center lg:gap-16">
-          {/* Orbital map */}
-          <motion.div
-            {...revealProps(reduce, 0.06)}
-            className="relative mx-auto w-full min-w-0 max-w-[40rem]"
-          >
-            <div
-              ref={stageRef}
-              role="group"
-              aria-label={SYSTEMS_UI.stageLabel[locale]}
-              className="relative aspect-square w-full [container-type:inline-size]"
-              onPointerEnter={(e) => {
-                if (e.pointerType === "mouse") flags.current.hover = true;
-              }}
-              onPointerLeave={(e) => {
-                if (e.pointerType === "mouse") flags.current.hover = false;
-              }}
-              onPointerDown={(e) => {
-                if (e.pointerType !== "mouse") flags.current.holdUntil = performance.now() + TOUCH_HOLD_MS;
-              }}
-              onFocus={() => {
-                flags.current.focus = true;
-              }}
-              onBlur={(e) => {
-                if (!e.currentTarget.contains(e.relatedTarget as Node | null)) flags.current.focus = false;
-              }}
-            >
-              <svg aria-hidden="true" viewBox="0 0 100 100" className="absolute inset-0 h-full w-full">
-                <defs>
-                  <radialGradient id="sys-star" cx="50%" cy="50%" r="50%">
-                    <stop offset="0%" stopColor="#F2B36F" stopOpacity="0.55" />
-                    <stop offset="40%" stopColor="#F2B36F" stopOpacity="0.14" />
-                    <stop offset="100%" stopColor="#F2B36F" stopOpacity="0" />
-                  </radialGradient>
-                </defs>
-                {DUST.map((d, i) => (
-                  <circle key={i} cx={d.x} cy={d.y} r={d.r} fill="#ECEDF0" opacity={d.o} />
-                ))}
-                {SYSTEM_PLANETS.map((p) => (
-                  <g key={p.id}>
-                    <circle
-                      cx="50"
-                      cy="50"
-                      r={p.orbit.r}
-                      fill="none"
-                      stroke="#2A2F3B"
-                      strokeWidth="0.22"
-                      strokeDasharray={p.id === "laura" ? "0.8 1.6" : undefined}
-                    />
-                    <circle
-                      cx="50"
-                      cy="50"
-                      r={p.orbit.r}
-                      fill="none"
-                      stroke="#F2B36F"
-                      strokeWidth="0.26"
-                      strokeDasharray={p.id === "laura" ? "0.8 1.6" : undefined}
-                      style={{ opacity: p.id === activeId ? 0.6 : 0, transition: "opacity 240ms cubic-bezier(0.23, 1, 0.32, 1)" }}
-                    />
-                  </g>
-                ))}
-                <circle cx="50" cy="50" r="13" fill="url(#sys-star)" />
-                <ellipse cx="50" cy="50" rx="7.4" ry="2.1" fill="none" stroke="#F2B36F" strokeOpacity="0.8" strokeWidth="0.35" transform="rotate(-16 50 50)" />
-                <circle cx="50" cy="50" r="2.9" fill="#F2B36F" />
-                <circle cx="50" cy="50" r="1.5" fill="#FFE2BC" />
-              </svg>
-
-              <p className="pointer-events-none absolute left-1/2 top-[58%] -translate-x-1/2 whitespace-nowrap font-mono text-[10.5px] tracking-[0.02em] text-muted [text-shadow:0_0_10px_var(--bg)] sm:text-[11px]">
-                {SYSTEMS_UI.star[locale]}
-              </p>
-
-              {SYSTEM_PLANETS.map((p) => {
-                const isActive = p.id === activeId;
-                const size = DOT[p.id] ?? 12;
-                return (
-                  <button
-                    key={p.id}
-                    ref={(el) => {
-                      planetRefs.current[p.id] = el;
-                    }}
-                    type="button"
-                    aria-pressed={isActive}
-                    aria-controls="systems-panel"
-                    aria-label={`${p.name[locale]}. ${p.line[locale]}`}
-                    onClick={() => setActiveId(p.id)}
-                    onFocus={() => setActiveId(p.id)}
-                    onPointerEnter={(e) => {
-                      if (e.pointerType === "mouse") setActiveId(p.id);
-                    }}
-                    className="group absolute left-1/2 top-1/2 z-10 flex h-11 w-11 flex-col items-center justify-center rounded-full outline-none will-change-transform"
-                    style={{ transform: pos(p, p.orbit.phase) }}
-                  >
-                    <span aria-hidden="true" className="relative block rounded-full bg-[#C9CDD6] outline outline-0 outline-offset-[7px] outline-accent group-focus-visible:outline-2" style={{ width: size, height: size }}>
-                      <span
-                        className="absolute inset-0 rounded-full bg-accent transition-opacity duration-200 ease-[var(--ease-out)]"
-                        style={{
-                          opacity: isActive ? 1 : 0,
-                          boxShadow: "0 0 0 5px rgb(242 179 111 / 0.18), 0 0 26px 2px rgb(242 179 111 / 0.45)",
-                        }}
-                      />
-                    </span>
-                    <span
-                      aria-hidden="true"
-                      className={`pointer-events-none absolute top-full -mt-0.5 whitespace-nowrap font-mono text-[10.5px] leading-none transition-colors duration-200 [text-shadow:0_0_8px_var(--bg),0_0_3px_var(--bg)] sm:text-[11.5px] ${
-                        isActive ? "text-accent" : "text-ink/80"
-                      }`}
-                    >
-                      {p.name[locale]}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-            <p className="mt-4 flex items-center gap-2 font-mono text-[11px] text-muted">
-              <span aria-hidden="true" className="inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
-              {SYSTEMS_UI.hint[locale]}
-            </p>
-            <div
-              role="tablist"
-              aria-label={SYSTEMS_UI.stageLabel[locale]}
-              className="no-scrollbar -mx-5 mt-4 flex snap-x gap-2 overflow-x-auto px-5 pb-1 sm:mx-0 sm:flex-wrap sm:px-0"
-            >
-              {SYSTEM_PLANETS.map((p) => {
-                const on = p.id === activeId;
-                return (
-                  <button
-                    key={p.id}
-                    type="button"
-                    role="tab"
-                    aria-selected={on}
-                    aria-controls="systems-panel"
-                    onClick={() => setActiveId(p.id)}
-                    className={`press-scale h-10 shrink-0 snap-start rounded-full border px-4 text-[13.5px] font-medium transition-colors duration-150 ${
-                      on ? "border-accent/70 bg-accent/10 text-ink" : "border-line text-muted hover:border-ink/40"
-                    }`}
-                  >
-                    {p.name[locale]}
-                  </button>
-                );
-              })}
-            </div>
-          </motion.div>
-
-          {/* Ficha */}
-          <div id="systems-panel" aria-live="polite" className="min-w-0">
-            <AnimatePresence mode="wait" initial={false}>
-              <motion.div
-                key={active.id}
-                initial={{ opacity: 0, transform: reduce ? "none" : "translateY(10px)" }}
-                animate={{ opacity: 1, transform: "translateY(0px)" }}
-                exit={{ opacity: 0, transform: reduce ? "none" : "translateY(-4px)" }}
-                transition={{ duration: 0.22, ease: EASE_OUT }}
-              >
-                <h3
-                  className="font-display text-[clamp(2.2rem,4vw,3.4rem)] font-semibold leading-none tracking-[-0.035em] text-ink"
-                  style={{ fontVariationSettings: '"opsz" 80' }}
-                >
-                  {active.name[locale]}
-                </h3>
-                <p className="mt-4 max-w-[30ch] text-balance text-[1.2rem] font-medium leading-snug text-ink">
-                  {active.line[locale]}
-                </p>
-                <p className="mt-4 max-w-[52ch] text-pretty text-[15px] leading-relaxed text-muted">
-                  {active.body[locale]}
-                </p>
-
-                <dl className="mt-8 grid grid-cols-1 gap-x-8 gap-y-6 border-t border-line pt-7 sm:grid-cols-2">
-                  {active.facts.map((fact) => (
-                    <Fact key={fact.value} fact={fact} locale={locale} />
-                  ))}
-                </dl>
-
-                <div className="mt-7 grid gap-3 border-t border-line pt-6 text-[13.5px] sm:grid-cols-[6.5rem_1fr]">
-                  <p className="font-mono text-[11.5px] text-muted">{SYSTEMS_UI.runsOn[locale]}</p>
-                  <p className="text-ink/90">{active.host[locale]}</p>
-                  <p className="font-mono text-[11.5px] text-muted">{SYSTEMS_UI.stack[locale]}</p>
-                  <ul className="flex flex-wrap gap-1.5">
-                    {active.stack.map((item) => (
-                      <li
-                        key={item}
-                        className="rounded-full border border-line px-2.5 py-1 font-mono text-[11.5px] leading-none text-ink/85"
-                      >
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                {active.links && active.links.length > 0 && (
-                  <div className="mt-7 flex flex-wrap gap-2">
-                    {active.links.map((link) => (
-                      <a
-                        key={link.href}
-                        href={link.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="group press-scale inline-flex h-10 items-center gap-2 rounded-full border border-ink/25 px-4 text-[13.5px] font-medium text-ink transition-colors duration-150 hover:border-ink/50"
-                      >
-                        {link.kind === "github" && <GithubLogo size={15} aria-hidden="true" />}
-                        {link.label[locale]}
-                        <ArrowUpRight size={13} className="cta-arrow cta-arrow-diag text-muted" aria-hidden="true" />
-                      </a>
-                    ))}
-                  </div>
-                )}
-              </motion.div>
-            </AnimatePresence>
-          </div>
+        <div className="mt-10 hidden lg:block">
+          <Diagram layout="wide" locale={locale} reduce={reduce} />
         </div>
+        <div className="mt-10 lg:hidden">
+          <Diagram layout="tall" locale={locale} reduce={reduce} />
+        </div>
+      </div>
+
+      <div className="mx-auto max-w-7xl px-5 pb-[var(--spacing-section)] pt-16 sm:px-8 lg:pt-8">
+        <motion.h3 {...revealProps(reduce)} className="font-display text-[clamp(1.4rem,2.4vw,1.9rem)] font-semibold tracking-[-0.03em] text-ink">
+          {SYSTEMS_UI.details[locale]}
+        </motion.h3>
+        <ul className="mt-8 grid gap-x-12 gap-y-14 md:grid-cols-2">
+          {SYSTEM_PLANETS.map((p, i) => (
+            <motion.li key={p.id} {...revealProps(reduce, (i % 2) * 0.06)} className="border-t border-line pt-6">
+              <p className="font-display text-[1.45rem] font-semibold leading-tight tracking-[-0.02em] text-ink">{p.name[locale]}</p>
+              <p className="mt-1 text-[14.5px] text-ink/80">{p.line[locale]}</p>
+              <p className="mt-4 max-w-[58ch] text-pretty text-[14.5px] leading-relaxed text-muted">{p.body[locale]}</p>
+              <dl className="mt-6 grid grid-cols-2 gap-6">
+                {p.facts.map((f) => (
+                  <Fact key={f.value} fact={f} locale={locale} />
+                ))}
+              </dl>
+              <p className="mt-5 font-mono text-[11.5px] text-muted">
+                {SYSTEMS_UI.runsOn[locale]}: <span className="text-ink/80">{p.host[locale]}</span>
+              </p>
+              <ul className="mt-3 flex flex-wrap gap-1.5" aria-label={SYSTEMS_UI.stack[locale]}>
+                {p.stack.map((s) => (
+                  <li key={s} className="rounded-full border border-line px-2.5 py-1 font-mono text-[11px] leading-none text-ink/75">
+                    {s}
+                  </li>
+                ))}
+              </ul>
+              {p.links?.map((l) => (
+                <a
+                  key={l.href}
+                  href={l.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group press-scale mt-5 inline-flex items-center gap-2 text-[13.5px] font-medium text-accent"
+                >
+                  {l.kind === "github" && <GithubLogo size={15} aria-hidden="true" />}
+                  <span className="link-rule">{l.label[locale]}</span>
+                  <ArrowUpRight size={12} className="cta-arrow cta-arrow-diag" aria-hidden="true" />
+                </a>
+              ))}
+            </motion.li>
+          ))}
+        </ul>
       </div>
     </section>
   );

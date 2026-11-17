@@ -827,3 +827,89 @@ html {
 .hw-rig[data-still="1"] * {
   animation: none !important;
 }
+
+/* ---------------------------------------------------------------------
+ * Systems: data-flow diagram (pinned on wide screens while it draws).
+ * ------------------------------------------------------------------- */
+.flow-track-wide {
+  height: 230vh;
+}
+
+.flow-pin {
+  position: sticky;
+  top: var(--nav-h);
+  min-height: calc(100vh - var(--nav-h));
+  min-height: calc(100dvh - var(--nav-h));
+  padding-block: 1.5rem;
+}
+
+.flow-track-wide[data-reduce="1"] {
+  height: auto;
+}
+.flow-track-wide[data-reduce="1"] .flow-pin {
+  position: relative;
+  min-height: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flow-track-wide {
+    height: auto;
+  }
+  .flow-pin {
+    position: relative;
+    min-height: 0;
+  }
+}
+
+.flow-pi {
+  fill: rgb(242 179 111 / 0.035);
+  stroke: rgb(242 179 111 / 0.35);
+  stroke-width: 1;
+  stroke-dasharray: 4 5;
+}
+
+.flow-track {
+  fill: none;
+  stroke: rgb(236 237 240 / 0.07);
+  stroke-width: 1.25;
+}
+
+.flow-edge {
+  fill: none;
+  stroke: rgb(242 179 111 / 0.7);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+}
+
+.flow-dot {
+  fill: #ffe6c7;
+}
+
+.flow-node {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding: 0 0.8em;
+  text-align: left;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  transition: border-color 180ms var(--ease-out), opacity 200ms var(--ease-out);
+}
+
+.flow-node.is-service {
+  border-color: rgb(242 179 111 / 0.35);
+  background: linear-gradient(180deg, #16140f, var(--surface));
+}
+
+.flow-node.is-active {
+  border-color: var(--accent);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .flow-node:hover {
+    border-color: rgb(242 179 111 / 0.7);
+  }
+}
