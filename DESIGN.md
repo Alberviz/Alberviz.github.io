@@ -36,17 +36,17 @@ El acento se reserva para el CTA primario, el foco, el elemento activo y detalle
 - Iconos: Phosphor, trazo uniforme.
 - Secciones separadas por `border-t border-line` y el espaciado `--spacing-section`; cabecera de sección = titular display a la izquierda y entradilla a la derecha.
 - Eyebrows: máximo 3 en toda la página y ya están todos usados: "01 · Mi producto, en beta" (Wari), "02 · Autoalojado, en uso diario" (Olimpo) y "HackYeah 2026 · 24 horas" (MyCrohnie). Las etiquetas de columna son titulares, no eyebrows.
-- Composición distinta por sección: hero a sangre con índice de casos; Wari en niebla con láminas e historia con móvil fijo; Olimpo como cielo profundo con nebulosa, ventana y móvil superpuestos en profundidad; Sistemas como mapa orbital; Trabajo como tarjeta de hackathon con horizonte cálido y un laboratorio compacto; contacto con un horizonte de acreción.
+- Composición distinta por sección: hero a sangre con índice de casos y caída con scroll; Wari en niebla con láminas e historia con móvil fijo; Olimpo como cielo profundo con nebulosa, ventana y móvil superpuestos en profundidad, y Warp como demo a lo ancho; Sistemas como diagrama de flujo; Trabajo como tarjeta de hackathon con horizonte cálido y un laboratorio compacto; contacto con un horizonte de acreción.
 - Textura: `.grain` (ruido SVG estático, nunca fijo) solo en Olimpo y en el pie.
 - Una sola etiqueta de contacto: "Contacto" en nav y pie.
 
 ## 4. Momentos firma
 
-1. **Hero:** Gargantua en WebGL en vivo (renderer en `desktop/live/gargantua-renderer.ts`), con poster como LCP y fallback para reduced motion, sin WebGL y móviles flojos. Se pausa fuera de viewport.
-2. **Sistemas:** mapa orbital. La Raspberry Pi 5 es la estrella y cada sistema es un planeta (un `<button>` real) en su órbita. Hover, foco o toque abren su ficha. Las órbitas se escriben al DOM desde un único `requestAnimationFrame` (sin estado por fotograma) y se paran con reduced motion, fuera de viewport, con el ratón encima, con foco dentro y unos segundos tras un toque.
-3. **Olimpo:** recreación a tamaño fijo (1200x740 escritorio, 390x844 móvil) escalada con `ScaledStage` (solo `transform`). Datos inventados; Marcellus (`--font-olimpo`) solo dentro de la recreación. En pantallas estrechas un control segmentado elige Móvil o Escritorio.
-4. **Warp:** el shader GLSL real del portal (`olimpo/warp-shaders.ts`) en un lienzo WebGL1, DPR limitado a 1,5, pausado fuera de pantalla; los archivos vuelan al agujero con transform y opacidad. Reduced motion: un fotograma quieto y fundidos. Sin WebGL: un agujero en CSS.
-5. **Wari:** historia con scroll. En ancho, móvil fijo que cambia de pantalla según el capítulo (IntersectionObserver); en estrecho, carrusel con scroll-snap nativo y puntos que lo siguen.
+1. **Hero, "caer en el agujero":** Gargantua en WebGL en vivo (`desktop/live/gargantua-renderer.ts`) con poster como LCP. El hero es una pista de 180vh (150vh en móvil) con la primera pantalla fija: el scroll acerca la cámara (zoom exponencial en el pase final, `Camera` del renderer), lleva el agujero al centro, gira, deja que el agujero curve las estrellas, acelera el disco, añade desenfoque radial y funde a negro, donde empieza el amanecer de Wari. El texto se aparta con opacidad y desplazamiento. Reduced motion, sin WebGL2 o dispositivo flojo: poster y scroll normal, sin pista. Si el guardián de fotogramas congela el lienzo, la caída sigue como zoom CSS.
+2. **Wari:** historia con scroll en cinco capítulos (Inicio, captura de pagos, ticket, saldar con Revolut o Bizum, viaje) con pantallas reales en modo demo. En ancho, móvil fijo; en estrecho, carrusel con scroll-snap.
+3. **Warp:** demo jugable. Una pantalla de portátil recreada (Canvas 2D, `olimpo/warp-desktop.ts`) es la textura que curva la lente; los portales son los shaders reales de Olimpo v2.19 (AE1 negro y blanco, BINARIO) con la lente del PC de LinuxRicing, portados a WebGL1 (`olimpo/warp-shaders.ts`, `warp-engine.ts`). Arrastrar un archivo abre Móvil y Tablet arriba y la Tele a la derecha, con la placa HUD; soltar lo traga y un agujero blanco lo escupe en el dispositivo. Shift sobre dos portales los funde. Táctil: tocar archivo y portal. Teclado: Enter, 1/2/3, Esc. Un archivo real solo se lee en local (nombre y tamaño). El bucle solo corre si algo se mueve y está en pantalla. Reduced motion: fotogramas quietos. Sin WebGL: agujeros CSS. Encima, una ruta portátil → dispositivos que se dibuja con el scroll.
+4. **Sistemas:** diagrama de flujo de datos (fuentes → Raspberry Pi → salidas) que sustituye al mapa orbital. Las aristas se dibujan con el scroll en tres fases y luego las recorren paquetes (un rAF que solo escribe transform). En ancho la pista está fija; en móvil el diagrama es vertical y no se fija. Pasar, enfocar o tocar un nodo ilumina sus conexiones. Debajo, las fichas de cada sistema.
+5. **Escritorio:** explorador del escritorio en vivo y la historia de ingeniería inversa en cuatro pasos (escuchar, decodificar, driver, escritorio): captura USB en hex, bytes que se nombran y el XOR que se deshace, el driver real y un setup cuyas luces reaccionan a una notificación simulada y a la carga. En ancho, visual fijo y raíl que se llena con el scroll.
 
 ## 5. Movimiento
 
@@ -56,6 +56,7 @@ El acento se reserva para el CTA primario, el foco, el elemento activo y detalle
 - Todo hover vive tras `@media (hover: hover) and (pointer: fine)`; todo componente con movimiento respeta `useReducedMotion()`.
 - La paleta de comandos y el cambio EN/ES son instantáneos.
 - Nada de listeners de `scroll`; se usa `useScroll`/`useInView` de Motion o `IntersectionObserver`.
+- Opacidad ligada al scroll con `useTransform` de función (no de rangos): Motion delega los rangos de opacidad en un ScrollTimeline nativo que mide la página entera.
 
 ## 6. Accesibilidad y rendimiento
 

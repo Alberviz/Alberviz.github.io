@@ -36,7 +36,7 @@ Todo el copy es bilingüe (`en` por defecto, `es`) y se elige con `useLocale()` 
 - `site-copy.ts`: nav, hero, portal de Wari (con los capítulos de la historia), contacto.
 - `olimpo.ts`: caso Olimpo, sus pilares y cifras, los datos INVENTADOS de la recreación y Warp.
 - `systems.ts`: planetas del mapa orbital (Patrimonio, Aurora, Salud, Laura).
-- `desktop.ts`: momentos del escritorio y piezas de hardware.
+- `desktop.ts`: momentos del escritorio y la historia de ingeniería inversa (`HARDWARE_STORY`).
 - `projects.ts`: MyCrohnie (destacado), laboratorio y menciones (enlaces solo si están verificados como públicos).
 - `portfolio-data.ts`: perfil, experiencia, estudios y reconocimientos.
 - `links.ts`, `assets.ts`, `wari-shots.ts`: enlaces públicos, medios con dimensiones exactas, capturas de Wari.
@@ -58,6 +58,8 @@ las tiendas". Olimpo nunca se enseña con datos reales: solo la recreación de `
    - Anima `transform`, `opacity` y `clip-path`. Nunca `transition: all`, `ease-in` ni `scale(0)`.
    - Hover tras `@media (hover: hover) and (pointer: fine)` y `useReducedMotion()` en todo lo que se mueve.
    - La paleta de comandos (`⌘K`) abre y cierra sin animación (0 ms).
+   - Para la preferencia de movimiento usa `useReducedMotionSafe()` de `src/lib/motion.ts` (evita errores de hidratación); los lienzos WebGL que se reutilizan no se recrean sobre el mismo `<canvas>`.
+   - Secciones fijas (hero, Sistemas en ancho, historia del hardware en ancho) solo con WebGL o en escritorio; con reduced motion vuelven a scroll normal.
    - Máximo 3 eyebrows en toda la página (hoy hay 3: Wari, Olimpo y MyCrohnie).
 4. **Verificación visual:** capturas desde el build estático (`out/`), nunca desde `pnpm dev`, a 1280x800, 390x844 y 360x780. Sin scroll horizontal a 360.
 
