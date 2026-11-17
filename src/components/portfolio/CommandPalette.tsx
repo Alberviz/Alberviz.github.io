@@ -116,7 +116,9 @@ export function CommandPalette() {
         if (hash) scrollToSection(hash);
         else window.scrollTo({ top: 0, behavior: "auto" });
       } else {
-        router.push(hash ? `${path}#${hash}` : path);
+        // With an anchor, a document navigation: the client router drops the hash on these static pages.
+        if (hash) window.location.assign(`${path}#${hash}`);
+        else router.push(path);
       }
     };
     const pageItem = (id: string, path: string, title: string, keywords: string): PaletteItem => ({

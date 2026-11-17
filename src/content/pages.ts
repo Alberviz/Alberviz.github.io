@@ -75,7 +75,7 @@ export const CASES: CasePage[] = [
     metaTitle: "Olimpo, the operating system of my life",
     metaDescription:
       "Olimpo: one self-hosted app for my tasks, projects, health, money and AI agents, on a Raspberry Pi 5. With Warp, files between devices through a real-time black hole shader you can play with, and the systems that run behind it.",
-    keywords: "olimpo svelte pwa raspberry pi firmamento warp portal black hole agujero systems sistemas instinct",
+    keywords: "olimpo svelte pwa raspberry pi firmamento cielo sky",
     sections: [
       { id: "olimpo", title: { en: "Olimpo, the operating system of my life", es: "Olimpo, el sistema operativo de mi vida" }, short: { en: "Olimpo", es: "Olimpo" }, keywords: "olimpo firmamento cielo sky horas agents agentes" },
       { id: "warp", title: { en: "Warp, files between devices", es: "Warp, archivos entre dispositivos" }, short: { en: "Warp", es: "Warp" }, keywords: "warp portal black hole agujero files archivos clipboard portapapeles cast" },
