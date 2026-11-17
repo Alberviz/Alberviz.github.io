@@ -458,3 +458,16 @@ html {
     0 44px 70px -30px rgb(19 33 59 / 0.55),
     0 14px 26px -14px rgb(19 33 59 / 0.35);
 }
+
+/* ---------------------------------------------------------------------
+ * Projects index: on a fine pointer the other rows step back while one is hovered.
+ * ------------------------------------------------------------------- */
+@media (hover: hover) and (pointer: fine) {
+  .proj-row {
+    transition: opacity 240ms var(--ease-out);
+  }
+  .proj-list:has(.proj-row:hover) .proj-row:not(:hover),
+  .proj-list:has(.proj-row:focus-within) .proj-row:not(:focus-within) {
+    opacity: 0.38;
+  }
+}
