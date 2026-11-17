@@ -174,6 +174,38 @@ export const SYSTEM_PLANETS: SystemPlanet[] = [
     orbit: { r: 36, period: 260, phase: 5.55 },
   },
   {
+    id: "instinct",
+    name: { en: "Instinct", es: "Instinct" },
+    line: {
+      en: "My personal assistant, and the closest thing to a second brain.",
+      es: "Mi asistente personal, lo más parecido a un segundo cerebro.",
+    },
+    body: {
+      en: "I talk to Instinct on WhatsApp like I'd talk to a person. It reaches every area of Olimpo, so it notes down what I ate, how I trained, a task or an idea the moment I say it, and remembers all of it. Every morning it reads my day and agrees the focus with me; at night it closes the day with me.",
+      es: "Hablo con Instinct por WhatsApp como hablaría con una persona. Llega a todas las áreas de Olimpo, así que apunta lo que he comido, cómo he entrenado, una tarea o una idea en cuanto se lo digo, y se acuerda de todo. Cada mañana lee mi día y acordamos el foco; por la noche cerramos el día juntos.",
+    },
+    host: { en: "WhatsApp, talking to Olimpo through Horas", es: "WhatsApp, hablando con Olimpo a través de Horas" },
+    stack: ["WhatsApp", "Olimpo API", "Horas"],
+    facts: [
+      {
+        value: "3 to 5",
+        valueEs: "3 a 5",
+        label: {
+          en: "essential tasks in the focus we agree every morning, never a long list",
+          es: "tareas esenciales en el foco que acordamos cada mañana, nunca una lista larga",
+        },
+      },
+      {
+        value: "1",
+        label: {
+          en: "place where everything it notes down lands: Olimpo, never scattered lists",
+          es: "sitio donde acaba todo lo que apunta: Olimpo, nunca listas sueltas",
+        },
+      },
+    ],
+    orbit: { r: 38, period: 260, phase: 2.4 },
+  },
+  {
     id: "laura",
     name: { en: "Laura", es: "Laura" },
     line: {
@@ -229,7 +261,7 @@ export interface FlowNode {
   sub: LocalizedText;
   /** What crosses through this node, one line. */
   detail: LocalizedText;
-  /** Centre in the wide (1200 x 600) and tall (390 x 820) layouts. */
+  /** Centre in the wide (1200 x 600) and tall (390 x 880) layouts. */
   wide: [number, number];
   tall: [number, number];
 }
@@ -249,12 +281,13 @@ export const FLOW_NODES: FlowNode[] = [
   { id: "aurora", col: "service", name: { en: "Aurora", es: "Aurora" }, sub: { en: "Hermes agent, always on", es: "agente Hermes, siempre en marcha" }, detail: { en: "Runs my inbox and calendar, records trades into the portfolio through a least-privilege proxy, and closes tasks in Olimpo.", es: "Lleva mi correo y mi agenda, registra operaciones en la cartera a través de un proxy de mínimo privilegio y cierra tareas en Olimpo." }, wide: [600, 381], tall: [100, 510] },
   { id: "health", col: "service", name: { en: "Health hub", es: "Hub de salud" }, sub: { en: "gym-hub · SQLite · Gemini", es: "gym-hub · SQLite · Gemini" }, detail: { en: "Joins the four feeds per day, estimates the calories burned and keeps an append-only journal where any write can be undone.", es: "Une las cuatro fuentes por día, estima las calorías gastadas y guarda un diario de solo añadir donde toda escritura se puede deshacer." }, wide: [600, 514], tall: [290, 510] },
 
-  { id: "wealthapp", col: "output", name: { en: "Wealth app", es: "App de patrimonio" }, sub: { en: "read-only, behind a PIN", es: "solo lectura, tras un PIN" }, detail: { en: "Net worth curve and allocation; its token can only read, and a test proves every write is refused.", es: "Curva de patrimonio y reparto; su token solo puede leer y un test demuestra que toda escritura se rechaza." }, wide: [1090, 70], tall: [100, 650] },
-  { id: "laura", col: "output", name: { en: "Laura", es: "Laura" }, sub: { en: "voice, on my laptop GPU", es: "voz, en la GPU del portátil" }, detail: { en: "Ask out loud for a balance, a task or the day ahead; she reads the Pi with her own token.", es: "Le pregunto en voz alta por un saldo, una tarea o el día; lee la Pi con su propio token." }, wide: [1090, 165], tall: [290, 650] },
-  { id: "app", col: "output", name: { en: "Olimpo app", es: "App Olimpo" }, sub: { en: "phone, tablet and PC", es: "móvil, tablet y PC" }, detail: { en: "The sky of the Hours on the phone, Firmamento on the desktop, and Warp between them.", es: "El cielo de las Horas en el móvil, el Firmamento en el escritorio y Warp entre ellos." }, wide: [1090, 260], tall: [100, 715] },
-  { id: "telegram", col: "output", name: { en: "Aurora on Telegram", es: "Aurora en Telegram" }, sub: { en: "text and voice notes", es: "texto y notas de voz" }, detail: { en: "Anything outward, like sending an email, waits for my confirmation in the chat.", es: "Todo lo que sale hacia fuera, como enviar un correo, espera mi confirmación en el chat." }, wide: [1090, 355], tall: [290, 715] },
-  { id: "coach", col: "output", name: { en: "Telegram coach", es: "Coach en Telegram" }, sub: { en: "habits, week, summary", es: "hábitos, semana, resumen" }, detail: { en: "Reminders per habit and a weekly summary written by Gemini that reads training, sleep, food and steps together.", es: "Recordatorios por hábito y un resumen semanal de Gemini que lee juntos entreno, sueño, comida y pasos." }, wide: [1090, 450], tall: [100, 780] },
-  { id: "planet", col: "output", name: { en: "Body planet", es: "Planeta Cuerpo" }, sub: { en: "on my Linux desktop", es: "en mi escritorio Linux" }, detail: { en: "A planet on the desktop drawn from a read-only summary of the hub.", es: "Un planeta del escritorio dibujado con un resumen de solo lectura del hub." }, wide: [1090, 545], tall: [290, 780] },
+  { id: "wealthapp", col: "output", name: { en: "Wealth app", es: "App de patrimonio" }, sub: { en: "read-only, behind a PIN", es: "solo lectura, tras un PIN" }, detail: { en: "Net worth curve and allocation; its token can only read, and a test proves every write is refused.", es: "Curva de patrimonio y reparto; su token solo puede leer y un test demuestra que toda escritura se rechaza." }, wide: [1090, 40], tall: [100, 650] },
+  { id: "laura", col: "output", name: { en: "Laura", es: "Laura" }, sub: { en: "voice, on my laptop GPU", es: "voz, en la GPU del portátil" }, detail: { en: "Ask out loud for a balance, a task or the day ahead; she reads the Pi with her own token.", es: "Le pregunto en voz alta por un saldo, una tarea o el día; lee la Pi con su propio token." }, wide: [1090, 127], tall: [290, 650] },
+  { id: "app", col: "output", name: { en: "Olimpo app", es: "App Olimpo" }, sub: { en: "phone, tablet and PC", es: "móvil, tablet y PC" }, detail: { en: "The sky of the Hours on the phone, Firmamento on the desktop, and Warp between them.", es: "El cielo de las Horas en el móvil, el Firmamento en el escritorio y Warp entre ellos." }, wide: [1090, 213], tall: [100, 715] },
+  { id: "telegram", col: "output", name: { en: "Aurora on Telegram", es: "Aurora en Telegram" }, sub: { en: "text and voice notes", es: "texto y notas de voz" }, detail: { en: "Anything outward, like sending an email, waits for my confirmation in the chat.", es: "Todo lo que sale hacia fuera, como enviar un correo, espera mi confirmación en el chat." }, wide: [1090, 300], tall: [290, 715] },
+  { id: "coach", col: "output", name: { en: "Telegram coach", es: "Coach en Telegram" }, sub: { en: "habits, week, summary", es: "hábitos, semana, resumen" }, detail: { en: "Reminders per habit and a weekly summary written by Gemini that reads training, sleep, food and steps together.", es: "Recordatorios por hábito y un resumen semanal de Gemini que lee juntos entreno, sueño, comida y pasos." }, wide: [1090, 387], tall: [100, 780] },
+  { id: "planet", col: "output", name: { en: "Body planet", es: "Planeta Cuerpo" }, sub: { en: "on my Linux desktop", es: "en mi escritorio Linux" }, detail: { en: "A planet on the desktop drawn from a read-only summary of the hub.", es: "Un planeta del escritorio dibujado con un resumen de solo lectura del hub." }, wide: [1090, 473], tall: [290, 780] },
+  { id: "instinct", col: "output", name: { en: "Instinct", es: "Instinct" }, sub: { en: "my personal assistant, on WhatsApp", es: "mi asistente personal, por WhatsApp" }, detail: { en: "My second brain with a voice: it reads everything in Olimpo, notes down what I tell it, remembers it all and runs my morning and evening check-ins, with a token that reaches every area.", es: "Mi segundo cerebro con voz: lo lee todo en Olimpo, apunta lo que le cuento, se acuerda de todo y lleva mis repasos de la mañana y de la noche, con un token que llega a todas las áreas." }, wide: [1090, 560], tall: [195, 845] },
 ];
 
 /** Edges: phase 0 sources to services, 1 between services, 2 services to outputs. */
@@ -278,4 +311,7 @@ export const FLOW_EDGES: { from: string; to: string; phase: 0 | 1 | 2 }[] = [
   { from: "aurora", to: "telegram", phase: 2 },
   { from: "health", to: "coach", phase: 2 },
   { from: "health", to: "planet", phase: 2 },
+  { from: "olimpo", to: "instinct", phase: 2 },
+  { from: "networth", to: "instinct", phase: 2 },
+  { from: "health", to: "instinct", phase: 2 },
 ];
