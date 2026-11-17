@@ -109,7 +109,7 @@ export function DesktopExplorer() {
         onClick={() => setActiveId(pin.id)}
         aria-label={`${index + 1}. ${item.title[locale]}`}
         aria-pressed={isActive}
-        className="group absolute z-10 grid h-7 w-7 place-items-center rounded-full"
+        className="tap group absolute z-10 grid h-7 w-7 place-items-center rounded-full"
         style={{ left: `${pin.x}%`, top: `${pin.y}%` }}
         initial={{ transform: "translate(-50%, -50%) scale(1)" }}
         animate={{ transform: reduce ? "translate(-50%, -50%) scale(1)" : pinTransform }}

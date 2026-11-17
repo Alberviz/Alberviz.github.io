@@ -325,7 +325,7 @@ export function SystemsSection() {
                   href={l.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group press-scale mt-5 inline-flex items-center gap-2 text-[13.5px] font-medium text-accent"
+                  className="tap relative group press-scale mt-5 inline-flex items-center gap-2 text-[13.5px] font-medium text-accent"
                 >
                   {l.kind === "github" && <GithubLogo size={15} aria-hidden="true" />}
                   <span className="link-rule">{l.label[locale]}</span>

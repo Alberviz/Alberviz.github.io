@@ -1203,3 +1203,17 @@ html {
     transform: scale(1.015);
   }
 }
+
+/* Touch: small text links and pins keep their look but get a 44px hit area.
+ * The element must be positioned (relative or absolute). */
+@media (pointer: coarse) {
+  .tap::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: max(100%, 44px);
+    height: max(100%, 44px);
+    transform: translate(-50%, -50%);
+  }
+}

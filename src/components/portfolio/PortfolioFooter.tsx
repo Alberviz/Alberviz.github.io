@@ -48,7 +48,7 @@ export function PortfolioFooter() {
   ];
 
   const linkClass =
-    "inline-flex items-center gap-1.5 text-[15px] text-muted transition-colors duration-150 hover:text-ink focus-visible:text-ink";
+    "tap relative inline-flex items-center gap-1.5 text-[15px] text-muted transition-colors duration-150 hover:text-ink focus-visible:text-ink";
 
   return (
     <footer
@@ -69,7 +69,7 @@ export function PortfolioFooter() {
         <div className="mt-12 flex flex-col items-start gap-5 sm:mt-14">
           <a
             href={`mailto:${EMAIL}`}
-            className="link-rule font-display text-[clamp(1.4rem,7vw,4.4rem)] font-semibold leading-none tracking-[-0.035em] text-ink transition-colors duration-150 hover:text-accent"
+            className="tap link-rule font-display text-[clamp(1.4rem,7vw,4.4rem)] font-semibold leading-none tracking-[-0.035em] text-ink transition-colors duration-150 hover:text-accent"
           >
             {EMAIL}
           </a>
@@ -134,7 +134,7 @@ export function PortfolioFooter() {
               href={WARI_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="link-rule text-ink"
+              className="tap relative link-rule text-ink"
             >
               {CONTACT.signatureLink[locale]}
             </a>
