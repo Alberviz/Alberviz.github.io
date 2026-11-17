@@ -226,6 +226,8 @@ export function LiveDesktop({ paused = false }: { paused?: boolean }) {
         alt={poster.alt[locale]}
         width={poster.width}
         height={poster.height}
+        loading="lazy"
+        decoding="async"
         draggable={false}
         className={`absolute inset-0 h-full w-full select-none object-cover transition-opacity duration-700 ${live ? "opacity-0" : "opacity-100"}`}
       />

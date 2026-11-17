@@ -182,6 +182,16 @@ export function HeroSection() {
       }}
       className="relative isolate flex min-h-[100dvh] flex-col overflow-hidden bg-bg"
     >
+      {/* Preload only the poster that matches the viewport (React hoists these links to <head>) */}
+      <link rel="preload" as="image" href={HERO_VARIANTS.wide.poster} media={WIDE_QUERY} fetchPriority="high" />
+      <link
+        rel="preload"
+        as="image"
+        href={HERO_VARIANTS.tall.poster}
+        media="(max-aspect-ratio: 1249/1000)"
+        fetchPriority="high"
+      />
+
       {/* Stage: poster is the LCP and the fallback; the canvas fades in over it */}
       <motion.div
         ref={stageRef}

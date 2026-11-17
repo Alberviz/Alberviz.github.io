@@ -1,11 +1,9 @@
 import type { LocalizedText } from "./types";
 
 /**
- * Real screenshots of the Wari app shown in the portal. Dimensions are exact
- * (they reserve the layout, no CLS). To swap in new captures, only edit this list.
- *
- * Provisional set: old dark captures from public/media/krakount (no Next badge).
- * Replace with public/media/wari/* (Cristal theme) when they exist.
+ * Real screenshots of the Wari app (v2.1, Cristal theme, demo seed data) shown
+ * in the portal. Dimensions are exact (they reserve the layout, no CLS). To swap
+ * captures, only edit this list. The same folder also has "-dark" variants.
  */
 export interface WariShot {
   src: string;
@@ -16,16 +14,16 @@ export interface WariShot {
 
 export const WARI_SHOTS: WariShot[] = [
   {
-    src: "/media/krakount/shot-balances.webp",
+    src: "/media/wari/wari-saldos-light.webp",
     width: 780,
     height: 1688,
     alt: {
-      en: "Wari screen listing who owes what, with a button to settle each debt",
-      es: "Pantalla de Wari con quién debe qué y un botón para saldar cada deuda",
+      en: "Wari balances screen: who pays whom in the group, with a Paid button for each debt",
+      es: "Pantalla de saldos de Wari: quién paga a quién en el grupo, con un botón Pagado en cada deuda",
     },
   },
   {
-    src: "/media/krakount/shot-receipt.webp",
+    src: "/media/wari/wari-ticket-light.webp",
     width: 780,
     height: 1688,
     alt: {
@@ -34,12 +32,12 @@ export const WARI_SHOTS: WariShot[] = [
     },
   },
   {
-    src: "/media/krakount/shot-itinerary.webp",
+    src: "/media/wari/wari-viaje-light.webp",
     width: 780,
     height: 1688,
     alt: {
-      en: "Wari screen with a trip itinerary, a map and a checklist for the day",
-      es: "Pantalla de Wari con el itinerario de un viaje, un mapa y la lista del día",
+      en: "Wari trip screen with the day's itinerary, a map and the next step on top",
+      es: "Pantalla de viaje de Wari con el itinerario del día, un mapa y el siguiente paso arriba",
     },
   },
 ];
