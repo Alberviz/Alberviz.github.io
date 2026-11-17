@@ -657,3 +657,173 @@ html {
   padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 20px);
   box-shadow: 0 -30px 60px -20px rgb(0 0 0 / 0.7);
 }
+
+/* ---------------------------------------------------------------------
+ * Hero fall: the hero is a scroll track; its first screen stays pinned while
+ * the camera falls into the black hole (HeroSection). Phones get a shorter
+ * track; reduced motion, no WebGL2 or a weak device get a plain hero.
+ * ------------------------------------------------------------------- */
+.hero-track[data-plunge="1"] {
+  height: 150vh;
+}
+
+.hero-track[data-plunge="1"] .hero-pin {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100dvh;
+}
+
+@media (min-width: 768px) {
+  .hero-track[data-plunge="1"] {
+    height: 180vh;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-track[data-plunge="1"] {
+    height: auto;
+  }
+  .hero-track[data-plunge="1"] .hero-pin {
+    position: relative;
+    height: auto;
+  }
+}
+
+/* ---------------------------------------------------------------------
+ * Warp demo: laptop screen, devices, portal targets and the HUD plate.
+ * ------------------------------------------------------------------- */
+.warp-screen {
+  background: linear-gradient(180deg, #0b0e18, #05060a);
+}
+
+.warp-tile {
+  cursor: grab;
+  transition: border-color 160ms var(--ease-out), background-color 160ms var(--ease-out);
+}
+
+.warp-tile:active {
+  cursor: grabbing;
+}
+
+.warp-portal-btn {
+  transform: translate(-50%, -50%);
+  background: transparent;
+}
+
+.warp-portal-btn:focus-visible {
+  outline: 1.5px solid var(--accent);
+  outline-offset: 4px;
+  border-radius: 999px;
+}
+
+.warp-plate {
+  padding: 0.75rem 0.9rem 0.8rem;
+  border-radius: 0.9rem;
+  background: rgb(5 6 10 / 0.86);
+  border: 1px solid rgb(255 222 185 / 0.4);
+  box-shadow: 0 18px 40px -20px rgb(0 0 0 / 0.9);
+  backdrop-filter: blur(8px);
+}
+
+@keyframes warpStream {
+  from {
+    transform: scaleX(0.05);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+.warp-stream {
+  animation: warpStream 9s linear infinite;
+}
+
+/* ---------------------------------------------------------------------
+ * Hardware story: panels, the simulated setup and its lights.
+ * ------------------------------------------------------------------- */
+.hw-panel {
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: linear-gradient(180deg, var(--surface), var(--bg));
+}
+
+.hw-svg-label {
+  fill: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+.hw-rig .hw-led {
+  transition: opacity 220ms var(--ease-out);
+}
+
+.hw-rig .hw-strip {
+  transform-box: fill-box;
+  transform-origin: left center;
+  transform: scaleX(1);
+  transition: transform 700ms var(--ease-out);
+}
+
+.hw-rig.is-docked .hw-strip {
+  transform: scaleX(0.47);
+  animation: hwStrip 2.4s var(--ease-in-out) infinite alternate;
+}
+
+@keyframes hwStrip {
+  from { opacity: 0.55; }
+  to { opacity: 1; }
+}
+
+.hw-rig .hw-ring-wrap {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.hw-rig.is-docked .hw-ring {
+  animation: hwRing 1.6s linear infinite;
+}
+
+@keyframes hwRing {
+  0% { opacity: 0.35; }
+  50% { opacity: 1; }
+  100% { opacity: 0.35; }
+}
+
+.hw-rig.is-docked .hw-mouse {
+  transform: translateY(4px);
+}
+.hw-rig .hw-mouse {
+  transition: transform 320ms var(--ease-out);
+}
+
+.hw-rig[data-flash="a"] .hw-fast,
+.hw-rig[data-flash="b"] .hw-fast {
+  animation: hwFlash 900ms var(--ease-out);
+}
+.hw-rig[data-flash="b"] .hw-fast {
+  animation-name: hwFlash2;
+}
+.hw-rig[data-flash="a"] .hw-fast-slow,
+.hw-rig[data-flash="b"] .hw-fast-slow {
+  animation: hwFlashSlow 900ms var(--ease-out);
+}
+
+@keyframes hwFlash {
+  0%, 100% { opacity: inherit; }
+  15%, 55% { opacity: 1; fill: #fff6ea; stroke: #fff6ea; }
+  35%, 75% { opacity: 0.2; }
+}
+@keyframes hwFlash2 {
+  0%, 100% { opacity: inherit; }
+  15%, 55% { opacity: 1; fill: #fff6ea; stroke: #fff6ea; }
+  35%, 75% { opacity: 0.2; }
+}
+@keyframes hwFlashSlow {
+  0%, 100% { opacity: 1; }
+  30% { opacity: 0.3; }
+}
+
+.hw-rig[data-still="1"] * {
+  animation: none !important;
+}

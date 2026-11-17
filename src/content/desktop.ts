@@ -155,6 +155,94 @@ export interface HardwarePiece {
   link?: ExternalLink;
 }
 
+/**
+ * Reverse engineering of the peripherals, told as four steps. Bytes are from the
+ * protocols documented in LinuxRicing/hardware (opcodes, payloads, checksums);
+ * no serial numbers, MACs, addresses or ports. Battery levels shown in the demo
+ * are sample values.
+ */
+export const HARDWARE_STORY = {
+  heading: {
+    en: "I reverse-engineered my own peripherals.",
+    es: "Hice ingeniería inversa de mis periféricos.",
+  },
+  lead: {
+    en: "My mouse, my headset and my keyboard only came with Windows apps. I listened to their USB traffic, decoded the protocols byte by byte and wrote my own drivers. Now every light in the setup follows the desktop, each wireless device reports its battery, and the LEDs react to notifications and to charging.",
+    es: "Mi ratón, mis cascos y mi teclado solo traían apps para Windows. Escuché su tráfico USB, decodifiqué los protocolos byte a byte y escribí mis propios drivers. Ahora todas las luces del setup siguen al escritorio, cada aparato inalámbrico dice su batería y los LEDs reaccionan a las notificaciones y a la carga.",
+  },
+  steps: [
+    {
+      id: "sniff",
+      label: { en: "Sniff", es: "Escuchar" },
+      title: { en: "Listen to the cable.", es: "Escuchar el cable." },
+      body: {
+        en: "With the official Windows app running, I captured every USB packet with USBPcap and Wireshark, and with usbmon on Linux. Change one colour, capture again, compare: the bytes that move are the ones that matter.",
+        es: "Con la app oficial de Windows abierta, capturé cada paquete USB con USBPcap y Wireshark, y con usbmon en Linux. Cambias un color, vuelves a capturar y comparas: los bytes que se mueven son los que importan.",
+      },
+    },
+    {
+      id: "decode",
+      label: { en: "Decode", es: "Decodificar" },
+      title: { en: "Name every byte.", es: "Ponerle nombre a cada byte." },
+      body: {
+        en: "The keyboard speaks 64-byte feature reports: an opcode, the mode, speed, brightness, a flag for custom colour, red, green, blue and a checksum. The mouse base hides the same idea behind an XOR 0xFF on every byte, and the headset answers a two-byte question with its battery level and whether it's charging.",
+        es: "El teclado habla en feature reports de 64 bytes: un opcode, el modo, la velocidad, el brillo, una bandera de color propio, rojo, verde, azul y un checksum. La base del ratón esconde lo mismo tras un XOR 0xFF en cada byte, y los cascos responden a una pregunta de dos bytes con su batería y si están cargando.",
+      },
+    },
+    {
+      id: "driver",
+      label: { en: "Driver", es: "Driver" },
+      title: { en: "Write the driver.", es: "Escribir el driver." },
+      body: {
+        en: "A few dozen lines of Python per device and no dependencies: find the right hidraw node, build the packet, send it with an ioctl. Over 2.4 GHz the keyboard only answers after a handshake I also had to capture: ask, poll until the radio has the frame, then read it back.",
+        es: "Unas decenas de líneas de Python por aparato y sin dependencias: encontrar el nodo hidraw correcto, montar el paquete y mandarlo con un ioctl. Por 2,4 GHz el teclado solo responde tras un saludo que también tuve que capturar: preguntar, sondear hasta que la radio tiene la trama y leerla.",
+      },
+    },
+    {
+      id: "desktop",
+      label: { en: "Desktop", es: "Escritorio" },
+      title: { en: "Wire it into the desktop.", es: "Conectarlo al escritorio." },
+      body: {
+        en: "Change the wallpaper and the keyboard, the mouse base, the RAM, the motherboard's ARGB and the Wi-Fi LED strip take its colour. A notification, like an AI agent finishing a task, flashes the fast devices. Put the mouse on its base and the ring runs a charging wave while the keyboard's side strip fills with its battery. A daemon routes every battery event to the zone it belongs to.",
+        es: "Cambio el fondo y el teclado, la base del ratón, la RAM, el ARGB de la placa y la tira LED Wi-Fi toman su color. Una notificación, como un agente de IA que acaba una tarea, hace destellar los aparatos rápidos. Dejo el ratón en su base y el anillo hace una ola de carga mientras la tira lateral del teclado se llena con su batería. Un demonio lleva cada evento de batería a la zona que le toca.",
+      },
+    },
+  ],
+  capture: {
+    head: { en: "USB capture · keyboard, interface 2", es: "Captura USB · teclado, interfaz 2" },
+    diff: { en: "only R, G, B move between captures", es: "entre capturas solo se mueven R, G y B" },
+  },
+  bytes: {
+    akko: { en: "Keyboard · set colour (0x07)", es: "Teclado · fijar color (0x07)" },
+    labels: {
+      en: ["opcode", "mode", "speed", "bright", "custom", "R", "G", "B", "sum"],
+      es: ["opcode", "modo", "veloc.", "brillo", "propio", "R", "G", "B", "suma"],
+    },
+    checksum: { en: "checksum = 0xFF - (sum of bytes 0-7)", es: "checksum = 0xFF - (suma de los bytes 0-7)" },
+    mchose: { en: "Mouse base · on the wire, then XOR 0xFF", es: "Base del ratón · en el cable y tras XOR 0xFF" },
+    headset: { en: "Headset · battery", es: "Cascos · batería" },
+    headsetRead: { en: "82 %, in use", es: "82 %, en uso" },
+  },
+  rig: {
+    notify: { en: "Simulate a notification", es: "Simular una notificación" },
+    dock: { en: "Mouse on its base", es: "Ratón en su base" },
+    mouse: { en: "Mouse", es: "Ratón" },
+    headset: { en: "Headset", es: "Cascos" },
+    keyboard: { en: "Keyboard", es: "Teclado" },
+    charging: { en: "charging", es: "cargando" },
+    strip: { en: "LED strip", es: "Tira LED" },
+    board: { en: "Board ARGB", es: "ARGB placa" },
+    caption: {
+      en: "Simulation · battery levels are sample values",
+      es: "Simulación · los niveles de batería son de ejemplo",
+    },
+    label: {
+      en: "Simulated setup: keyboard with side strip, mouse on its charging base, headset, LED strip and motherboard lights",
+      es: "Setup simulado: teclado con tira lateral, ratón en su base de carga, cascos, tira LED y luces de la placa",
+    },
+  },
+} as const;
+
 export const HARDWARE: HardwarePiece[] = [
   {
     id: "mchose",
