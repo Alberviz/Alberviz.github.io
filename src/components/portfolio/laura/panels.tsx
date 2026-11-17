@@ -346,10 +346,10 @@ export function HoloConfirm({
         <p className="mt-1.5 font-mono text-[10px] text-muted/80">{DEMO_PANELS.speedNote[locale]}</p>
 
         <div className="mt-3.5 flex gap-2">
-          <button type="button" onClick={onCancel} className="holo-btn press-scale h-10 flex-1 rounded-full border border-ink/20 px-4 text-[13px] font-medium text-ink">
+          <button type="button" onClick={onCancel} className="holo-btn press-scale h-10 flex-1 whitespace-nowrap rounded-full border border-ink/20 px-3 text-[13px] font-medium text-ink">
             {DEMO_PANELS.cancel[locale]}
           </button>
-          <button type="button" onClick={onConfirm} className="holo-btn-primary press-scale h-10 flex-[1.5] rounded-full bg-accent px-4 text-[13px] font-semibold text-on-accent">
+          <button type="button" onClick={onConfirm} className="holo-btn-primary press-scale h-10 flex-[2] whitespace-nowrap rounded-full bg-accent px-3 text-[13px] font-semibold text-on-accent">
             {DEMO_PANELS.confirm[locale]}
           </button>
         </div>
