@@ -9,6 +9,7 @@ import { ScaledStage } from "./olimpo/ScaledStage";
 import { Firmamento } from "./olimpo/Firmamento";
 import { SkyPhone } from "./olimpo/SkyPhone";
 import { WarpDemo } from "./olimpo/WarpDemo";
+import { WarpRoute } from "./olimpo/WarpRoute";
 
 /**
  * #olimpo, case 02. A recreated Olimpo (desktop star map and phone sky, invented
@@ -192,36 +193,55 @@ export function OlimpoSection() {
           ))}
         </dl>
 
-        {/* Warp */}
-        <div id="warp" className="mt-24 grid scroll-mt-20 gap-10 lg:mt-32 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:items-center lg:gap-16">
-          <motion.div {...revealProps(reduce)}>
-            <h3 className="font-display text-[clamp(2.6rem,5vw,4.2rem)] font-semibold leading-[0.95] tracking-[-0.04em] text-ink">
-              {WARP.title[locale]}
-            </h3>
-            <p className="mt-4 max-w-[26ch] text-balance font-display text-[1.35rem] font-semibold leading-snug tracking-[-0.02em] text-ink/90">
-              {WARP.tagline[locale]}
-            </p>
-            <p className="mt-5 max-w-[48ch] text-pretty text-[15.5px] leading-relaxed text-muted">{WARP.body[locale]}</p>
-            <ul className="mt-7 space-y-2.5">
-              {WARP.steps.map((s) => (
-                <li key={s.k} className="flex flex-wrap items-center gap-3 text-[14px] text-muted">
-                  <span className="flex items-center gap-1">
-                    {s.k.split(" + ").map((k, i) => (
-                      <React.Fragment key={k}>
-                        {i > 0 && <span className="text-muted/70">+</span>}
-                        <kbd className="keycap">{locale === "es" && k === "Space" ? "Espacio" : k}</kbd>
-                      </React.Fragment>
-                    ))}
-                  </span>
-                  {s.label[locale]}
-                </li>
-              ))}
-            </ul>
-            <p className="mt-7 max-w-[48ch] border-l border-accent/50 pl-4 text-[13.5px] leading-relaxed text-muted">{WARP.shaderNote[locale]}</p>
-          </motion.div>
-          <motion.div {...revealProps(reduce, 0.06)}>
+        {/* Warp: the flagship inside Olimpo */}
+        <div id="warp" className="mt-28 scroll-mt-20 border-t border-line pt-20 lg:mt-36 lg:pt-28">
+          <div className="grid gap-10 lg:grid-cols-12 lg:items-end lg:gap-16">
+            <motion.div {...revealProps(reduce)} className="lg:col-span-7">
+              <h3 className="font-display text-[clamp(3.2rem,8vw,6.5rem)] font-semibold leading-[0.9] tracking-[-0.045em] text-ink" style={{ fontVariationSettings: '"opsz" 96' }}>
+                {WARP.title[locale]}
+              </h3>
+              <p className="mt-5 max-w-[30ch] text-balance font-display text-[clamp(1.35rem,2.4vw,1.9rem)] font-semibold leading-snug tracking-[-0.025em] text-ink/90">
+                {WARP.tagline[locale]}
+              </p>
+            </motion.div>
+            <motion.p {...revealProps(reduce, 0.05)} className="max-w-[50ch] text-pretty text-[15.5px] leading-relaxed text-muted lg:col-span-5">
+              {WARP.body[locale]}
+            </motion.p>
+          </div>
+
+          <div className="mt-14 pb-10 lg:mt-20">
+            <WarpRoute locale={locale} />
+          </div>
+
+          <motion.div {...revealProps(reduce)} className="mt-6">
             <WarpDemo locale={locale} />
           </motion.div>
+
+          <div className="mt-16 grid gap-12 lg:mt-20 lg:grid-cols-2 lg:gap-16">
+            <motion.div {...revealProps(reduce)}>
+              <ul className="space-y-4">
+                {WARP.keys.map((s) => (
+                  <li key={s.k.join("+")} className="grid gap-2 sm:grid-cols-[11rem_minmax(0,1fr)] sm:items-center sm:gap-4">
+                    <span className="flex items-center gap-1">
+                      {s.k.map((k, i) => (
+                        <React.Fragment key={k}>
+                          {i > 0 && <span className="text-muted/70">+</span>}
+                          <kbd className="keycap">{locale === "es" && k === "Space" ? "Espacio" : k}</kbd>
+                        </React.Fragment>
+                      ))}
+                    </span>
+                    <span className="text-pretty text-[14.5px] leading-snug text-muted">{s.label[locale]}</span>
+                  </li>
+                ))}
+              </ul>
+              <p className="mt-6 max-w-[56ch] text-[13.5px] leading-relaxed text-muted/90">{WARP.keysNote[locale]}</p>
+            </motion.div>
+            <motion.div {...revealProps(reduce, 0.06)} className="lg:border-l lg:border-line lg:pl-16">
+              <p className="font-display text-[1.45rem] font-semibold leading-tight tracking-[-0.02em] text-ink">{WARP.cast.title[locale]}</p>
+              <p className="mt-3 max-w-[52ch] text-pretty text-[15px] leading-relaxed text-muted">{WARP.cast.body[locale]}</p>
+              <p className="mt-6 max-w-[52ch] border-l border-accent/50 pl-4 text-[13.5px] leading-relaxed text-muted">{WARP.shaderNote[locale]}</p>
+            </motion.div>
+          </div>
         </div>
 
         <ul className="mt-16 flex flex-wrap gap-1.5" aria-label="Stack">

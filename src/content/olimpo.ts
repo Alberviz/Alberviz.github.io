@@ -95,29 +95,78 @@ export const OLIMPO_DEMO = {
 
 export const WARP = {
   title: { en: "Warp", es: "Warp" },
+  kicker: { en: "Inside Olimpo", es: "Dentro de Olimpo" },
   tagline: {
-    en: "Files and the clipboard, from any device to any other, instantly.",
-    es: "Archivos y portapapeles, de cualquier dispositivo a cualquier otro, al instante.",
+    en: "Files and the clipboard, from any device to any other, through a black hole.",
+    es: "Archivos y portapapeles, de cualquier dispositivo a cualquier otro, a través de un agujero negro.",
   },
   body: {
-    en: "Select files on my laptop, press Super+Space and they fall into a black hole at the top of the screen. On my phone a white hole spits them out. With Super held, each Space jumps to the next device; with Shift it adds one, and the two portals merge into a bigger one. Nothing to pick, no cable, no chat with myself.",
-    es: "Selecciono archivos en el portátil, pulso Super+Espacio y caen en un agujero negro en lo alto de la pantalla. En el móvil, un agujero blanco los escupe. Con Super pulsado, cada Espacio salta al siguiente dispositivo; con Shift suma uno, y los dos portales se funden en uno más grande. Nada que elegir, ni cables, ni chats conmigo mismo.",
+    en: "Drag something toward the top of my laptop's screen and a portal opens for each device: phone and tablet along the top edge, the TV on the right. Drop it in one and the black hole swallows it; on that device a white hole spits it out. Both are real-time shaders: a disk traced along true light paths, and a gravitational lens that bends the screen itself around the shadow.",
+    es: "Arrastro algo hacia arriba en la pantalla del portátil y se abre un portal por dispositivo: el móvil y la tablet en el borde de arriba, la tele a la derecha. Lo suelto en uno y el agujero negro se lo traga; en ese dispositivo, un agujero blanco lo escupe. Los dos son shaders en tiempo real: un disco trazado siguiendo rayos de luz de verdad y una lente gravitatoria que curva la propia pantalla alrededor de la sombra.",
+  },
+  demoHint: {
+    en: "Drag a file to the top edge and drop it in a portal. Hold Shift over two portals to merge them.",
+    es: "Arrastra un archivo al borde de arriba y suéltalo en un portal. Con Shift sobre dos portales, se funden.",
+  },
+  demoHintTouch: {
+    en: "Tap a file, then tap a portal.",
+    es: "Toca un archivo y después un portal.",
+  },
+  realFile: {
+    en: "You can also drop a file of your own. It never leaves your browser: only its name and size are read, to draw it.",
+    es: "También puedes soltar un archivo tuyo. Nunca sale de tu navegador: solo se leen su nombre y su tamaño para dibujarlo.",
+  },
+  both: { en: "Shift · to both", es: "Shift · a los dos" },
+  cancel: { en: "Cancel", es: "Cancelar" },
+  canvasLabel: {
+    en: "Warp demo: a recreated laptop screen with files, three portals on its top edge and three devices that receive",
+    es: "Demo de Warp: una pantalla de portátil recreada con archivos, tres portales en su borde superior y tres dispositivos que reciben",
+  },
+  filesLabel: { en: "Files in Downloads", es: "Archivos de Descargas" },
+  portalsLabel: { en: "Portals", es: "Portales" },
+  devicesLabel: { en: "Devices that receive", es: "Dispositivos que reciben" },
+  tray: { en: "From the PC", es: "Desde el PC" },
+  trayEmpty: { en: "Nothing yet", es: "Nada todavía" },
+  playing: { en: "Streaming to the TV", es: "En streaming en la tele" },
+  dropToSend: { en: "Drop to send", es: "Suelta para enviar" },
+  dropToPlay: { en: "Drop to play", es: "Suelta para reproducir" },
+  onlyVideo: { en: "Video and torrents only", es: "Solo vídeo y torrents" },
+  trayDetail: { en: "Tray “From the PC”", es: "Bandeja «Desde el PC»" },
+  tvDetail: { en: "Video and torrents, streamed", es: "Vídeo y torrents, en streaming" },
+  sent: { en: "Sent to", es: "Enviado a" },
+  devices: [
+    { id: "movil", kicker: "WARP", name: { en: "Phone", es: "Móvil" }, title: { en: "Phone · Olimpo", es: "Móvil · Olimpo" } },
+    { id: "tablet", kicker: "WARP", name: { en: "Tablet", es: "Tablet" }, title: { en: "Tablet · Olimpo", es: "Tablet · Olimpo" } },
+    { id: "tele", kicker: "TELE", name: { en: "TV", es: "Tele" }, title: { en: "Living room TV", es: "Tele del salón" } },
+  ] satisfies { id: string; kicker: string; name: LocalizedText; title: LocalizedText }[],
+  files: [
+    { name: "apuntes-algebra.pdf", kind: "pdf", size: "2,4 MB" },
+    { name: "foto-rynek.jpg", kind: "image", size: "4,1 MB" },
+    { name: "tatras-timelapse.mp4", kind: "video", size: "812 MB" },
+    { name: "“link del piso”", kind: "text", size: "38 B" },
+  ] satisfies { name: string; kind: "pdf" | "image" | "video" | "text"; size: string }[],
+  keys: [
+    { k: ["Super", "Space"], label: { en: "sends what's selected to the last device, or the clipboard if nothing is", es: "manda lo seleccionado al último dispositivo, o el portapapeles si no hay nada" } },
+    { k: ["Space"], label: { en: "with Super held, jumps to the next device's portal", es: "con Super pulsado, salta al portal del siguiente dispositivo" } },
+    { k: ["Shift"], label: { en: "adds a device: the two portals merge into a bigger one", es: "suma un dispositivo: los dos portales se funden en uno más grande" } },
+  ] satisfies { k: string[]; label: LocalizedText }[],
+  keysNote: {
+    en: "Jumping and merging from the keyboard are designed and you can try them here; on my desktop they're still being wired in. Dropping a file between two portals already merges them and sends to both.",
+    es: "Saltar y fundir desde el teclado están diseñados y aquí puedes probarlos; en mi escritorio aún los estoy conectando. Soltar un archivo entre dos portales ya los funde y lo manda a los dos.",
+  },
+  cast: {
+    title: { en: "And the TV is just another portal.", es: "Y la tele es un portal más." },
+    body: {
+      en: "Dropping a video on the TV portal casts it; dropping a torrent or a magnet link streams it while it downloads, so the film starts in seconds. The same system that moves a PDF to my phone puts things on the big screen.",
+      es: "Si suelto un vídeo en el portal de la tele, se reproduce en ella; si suelto un torrent o un enlace magnet, se emite en streaming mientras se descarga, así que la peli empieza en segundos. El mismo sistema que pasa un PDF al móvil pone cosas en la pantalla grande.",
+    },
   },
   shaderNote: {
-    en: "The portal on this page is the same GLSL shader that runs in the app and on my desktop, with the light bent around the hole like a gravitational lens.",
-    es: "El portal de esta página es el mismo shader GLSL que corre en la app y en mi escritorio, con la luz curvada alrededor del agujero como una lente gravitacional.",
+    en: "Ported to WebGL from Olimpo v2.16 to v2.19.1 and my desktop: holes born from a point, a lensed starfield, soft edges and dithering, the screen bent around the shadow, the HUD plate and the merge.",
+    es: "Portado a WebGL desde Olimpo v2.16 a v2.19.1 y mi escritorio: agujeros que nacen desde un punto, cielo con lente, bordes suaves y tramado, la pantalla curvada alrededor de la sombra, la placa del HUD y la fusión.",
   },
-  send: { en: "Send to phone", es: "Enviar al móvil" },
-  sent: { en: "Sent", es: "Enviado" },
-  again: { en: "Send again", es: "Enviar otra vez" },
-  canvasLabel: {
-    en: "Warp portal demo: files fall into a black hole",
-    es: "Demo del portal de Warp: los archivos caen en un agujero negro",
+  route: {
+    label: { en: "One send, any direction", es: "Un envío, en cualquier dirección" },
+    pc: { en: "Laptop", es: "Portátil" },
   },
-  files: ["apuntes-algebra.pdf", "foto-rynek.jpg", "“link del piso”"],
-  steps: [
-    { k: "Super + Space", label: { en: "send what's selected", es: "envía lo seleccionado" } },
-    { k: "Space", label: { en: "next device, Super held", es: "siguiente dispositivo, con Super" } },
-    { k: "Shift", label: { en: "add a device", es: "suma un dispositivo" } },
-  ],
 };
