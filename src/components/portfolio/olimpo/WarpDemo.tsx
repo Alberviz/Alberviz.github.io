@@ -30,7 +30,7 @@ interface Item {
   demo?: number;
 }
 
-type Mode = "idle" | "choosing" | "sending" | "arriving";
+type Mode = "idle" | "choosing";
 type DeviceId = "movil" | "tablet" | "tele";
 
 interface Geo {
@@ -83,26 +83,35 @@ export function WarpDemo({ locale }: { locale: "en" | "es" }) {
   const urlsRef = useRef<string[]>([]);
   const timers = useRef<number[]>([]);
   const drag = useRef<{ i: number; pid: number; x0: number; y0: number; on: boolean; el: HTMLButtonElement } | null>(null);
+  /** Set when a pointer drag really started: the click the browser fires after its pointerup must not reopen the portals. */
+  const swallowClick = useRef(false);
   const shiftRef = useRef(false);
   const selRef = useRef<DeviceId[]>([]);
   const hoverRef = useRef<DeviceId | "fused" | null>(null);
   const modeRef = useRef<Mode>("idle");
+  const pickedRef = useRef<Item | null>(null);
+  /** Bumped on every open and cancel: a send's late timers only touch the portals if nothing new started since. */
+  const genRef = useRef(0);
+  /** The flight animation each demo tile is running, so a new gesture can interrupt it. */
+  const flights = useRef<Map<number, Animation>>(new Map());
 
   const [gl, setGl] = useState<"pending" | "on" | "off">("pending");
   const [geo, setGeo] = useState<Geo | null>(null);
   const [mode, setModeState] = useState<Mode>("idle");
-  const [picked, setPicked] = useState<Item | null>(null);
+  const [picked, setPickedState] = useState<Item | null>(null);
   const [hover, setHoverState] = useState<DeviceId | "fused" | null>(null);
-  const [fused, setFused] = useState(false);
   const [both, setBoth] = useState(false);
   const [received, setReceived] = useState<Partial<Record<DeviceId, Item>>>({});
   const [status, setStatus] = useState("");
   const [fine, setFine] = useState(false);
-  const [hidden, setHidden] = useState<number | null>(null);
 
   const setMode = (m: Mode) => {
     modeRef.current = m;
     setModeState(m);
+  };
+  const setPicked = (item: Item | null) => {
+    pickedRef.current = item;
+    setPickedState(item);
   };
   const setHover = (h: DeviceId | "fused" | null) => {
     if (hoverRef.current === h) return;
@@ -187,34 +196,66 @@ export function WarpDemo({ locale }: { locale: "en" | "es" }) {
     return () => ro.disconnect();
   }, [gl, measure]);
 
-  /* ----- choosing and sending ----- */
+  /* ----- the state machine -----
+   * Only two states: idle, or choosing (portals open, one item picked). A send is
+   * not a state: it hands the item to a flight (tile into the hole, white hole on
+   * the device) that runs on its own timers, and the demo is idle again at once,
+   * so any file can be grabbed while the previous one is still travelling. */
 
-  const reset = useCallback(() => {
+  /** Interrupts a tile's flight or return animation so it can be grabbed again. */
+  const settleTile = (i: number) => {
+    const el = tileRefs.current[i];
+    if (!el) return;
+    el.getAnimations().forEach((a) => a.cancel());
+    flights.current.delete(i);
+    el.style.transform = "";
+  };
+
+  const close = useCallback(() => {
+    genRef.current += 1;
     selRef.current = [];
-    setFused(false);
     setHover(null);
     setPicked(null);
     setMode("idle");
     engineRef.current?.open(false);
   }, []);
 
-  const cancel = useCallback(() => {
-    const d = drag.current;
-    if (d?.el) {
-      d.el.animate([{ transform: d.el.style.transform || "none" }, { transform: "translate(0px, 0px)" }], {
-        duration: reduce ? 0 : 320,
-        easing: "cubic-bezier(0.23, 1, 0.32, 1)",
-      });
-      d.el.style.transform = "";
-    }
-    drag.current = null;
-    reset();
-  }, [reduce, reset]);
+  /** Cancels whatever is in progress: a drag springs back home, the portals close with their animation. */
+  const cancel = useCallback(
+    (restoreFocus = false) => {
+      const d = drag.current;
+      drag.current = null;
+      if (d?.el) {
+        try {
+          if (d.el.hasPointerCapture(d.pid)) d.el.releasePointerCapture(d.pid);
+        } catch {
+          /* ignore */
+        }
+        const from = d.el.style.transform;
+        d.el.style.transform = "";
+        if (from && !reduce) {
+          d.el.animate([{ transform: from }, { transform: "translate(0px, 0px)" }], {
+            duration: 320,
+            easing: "cubic-bezier(0.23, 1, 0.32, 1)",
+          });
+        }
+      }
+      const was = pickedRef.current;
+      if (modeRef.current !== "idle") close();
+      if (restoreFocus && was?.demo != null && stageRef.current?.contains(document.activeElement)) {
+        tileRefs.current[was.demo]?.focus({ preventScroll: true });
+      }
+    },
+    [reduce, close]
+  );
 
   const open = useCallback((item: Item) => {
+    genRef.current += 1;
+    if (item.demo != null) settleTile(item.demo);
     setPicked(item);
     setMode("choosing");
     selRef.current = [];
+    setHover(null);
     engineRef.current?.open(true);
   }, []);
 
@@ -233,25 +274,29 @@ export function WarpDemo({ locale }: { locale: "en" | "es" }) {
   };
 
   const send = useCallback(
-    (targets: DeviceId[], item: Item | null = picked) => {
-      if (!item || modeRef.current === "sending" || modeRef.current === "arriving") return;
+    (targets: DeviceId[], item: Item | null = pickedRef.current) => {
+      if (!item) return;
       if (targets.some((t) => !accepts(t, item))) {
         setStatus(WARP.onlyVideo[locale]);
         return;
       }
       const into: DeviceId | "fused" = targets.length > 1 ? "fused" : targets[0];
-      setMode("sending");
-      setHover(null);
       const c = centreOf(into);
       const stage = stageRef.current;
-      const el = item.demo != null ? tileRefs.current[item.demo] : null;
-      if (el && c && stage) {
+      const i = item.demo;
+      const el = i != null ? tileRefs.current[i] : null;
+      drag.current = null;
+      let anim: Animation | null = null;
+      if (el && i != null && c && stage) {
         const s = stage.getBoundingClientRect();
         const r = el.getBoundingClientRect();
-        const cur = new DOMMatrixReadOnly(getComputedStyle(el).transform === "none" ? undefined : getComputedStyle(el).transform);
+        const cs = getComputedStyle(el).transform;
+        const cur = new DOMMatrixReadOnly(cs === "none" ? undefined : cs);
         const dx = c.x - (r.left - s.left + r.width / 2) + cur.m41;
         const dy = c.y - (r.top - s.top + r.height / 2) + cur.m42;
-        el.animate(
+        el.getAnimations().forEach((a) => a.cancel());
+        el.style.transform = "";
+        anim = el.animate(
           reduce
             ? [{ opacity: 1 }, { opacity: 0 }]
             : [
@@ -260,14 +305,17 @@ export function WarpDemo({ locale }: { locale: "en" | "es" }) {
               ],
           { duration: reduce ? 200 : 460, easing: "cubic-bezier(0.77, 0, 0.175, 1)", fill: "forwards" }
         );
-        setHidden(item.demo ?? null);
+        flights.current.set(i, anim);
       }
-      drag.current = null;
+      // The interaction ends now; the portals stay open for the swallow unless something new opens or cancels them.
+      const gen = genRef.current;
+      selRef.current = [];
+      setHover(null);
+      setPicked(null);
+      setMode("idle");
       later(() => engineRef.current?.swallow(into), reduce ? 0 : 360);
       later(() => {
-        engineRef.current?.open(false);
-        setFused(false);
-        setMode("arriving");
+        if (genRef.current === gen) engineRef.current?.open(false);
         for (const t of targets) engineRef.current?.spit(t);
         later(() => {
           setReceived((prev) => {
@@ -283,20 +331,16 @@ export function WarpDemo({ locale }: { locale: "en" | "es" }) {
           });
           const names = targets.map((t) => DEVICES.find((d) => d.id === t)?.title[locale]).join(" + ");
           setStatus(`${WARP.sent[locale]} ${names}: ${item.name}`);
+          // The file is back on the desktop (a copy went through), unless a new gesture already took the tile.
+          if (el && i != null && anim && flights.current.get(i) === anim) {
+            flights.current.delete(i);
+            anim.cancel();
+            if (!reduce) el.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 220, easing: "cubic-bezier(0.23, 1, 0.32, 1)" });
+          }
         }, reduce ? 0 : 420);
       }, reduce ? 250 : 980);
-      later(() => {
-        if (el) {
-          el.getAnimations().forEach((a) => a.cancel());
-          el.style.transform = "";
-        }
-        setHidden(null);
-        selRef.current = [];
-        setPicked(null);
-        setMode("idle");
-      }, reduce ? 900 : 2600);
     },
-    [picked, locale, reduce]
+    [locale, reduce]
   );
 
   /** Shift (or the "to both" chip): add a portal; with two, they merge. */
@@ -306,9 +350,13 @@ export function WarpDemo({ locale }: { locale: "en" | "es" }) {
       if (!selRef.current.includes(id)) selRef.current = [...selRef.current, id];
       if (selRef.current.length === 2) {
         engineRef.current?.fuse("movil", "tablet");
-        setFused(true);
         setHover("fused");
-        if (sendWhenMerged) later(() => send(["movil", "tablet"]), reduce ? 50 : 620);
+        if (sendWhenMerged) {
+          const gen = genRef.current;
+          later(() => {
+            if (genRef.current === gen && modeRef.current === "choosing") send(["movil", "tablet"]);
+          }, reduce ? 50 : 620);
+        }
       } else {
         setStatus(locale === "es" ? "Elige el segundo portal" : "Pick the second portal");
       }
@@ -337,10 +385,25 @@ export function WarpDemo({ locale }: { locale: "en" | "es" }) {
     return best;
   };
 
-  /* Mouse and pen drag of the demo files (touch uses tap, so scrolling stays native). */
+  /* Mouse and pen drag of the demo files (touch uses tap, so scrolling stays native). Always allowed: a new
+   * gesture interrupts whatever the previous one left running. */
   const onTileDown = (e: React.PointerEvent<HTMLButtonElement>, i: number) => {
-    if (e.pointerType === "touch" || mode !== "idle" || e.button !== 0) return;
+    swallowClick.current = false;
+    if (e.pointerType === "touch" || e.button !== 0) return;
+    if (drag.current) cancel();
     drag.current = { i, pid: e.pointerId, x0: e.clientX, y0: e.clientY, on: false, el: e.currentTarget };
+  };
+
+  /** Tap, click or Enter on a file: opens the portals; the same file again cancels, another one switches. */
+  const onTileClick = (i: number) => {
+    if (swallowClick.current) {
+      swallowClick.current = false;
+      return;
+    }
+    const f = WARP.files[i];
+    if (modeRef.current === "choosing" && pickedRef.current?.demo === i) return cancel(true);
+    focusPortal.current = true;
+    open({ name: f.name, size: f.size, kind: f.kind, demo: i });
   };
 
   useEffect(() => {
@@ -352,6 +415,7 @@ export function WarpDemo({ locale }: { locale: "en" | "es" }) {
       if (!d.on) {
         if (Math.hypot(dx, dy) < 6) return;
         d.on = true;
+        swallowClick.current = true;
         try {
           d.el.setPointerCapture(e.pointerId);
         } catch {
@@ -374,26 +438,51 @@ export function WarpDemo({ locale }: { locale: "en" | "es" }) {
         drag.current = null;
         return;
       }
-      const h = hoverRef.current;
+      const h = e.type === "pointerup" ? hoverRef.current : null;
+      const item = pickedRef.current;
       if (h === "fused") send(["movil", "tablet"]);
-      else if (h && accepts(h, picked ?? { name: "", size: "", kind: WARP.files[d.i].kind })) send([h]);
+      else if (h && accepts(h, item)) send([h]);
       else cancel();
     };
+    /* Losing the pointer (window blur, tab hidden, capture stolen) cancels a drag in flight. */
+    const lost = () => {
+      if (drag.current?.on) cancel();
+      else drag.current = null;
+    };
+    const vis = () => document.hidden && lost();
     const key = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && e.type === "keydown" && (drag.current?.on || modeRef.current === "choosing")) {
+        e.preventDefault();
+        cancel(true);
+        return;
+      }
       if (e.key !== "Shift") return;
       shiftRef.current = e.type === "keydown";
       const h = hoverRef.current;
       if (shiftRef.current && drag.current?.on && h && h !== "fused") add(h, false);
     };
+    /* A tap or click anywhere that is not a file, a portal or the demo's controls closes the portals. */
+    const outside = (e: PointerEvent) => {
+      if (modeRef.current !== "choosing" || drag.current?.on) return;
+      const t = e.target as Element | null;
+      if (t?.closest?.(".warp-tile, .warp-portal-btn, .warp-controls")) return;
+      cancel();
+    };
     window.addEventListener("pointermove", move);
     window.addEventListener("pointerup", up);
     window.addEventListener("pointercancel", up);
+    window.addEventListener("pointerdown", outside, true);
+    window.addEventListener("blur", lost);
+    document.addEventListener("visibilitychange", vis);
     window.addEventListener("keydown", key);
     window.addEventListener("keyup", key);
     return () => {
       window.removeEventListener("pointermove", move);
       window.removeEventListener("pointerup", up);
       window.removeEventListener("pointercancel", up);
+      window.removeEventListener("pointerdown", outside, true);
+      window.removeEventListener("blur", lost);
+      document.removeEventListener("visibilitychange", vis);
       window.removeEventListener("keydown", key);
       window.removeEventListener("keyup", key);
     };
@@ -402,9 +491,9 @@ export function WarpDemo({ locale }: { locale: "en" | "es" }) {
   /* A file from the visitor's own system: read locally, never uploaded. */
   const isFiles = (e: React.DragEvent) => Array.from(e.dataTransfer.types).includes("Files");
   const onDragEnter = (e: React.DragEvent) => {
-    if (!isFiles(e) || modeRef.current === "sending" || modeRef.current === "arriving") return;
+    if (!isFiles(e)) return;
     e.preventDefault();
-    if (modeRef.current === "idle") open({ name: "", size: "", kind: "file" });
+    if (modeRef.current === "idle" || pickedRef.current?.demo != null) open({ name: "", size: "", kind: "file" });
   };
   const onDragOver = (e: React.DragEvent) => {
     if (!isFiles(e) || modeRef.current !== "choosing") return;
@@ -415,30 +504,30 @@ export function WarpDemo({ locale }: { locale: "en" | "es" }) {
   };
   const onDragLeave = (e: React.DragEvent) => {
     const next = e.relatedTarget as Node | null;
-    if (modeRef.current === "choosing" && (!next || !stageRef.current?.contains(next))) reset();
+    if (modeRef.current === "choosing" && (!next || !stageRef.current?.contains(next))) cancel();
   };
   const onDrop = (e: React.DragEvent) => {
     if (!isFiles(e)) return;
     e.preventDefault();
     const f = e.dataTransfer.files[0];
     const h = hoverRef.current;
-    if (!f || !h) return reset();
+    if (!f || !h) return cancel();
     const kind = kindOf(f);
     const item: Item = { name: f.name, size: fmtSize(f.size, locale), kind };
     if (kind === "image" && f.size < 25 * 1024 * 1024) {
       item.url = URL.createObjectURL(f);
       urlsRef.current.push(item.url);
     }
-    setPicked(item);
-    send(h === "fused" ? ["movil", "tablet"] : [h], item);
+    const targets: DeviceId[] = h === "fused" ? ["movil", "tablet"] : [h];
+    if (targets.some((t) => !accepts(t, item))) {
+      setStatus(WARP.onlyVideo[locale]);
+      return cancel();
+    }
+    send(targets, item);
   };
 
-  /* Keyboard: Esc cancels, 1/2/3 pick a portal. */
+  /* Keyboard: 1/2/3 pick a portal (Esc is handled on the window, so it works wherever the focus is). */
   const onKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Escape" && modeRef.current === "choosing") {
-      e.preventDefault();
-      cancel();
-    }
     if (modeRef.current === "choosing" && ["1", "2", "3"].includes(e.key)) {
       e.preventDefault();
       send([DEVICES[Number(e.key) - 1].id]);
@@ -517,16 +606,12 @@ export function WarpDemo({ locale }: { locale: "en" | "es" }) {
                     }}
                     type="button"
                     onPointerDown={(e) => onTileDown(e, i)}
-                    onClick={() => {
-                      if (drag.current?.on || modeRef.current !== "idle") return;
-                      focusPortal.current = true;
-                      open({ name: f.name, size: f.size, kind: f.kind, demo: i });
-                    }}
+                    onClick={() => onTileClick(i)}
                     aria-label={`${f.name}, ${f.size}`}
                     aria-pressed={isPicked}
                     className={`warp-tile relative z-20 flex w-full min-w-0 items-center gap-2 rounded-lg border px-2 py-1.5 text-left font-mono text-[10.5px] leading-tight text-ink sm:px-2.5 sm:py-2 sm:text-[12px] ${
                       isPicked ? "border-accent/70 bg-accent/10" : "border-ink/10 bg-[#141722]/90"
-                    } ${hidden === i ? "pointer-events-none" : ""}`}
+                    }`}
                     style={{ touchAction: "manipulation" }}
                   >
                     <Icon size={16} aria-hidden="true" className="shrink-0 text-accent" />
@@ -661,7 +746,7 @@ export function WarpDemo({ locale }: { locale: "en" | "es" }) {
       </div>
 
       {/* Controls and hints */}
-      <div className="mt-4 flex flex-wrap items-center justify-between gap-x-4 gap-y-3">
+      <div className="warp-controls mt-4 flex flex-wrap items-center justify-between gap-x-4 gap-y-3">
         <p className="min-w-0 max-w-[60ch] text-[13px] leading-snug text-muted">
           {touchHint ? WARP.demoHintTouch[locale] : WARP.demoHint[locale]}
         </p>
@@ -679,7 +764,7 @@ export function WarpDemo({ locale }: { locale: "en" | "es" }) {
           {mode === "choosing" && (
             <button
               type="button"
-              onClick={cancel}
+              onClick={() => cancel(true)}
               className="press-scale inline-flex h-10 items-center gap-1.5 rounded-full border border-line px-4 text-[13px] text-muted"
             >
               <X size={13} aria-hidden="true" />
