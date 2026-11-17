@@ -113,8 +113,8 @@ export const WARI = {
       id: "ticket",
       title: { en: "The receipt, product by product.", es: "El ticket, producto a producto." },
       body: {
-        en: "Take a photo of the receipt and an AI reads it, Polish supermarkets included. Everyone ticks what's theirs in real time. The photo is never uploaded or stored.",
-        es: "Haces una foto del ticket y una IA lo lee, también los de supermercados polacos. Cada uno marca lo suyo en tiempo real. La foto no se sube ni se guarda.",
+        en: "Take a photo of the receipt and an AI reads it, Polish supermarkets included. Everyone ticks what's theirs in real time. The photo is only read, never stored.",
+        es: "Haces una foto del ticket y una IA lo lee, también los de supermercados polacos. Cada uno marca lo suyo en tiempo real. La foto solo se lee, no se guarda.",
       },
     },
     {
