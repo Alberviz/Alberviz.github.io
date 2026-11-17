@@ -202,6 +202,7 @@ uniform vec2 boxOrigin;
 uniform float rOut;
 uniform float musicActive;
 uniform float musicProgress;
+uniform float progressRing;
 uniform float musicBass;
 uniform float musicTreble;
 uniform float beatAge;
@@ -412,7 +413,7 @@ void main(){
     float fill = 1.0 - smoothstep(musicProgress - 0.04, musicProgress + 0.02, tAng);
     float dh = (tAng - musicProgress + 0.01) / 0.03;
     float head = exp(-0.5 * dh * dh);
-    float gain  = mix(1.0, mix(DIM_OFF, 1.0, fill) * (1.0 + 0.4 * head), musicActive);
+    float gain  = mix(1.0, mix(DIM_OFF, 1.0, fill) * (1.0 + 0.4 * head), musicActive * progressRing);
     if (s0.z > 1e-6){
         vec4 c = shadeThin(s0, s0.w, 0.0, J0);
         c.rgb *= gain;
@@ -516,7 +517,7 @@ uniform float bhRadius;
 uniform vec4 tint;
 uniform vec2 boxOrigin;
 uniform float softAmt;
-uniform vec2 edgeOpen;
+uniform vec4 edgeOpen;
 uniform sampler2D scene;
 uniform sampler2D bloom;
 uniform sampler2D bloom2;
@@ -532,7 +533,8 @@ void main(){
     sc = mix(sc, sf, ek);
     float bm = 1.0 - step(0.99, sc.a) * exp(-8.0 * dot(sc.rgb, vec3(0.2126, 0.7152, 0.0722)));
     vec2 px = qtc * resolution;
-    float ef = smoothstep(0.0, 60.0, px.x + edgeOpen.x) * smoothstep(0.0, 60.0, resolution.y - px.y + edgeOpen.y);
+    float ef = smoothstep(0.0, 60.0, px.x + edgeOpen.x) * smoothstep(0.0, 60.0, resolution.y - px.y + edgeOpen.y)
+             * smoothstep(0.0, 60.0, resolution.x - px.x + edgeOpen.z) * smoothstep(0.0, 60.0, px.y + edgeOpen.w);
     vec3 bl = (0.22 * texture(bloom, vUv).rgb + 0.38 * texture(bloom2, vUv).rgb) * tint.rgb * ef;
     vec3 h = sc.rgb + bm * bloomAmt * bl;
     vec3 e = h * exposure;
@@ -555,6 +557,8 @@ uniform vec2 boxSize;
 uniform float scale;
 uniform float time;
 uniform float hasBh;
+uniform vec3 bgColor;
+uniform float vignette;
 float h12(vec2 p){ vec3 p3 = fract(vec3(p.xyx) * 0.1031); p3 += dot(p3, p3.yzx + 33.33); return fract((p3.x + p3.y) * p3.z); }
 float stars(vec2 frag, float cell, float density, float seed){
     vec2 g = frag / cell;
@@ -569,7 +573,7 @@ float stars(vec2 frag, float cell, float density, float seed){
 void main(){
     vec2 frag = vec2(vUv.x, 1.0 - vUv.y) * canvasSize;
     vec2 q = vUv - 0.5;
-    vec3 bg = vec3(0.012, 0.013, 0.016) * (1.0 - 0.6 * dot(q, q));
+    vec3 bg = bgColor * (1.0 - vignette * dot(q, q));
     float s = stars(frag, 46.0 * scale, 0.42, 1.0) + 0.6 * stars(frag, 23.0 * scale, 0.22, 5.0);
     bg += vec3(0.78, 0.8, 0.84) * s;
     vec4 b = vec4(0.0);

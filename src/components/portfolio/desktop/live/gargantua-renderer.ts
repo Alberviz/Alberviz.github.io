@@ -34,16 +34,48 @@ interface Target {
 /** Desktop-space layout (1920 x 1080), measured on the live capture. */
 export const BH = { cx: 1651, cy: 97, shadow: 230 } as const;
 
+type Rgb = readonly [number, number, number];
+
+export interface Palette {
+  primary: Rgb;
+  onPrimaryContainer: Rgb;
+  primaryContainer: Rgb;
+  tertiary: Rgb;
+  onSurface: Rgb;
+}
+
 /** Current Material You scheme on the desktop (Caelestia dynamic, dark). */
-const PALETTE = {
+const PALETTE: Palette = {
   primary: [0xbc, 0xc8, 0xd1],
   onPrimaryContainer: [0xb7, 0xc3, 0xcc],
   primaryContainer: [0x45, 0x51, 0x58],
   tertiary: [0xd0, 0xc2, 0xd2],
   onSurface: [0xe4, 0xe2, 0xe2],
-} as const;
+};
 
 const rgba = (c: readonly number[]) => [c[0] / 255, c[1] / 255, c[2] / 255, 1] as const;
+
+/** Black hole placement in canvas pixels (cx, cy of the shadow, radius of the shadow). */
+export interface BhLayout {
+  cx: number;
+  cy: number;
+  shadow: number;
+  /** Extra room around the hole, in shadow radii. Defaults: left 3.8, right 2, up 2, down 1.9. */
+  margins?: { left: number; right: number; up: number; down: number };
+}
+
+export interface RendererOptions {
+  /** Defaults to the desktop-capture layout (BH scaled by height / 1080). */
+  layout?: BhLayout;
+  /** Space color behind the disk, 0-1 linear-ish RGB as written to the framebuffer. */
+  bgColor?: readonly [number, number, number];
+  /** Corner darkening strength (0 = flat). */
+  vignette?: number;
+  /** Disk colors. Defaults to the desktop's Material You scheme. */
+  palette?: Palette;
+  /** Show the song-progress sweep around the hole (the desktop does; a hero does not). */
+  progressRing?: boolean;
+}
 
 export const TRACK = { title: "CONTIGO", artist: "Lucho RK", duration: 177, start: 94 } as const;
 const BEAT = 60 / 96;
@@ -56,6 +88,12 @@ export class GargantuaRenderer {
   private targets: Record<string, Target> = {};
   private box = { x: 0, y: 0, w: 1, h: 1 };
   private scale = 1;
+  private bh = { cx: 0, cy: 0, R: 0 };
+  private bgColor: readonly [number, number, number];
+  private vignette: number;
+  private palette: Palette;
+  private progressRing: number;
+  private layoutOverride?: BhLayout;
   private bakeRow = 0;
   private lastBeat = -1e6;
   private beatT0 = -1e6;
@@ -70,7 +108,12 @@ export class GargantuaRenderer {
   readonly height: number;
 
   /** Returns null when WebGL2 or float render targets are missing. */
-  static create(canvas: HTMLCanvasElement, width: number, height: number): GargantuaRenderer | null {
+  static create(
+    canvas: HTMLCanvasElement,
+    width: number,
+    height: number,
+    options: RendererOptions = {}
+  ): GargantuaRenderer | null {
     const gl = canvas.getContext("webgl2", {
       alpha: false,
       antialias: false,
@@ -81,14 +124,19 @@ export class GargantuaRenderer {
     });
     if (!gl || !gl.getExtension("EXT_color_buffer_float")) return null;
     try {
-      return new GargantuaRenderer(gl, width, height);
+      return new GargantuaRenderer(gl, width, height, options);
     } catch {
       return null;
     }
   }
 
-  private constructor(gl: WebGL2RenderingContext, width: number, height: number) {
+  private constructor(gl: WebGL2RenderingContext, width: number, height: number, options: RendererOptions) {
     this.gl = gl;
+    this.layoutOverride = options.layout;
+    this.bgColor = options.bgColor ?? [0.012, 0.013, 0.016];
+    this.vignette = options.vignette ?? 0.6;
+    this.palette = options.palette ?? PALETTE;
+    this.progressRing = options.progressRing === false ? 0 : 1;
     this.width = width;
     this.height = height;
     gl.canvas.width = width;
@@ -124,13 +172,16 @@ export class GargantuaRenderer {
   private layout() {
     const sc = this.height / 1080;
     this.scale = sc;
-    const R = BH.shadow * sc;
-    const cx = BH.cx * sc;
-    const cy = BH.cy * sc;
-    const x0 = Math.max(0, Math.floor(cx - 3.8 * R));
-    const x1 = Math.min(this.width, Math.ceil(cx + 2.0 * R));
-    const y0 = Math.max(0, Math.floor(cy - 2.0 * R));
-    const y1 = Math.min(this.height, Math.ceil(cy + 1.9 * R));
+    const o = this.layoutOverride;
+    const R = o ? o.shadow : BH.shadow * sc;
+    const cx = o ? o.cx : BH.cx * sc;
+    const cy = o ? o.cy : BH.cy * sc;
+    this.bh = { cx, cy, R };
+    const m = o?.margins ?? { left: 3.8, right: 2.0, up: 2.0, down: 1.9 };
+    const x0 = Math.max(0, Math.floor(cx - m.left * R));
+    const x1 = Math.min(this.width, Math.ceil(cx + m.right * R));
+    const y0 = Math.max(0, Math.floor(cy - m.up * R));
+    const y1 = Math.min(this.height, Math.ceil(cy + m.down * R));
     this.box = { x: x0, y: y0, w: x1 - x0, h: y1 - y0 };
   }
 
@@ -218,6 +269,7 @@ export class GargantuaRenderer {
       const l = loc(key);
       if (!l) continue;
       if (typeof v === "number") gl.uniform1f(l, v);
+      else if (v.length === 3) gl.uniform3f(l, v[0], v[1], v[2]);
       else if (v.length === 2) gl.uniform2f(l, v[0], v[1]);
       else if (v.length === 4) gl.uniform4f(l, v[0], v[1], v[2], v[3]);
     }
@@ -249,12 +301,11 @@ export class GargantuaRenderer {
   }
 
   private get bhUniforms() {
-    const sc = this.scale;
     return {
-      bhRadius: BH.shadow * sc,
+      bhRadius: this.bh.R,
       bhTilt: -0.3,
       resolution: [this.box.w, this.box.h],
-      bhCenter: [BH.cx * sc, BH.cy * sc],
+      bhCenter: [this.bh.cx, this.bh.cy],
       boxOrigin: [this.box.x, this.box.y],
       rOut: 10.5,
     } as const;
@@ -328,12 +379,13 @@ export class GargantuaRenderer {
         {
           ...this.bhUniforms,
           ...this.music(t),
+          progressRing: this.progressRing,
           time: t,
-          colPrimary: rgba(PALETTE.primary),
-          colInk: rgba(PALETTE.onSurface),
-          colOnPC: rgba(PALETTE.onPrimaryContainer),
-          colPC: rgba(PALETTE.primaryContainer),
-          colTert: rgba(PALETTE.tertiary),
+          colPrimary: rgba(this.palette.primary),
+          colInk: rgba(this.palette.onSurface),
+          colOnPC: rgba(this.palette.onPrimaryContainer),
+          colPC: rgba(this.palette.primaryContainer),
+          colTert: rgba(this.palette.tertiary),
         },
         { geoA: T.geo.tex[0], geoB: T.geo.tex[1], geoH: T.geo.tex[2], noiseTex: T.noise.tex[0] }
       );
@@ -359,19 +411,24 @@ export class GargantuaRenderer {
       soft(T.scene.tex[0], "softH", [1, 0]);
       soft(T.softH.tex[0], "softV", [0, 1]);
 
-      const tert = PALETTE.tertiary.map((c) => c / 255);
+      const tert = this.palette.tertiary.map((c) => c / 255);
       this.use(
         "comp",
         {
           exposure: 0.8,
           bloomAmt: 1.4,
           resolution: [this.box.w, this.box.h],
-          bhCenter: [BH.cx * this.scale, BH.cy * this.scale],
-          bhRadius: BH.shadow * this.scale,
+          bhCenter: [this.bh.cx, this.bh.cy],
+          bhRadius: this.bh.R,
           tint: [0.45 + 0.55 * tert[0], 0.45 + 0.55 * tert[1], 0.45 + 0.55 * tert[2], 1],
           boxOrigin: [this.box.x, this.box.y],
           softAmt: 1,
-          edgeOpen: [this.box.x <= 0 ? 1e4 : 0, this.box.y + this.box.h >= this.height ? 1e4 : 0],
+          edgeOpen: [
+            this.box.x <= 0 ? 1e4 : 0,
+            this.box.y + this.box.h >= this.height ? 1e4 : 0,
+            this.box.x + this.box.w >= this.width ? 1e4 : 0,
+            this.box.y <= 0 ? 1e4 : 0,
+          ],
         },
         { scene: T.scene.tex[0], bloom: T.bloomV.tex[0], bloom2: T.bloomV2.tex[0], soft: T.softV.tex[0] }
       );
@@ -387,6 +444,8 @@ export class GargantuaRenderer {
         scale: this.scale,
         time: t,
         hasBh: ready ? 1 : 0,
+        bgColor: this.bgColor,
+        vignette: this.vignette,
       },
       { bhTex: T.comp.tex[0] }
     );

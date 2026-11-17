@@ -1,338 +1,256 @@
 "use client";
 
-import React, { useState } from "react";
-import Link from "next/link";
-import { AnimatePresence, LayoutGroup, motion, useReducedMotion } from "motion/react";
-import {
-  ArrowDown,
-  ArrowRight,
-  DownloadSimple,
-  GithubLogo,
-  LinkedinLogo,
-} from "@phosphor-icons/react";
+import React, { useEffect, useRef, useState } from "react";
+import { motion, useMotionValue, useReducedMotion, useSpring, useTransform } from "motion/react";
+import { ArrowDown } from "@phosphor-icons/react";
 import { useLocale } from "@/lib/i18n-context";
-import type { Locale } from "@/lib/i18n-context";
-import { PROFILE } from "@/content/portfolio-data";
-import { ASSETS } from "@/content/assets";
-import { DURATION, EASE_OUT, SPRING_LAYOUT, usePointerDepth } from "@/lib/motion";
+import { HERO } from "@/content/site-copy";
+import { SPRING_POINTER, useFinePointer } from "@/lib/motion";
+import { HERO_BG, HERO_PALETTE, HERO_VARIANTS, WIDE_QUERY } from "./hero/hero-layout";
+import type { HeroVariant } from "./hero/hero-layout";
 
-type PreviewTab = "krakount" | "desktop";
+/**
+ * Hero state, exposed as `data-state` for tests:
+ *  poster   -> static poster only (reduced motion, no WebGL2, weak device)
+ *  loading  -> renderer is being fetched/baked
+ *  live     -> WebGL canvas is drawing
+ *  frozen   -> canvas stopped by the frame-time guard (keeps the last frame)
+ */
+type HeroState = "poster" | "loading" | "live" | "frozen";
 
-const TABS: { id: PreviewTab; index: string; label: Record<Locale, string> }[] = [
-  { id: "krakount", index: "01", label: { en: "Krakount PWA", es: "Krakount PWA" } },
-  { id: "desktop", index: "02", label: { en: "AI Linux Desktop", es: "Escritorio Linux IA" } },
-];
+const FRAME_MS = 1000 / 30;
+const GUARD_FRAMES = 36;
+const GUARD_MAX_AVG_MS = 62;
+
+function weakDevice() {
+  const nav = navigator as Navigator & { deviceMemory?: number };
+  return (nav.hardwareConcurrency ?? 8) <= 2 || (nav.deviceMemory ?? 8) <= 2;
+}
 
 export function HeroSection() {
   const { locale } = useLocale();
   const reduce = useReducedMotion();
-  const words = PROFILE.hero.headline[locale].split(" ");
+  const fine = useFinePointer();
+  const sectionRef = useRef<HTMLElement>(null);
+  const stageRef = useRef<HTMLDivElement>(null);
+  const [state, setState] = useState<HeroState>("loading");
 
-  const rise = (delay: number) => ({
-    initial: { opacity: 0, transform: reduce ? "none" : "translateY(10px)" },
-    animate: { opacity: 1, transform: "translateY(0px)" },
-    transition: { duration: DURATION.reveal, ease: EASE_OUT, delay },
-  });
+  // Pointer parallax on the whole stage (the shader is baked once; only the layer moves).
+  const px = useMotionValue(0);
+  const py = useMotionValue(0);
+  const sx = useSpring(px, SPRING_POINTER);
+  const sy = useSpring(py, SPRING_POINTER);
+  const tx = useTransform(sx, (n) => n * 14);
+  const ty = useTransform(sy, (n) => n * 10);
+
+  useEffect(() => {
+    const stage = stageRef.current;
+    const section = sectionRef.current;
+    if (!stage || !section) return;
+
+    if (reduce || window.matchMedia("(prefers-reduced-motion: reduce)").matches || weakDevice()) {
+      setState("poster");
+      return;
+    }
+
+    let cancelled = false;
+    let raf = 0;
+    let idle = 0;
+    let canvas: HTMLCanvasElement | null = null;
+    let dispose: (() => void) | null = null;
+    let io: IntersectionObserver | null = null;
+
+    const start = async () => {
+      const variant: HeroVariant = window.matchMedia(WIDE_QUERY).matches ? "wide" : "tall";
+      const cfg = HERO_VARIANTS[variant];
+      const cssW = stage.clientWidth || window.innerWidth;
+      const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+      const base = variant === "wide" ? cssW : Math.min(cssW, window.innerHeight * cfg.aspect + 120);
+      const w = Math.round(Math.min(cfg.maxWidth, Math.max(cfg.minWidth, base * dpr)));
+      const h = Math.round(w / cfg.aspect);
+
+      const { GargantuaRenderer } = await import("./desktop/live/gargantua-renderer");
+      if (cancelled) return;
+
+      // Fresh canvas per run: a lost context cannot be reused (StrictMode, reduced-motion flips).
+      canvas = document.createElement("canvas");
+      canvas.setAttribute("aria-hidden", "true");
+      canvas.className = "hero-canvas";
+      const renderer = GargantuaRenderer.create(canvas, w, h, {
+        layout: cfg.place(w, h),
+        bgColor: HERO_BG,
+        vignette: 0,
+        palette: HERO_PALETTE,
+        progressRing: false,
+      });
+      if (!renderer) {
+        canvas = null;
+        setState("poster");
+        return;
+      }
+      stage.appendChild(canvas);
+
+      let visible = true;
+      io = new IntersectionObserver(([entry]) => (visible = entry.isIntersecting), { rootMargin: "80px" });
+      io.observe(section);
+
+      let ready = false;
+      let started = -1;
+      let last = 0;
+      let slow = 0;
+      let counted = 0;
+      let frozen = false;
+
+      const frame = (now: number) => {
+        raf = requestAnimationFrame(frame);
+        if (!ready) {
+          ready = renderer.bakeStep();
+          if (!ready) return;
+          started = now;
+          last = 0;
+          return;
+        }
+        if (frozen || !visible || document.hidden) {
+          last = 0;
+          return;
+        }
+        if (last && now - last < FRAME_MS - 2) return;
+        if (last) {
+          const dt = now - last;
+          counted += 1;
+          if (counted > 8 && dt > 0 && dt < 500) slow += dt;
+          if (counted === 8 + GUARD_FRAMES && slow / GUARD_FRAMES > GUARD_MAX_AVG_MS) {
+            frozen = true;
+            setState("frozen");
+            cancelAnimationFrame(raf);
+            return;
+          }
+        }
+        last = now;
+        renderer.render((now - started) / 1000);
+        if (canvas && canvas.dataset.on !== "1") {
+          canvas.dataset.on = "1";
+          setState("live");
+        }
+      };
+      raf = requestAnimationFrame(frame);
+
+      dispose = () => {
+        cancelAnimationFrame(raf);
+        io?.disconnect();
+        renderer.dispose();
+        canvas?.remove();
+      };
+    };
+
+    // Let the poster paint and the page settle before spending GPU on the shader.
+    const kick = () => {
+      if (!cancelled) void start().catch(() => setState("poster"));
+    };
+    const hasIdle = "requestIdleCallback" in window;
+    if (hasIdle) idle = window.requestIdleCallback(kick, { timeout: 1800 });
+    else idle = window.setTimeout(kick, 600);
+
+    return () => {
+      cancelled = true;
+      if (hasIdle) window.cancelIdleCallback(idle);
+      else window.clearTimeout(idle);
+      cancelAnimationFrame(raf);
+      dispose?.();
+    };
+  }, [reduce]);
+
+  const onPointerMove = (e: React.PointerEvent<HTMLElement>) => {
+    if (!fine || reduce) return;
+    const r = e.currentTarget.getBoundingClientRect();
+    px.set(((e.clientX - r.left) / r.width - 0.5) * 2);
+    py.set(((e.clientY - r.top) / r.height - 0.5) * 2);
+  };
+
+  const live = state === "live" || state === "frozen";
 
   return (
     <section
+      ref={sectionRef}
       id="hero"
       data-scene="hero"
-      className="relative flex min-h-[calc(100dvh-3.5rem)] flex-col justify-center overflow-hidden pb-16 pt-14 md:pt-20"
+      data-state={state}
+      onPointerMove={onPointerMove}
+      onPointerLeave={() => {
+        px.set(0);
+        py.set(0);
+      }}
+      className="relative isolate flex min-h-[100dvh] flex-col overflow-hidden bg-bg"
     >
-      <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 items-center gap-14 lg:grid-cols-12 lg:gap-10">
-          {/* Copy column */}
-          <div className="lg:col-span-6">
-            <motion.p
-              {...rise(0)}
-              className="mb-6 flex items-center gap-2.5 font-mono text-[11px] tracking-[0.08em] text-[#8E95A5]"
-            >
-              <span aria-hidden="true" className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#10B981] status-breath" />
-              <span>{PROFILE.hero.eyebrow[locale]}</span>
-            </motion.p>
+      {/* Stage: poster is the LCP and the fallback; the canvas fades in over it */}
+      <motion.div
+        ref={stageRef}
+        aria-hidden="true"
+        className="hero-stage absolute inset-0 -z-10"
+        style={reduce || !fine ? undefined : { x: tx, y: ty, scale: 1.03 }}
+      >
+        <picture>
+          <source media={WIDE_QUERY} srcSet={HERO_VARIANTS.wide.poster} />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={HERO_VARIANTS.tall.poster}
+            alt=""
+            width={720}
+            height={1280}
+            fetchPriority="high"
+            decoding="async"
+            className="hero-poster"
+          />
+        </picture>
+      </motion.div>
 
-            <h1 className="font-display text-balance text-[clamp(2.5rem,5vw,4.15rem)] font-semibold leading-[1.02] tracking-[-0.035em] text-[#ECEEF2]">
-              {words.map((word, i) => (
-                // Keyed by index so a locale swap re-renders text without replaying the entrance.
-                <React.Fragment key={i}>
-                  <span className="inline-block overflow-hidden pb-[0.1em] -mb-[0.1em] align-bottom">
-                    <motion.span
-                      className="inline-block"
-                      initial={{ transform: reduce ? "translateY(0%)" : "translateY(105%)", opacity: reduce ? 0 : 1 }}
-                      animate={{ transform: "translateY(0%)", opacity: 1 }}
-                      transition={{ duration: 0.85, ease: EASE_OUT, delay: 0.06 + i * 0.035 }}
-                    >
-                      {word}
-                    </motion.span>
-                  </span>
-                  {i < words.length - 1 ? " " : null}
-                </React.Fragment>
-              ))}
-            </h1>
+      {/* Veil: guarantees text contrast on the left and melts the stage into the page below */}
+      <div aria-hidden="true" className="hero-veil pointer-events-none absolute inset-0 -z-10" />
 
-            <motion.p
-              {...rise(0.32)}
-              className="mt-6 max-w-[46ch] text-pretty text-[17px] leading-relaxed text-[#8E95A5]"
-            >
-              {PROFILE.hero.subtext[locale]}
-            </motion.p>
-
-            <motion.div {...rise(0.42)} className="mt-9 flex flex-wrap items-center gap-3">
-              <Link
-                href="/krakount/"
-                className="group inline-flex items-center gap-2 rounded-full bg-[#10B981] px-5 py-2.5 text-[15px] font-semibold text-[#04130D] transition-colors duration-150 hover:bg-[#0FA875] press-scale"
-              >
-                {PROFILE.hero.primaryCta[locale]}
-                <ArrowRight size={16} weight="bold" className="cta-arrow" aria-hidden="true" />
-              </Link>
-              <a
-                href={PROFILE.cvPath}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-full border border-[#232732] px-5 py-2.5 text-[15px] font-medium text-[#ECEEF2] transition-colors duration-150 hover:border-[#343a48] hover:bg-[#111318] press-scale"
-              >
-                {PROFILE.hero.secondaryCta[locale]}
-                <DownloadSimple size={16} aria-hidden="true" />
-              </a>
-            </motion.div>
-
-            <motion.div
-              {...rise(0.5)}
-              className="mt-8 flex items-center gap-5 text-[13px] text-[#8E95A5]"
-            >
-              <a
-                href={PROFILE.githubUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 transition-colors duration-150 hover:text-[#ECEEF2]"
-              >
-                <GithubLogo size={15} aria-hidden="true" />
-                <span className="link-rule">GitHub</span>
-              </a>
-              <a
-                href={PROFILE.linkedinUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 transition-colors duration-150 hover:text-[#ECEEF2]"
-              >
-                <LinkedinLogo size={15} aria-hidden="true" />
-                <span className="link-rule">LinkedIn</span>
-              </a>
-              <span aria-hidden="true" className="h-3 w-px bg-[#232732]" />
-              <span className="font-mono text-[11px]">{PROFILE.currentLocation[locale]}</span>
-            </motion.div>
-          </div>
-
-          {/* System preview window */}
-          <motion.div
-            className="lg:col-span-6"
-            initial={{
-              opacity: 0,
-              transform: reduce ? "none" : "translateY(24px)",
-              clipPath: reduce ? "inset(0% 0% 0% 0% round 16px)" : "inset(6% 4% 6% 4% round 16px)",
-            }}
-            animate={{ opacity: 1, transform: "translateY(0px)", clipPath: "inset(0% 0% 0% 0% round 16px)" }}
-            transition={{ duration: 1, ease: EASE_OUT, delay: 0.2 }}
+      <div className="relative mx-auto flex w-full max-w-7xl flex-1 flex-col justify-end px-5 pb-14 pt-24 sm:px-8 lg:justify-center lg:pb-16 lg:pt-24">
+        <div className="max-w-[40rem] lg:max-w-[36rem] xl:max-w-[40rem]">
+          <h1
+            className="hero-rise font-display text-balance text-[clamp(2.4rem,5.2vw,4.5rem)] font-semibold leading-[0.98] tracking-[-0.035em] text-ink"
+            style={{ ["--d" as string]: "60ms", fontVariationSettings: '"opsz" 96' }}
           >
-            <SystemPreviewWindow locale={locale} />
-          </motion.div>
+            {HERO.headline[locale]}
+          </h1>
+
+          <p
+            className="hero-rise mt-6 max-w-[34ch] text-pretty text-[1.0625rem] leading-relaxed text-muted sm:text-lg"
+            style={{ ["--d" as string]: "160ms" }}
+          >
+            {HERO.sub[locale]}
+          </p>
+
+          <div className="hero-rise mt-9 flex flex-wrap items-center gap-3" style={{ ["--d" as string]: "260ms" }}>
+            <a
+              href="#wari"
+              className="group press-scale inline-flex h-12 items-center gap-2 rounded-full bg-accent px-6 text-[15px] font-semibold text-on-accent transition-colors duration-150 hover:bg-accent-pressed"
+            >
+              {HERO.ctaPrimary[locale]}
+              <ArrowDown size={16} weight="bold" className="cta-arrow-down" aria-hidden="true" />
+            </a>
+            <a
+              href="#contacto"
+              className="press-scale inline-flex h-12 items-center rounded-full border border-ink/25 bg-bg/40 px-6 text-[15px] font-medium text-ink backdrop-blur-sm transition-colors duration-150 hover:border-ink/50"
+            >
+              {HERO.ctaSecondary[locale]}
+            </a>
+          </div>
         </div>
+
+        <p
+          className="hero-rise absolute bottom-5 left-5 right-5 flex items-center gap-2 font-mono text-[11px] leading-snug text-muted sm:left-8 sm:right-8 lg:left-auto lg:max-w-[36ch] lg:justify-end lg:text-right"
+          style={{ ["--d" as string]: "420ms" }}
+        >
+          <span
+            aria-hidden="true"
+            className={`h-1.5 w-1.5 shrink-0 rounded-full ${live ? "bg-accent status-breath" : "bg-muted/50"}`}
+          />
+          <span>{live ? HERO.legendLive[locale] : HERO.legendStill[locale]}</span>
+        </p>
       </div>
     </section>
-  );
-}
-
-function SystemPreviewWindow({ locale }: { locale: Locale }) {
-  const reduce = useReducedMotion();
-  const [tab, setTab] = useState<PreviewTab>("krakount");
-  const depth = usePointerDepth(2.5);
-
-  return (
-    <div style={{ perspective: 1400 }}>
-      <motion.div
-        {...depth.handlers}
-        style={{ transform: depth.transform }}
-        className="relative overflow-hidden rounded-2xl border border-[#232732] bg-[#0C0E12] shadow-[0_40px_80px_-40px_rgba(0,0,0,0.9)]"
-      >
-        {/* Pointer illumination: a soft light that follows the cursor (transform only) */}
-        {depth.enabled && (
-          <motion.div
-            aria-hidden="true"
-            style={{ transform: depth.glowTransform }}
-            className="pointer-events-none absolute -left-[220px] -top-[220px] z-20 h-[440px] w-[440px] rounded-full bg-[radial-gradient(closest-side,rgba(236,238,242,0.06),transparent)]"
-          />
-        )}
-
-        {/* Window bar: tab switcher */}
-        <div className="relative z-10 flex items-center justify-between gap-3 border-b border-[#232732] px-3 py-2.5">
-          <LayoutGroup id="hero-preview-tabs">
-            <div role="tablist" aria-label={locale === "es" ? "Vista previa" : "Preview"} className="flex items-center gap-1">
-              {TABS.map((t) => {
-                const selected = tab === t.id;
-                return (
-                  <button
-                    key={t.id}
-                    type="button"
-                    role="tab"
-                    aria-selected={selected}
-                    aria-controls="hero-preview-stage"
-                    onClick={() => setTab(t.id)}
-                    className={`relative isolate flex items-center gap-2 rounded-full px-3 py-1.5 text-[12.5px] font-medium transition-colors duration-150 press-scale ${
-                      selected ? "text-[#ECEEF2]" : "text-[#8E95A5] hover:text-[#ECEEF2]"
-                    }`}
-                  >
-                    {selected && (
-                      <motion.span
-                        layoutId="hero-preview-pill"
-                        aria-hidden="true"
-                        className="absolute inset-0 -z-10 rounded-full border border-[#2A2F3B] bg-[#171A21]"
-                        transition={reduce ? { duration: 0 } : SPRING_LAYOUT}
-                      />
-                    )}
-                    <span className={`font-mono text-[10.5px] ${selected ? "text-[#10B981]" : "text-[#5D6474]"}`}>
-                      {t.index}
-                    </span>
-                    {t.label[locale]}
-                  </button>
-                );
-              })}
-            </div>
-          </LayoutGroup>
-          <span className="hidden font-mono text-[10.5px] text-[#5D6474] sm:block">
-            {tab === "krakount" ? "krakount.vercel.app" : "hyprland · caelestia 2.5"}
-          </span>
-        </div>
-
-        {/* Stage */}
-        <div id="hero-preview-stage" role="tabpanel" className="relative aspect-[4/3] w-full">
-          <AnimatePresence initial={false}>
-            {tab === "krakount" ? (
-              <motion.div
-                key="krakount"
-                className="absolute inset-0"
-                initial={{ opacity: 0, transform: reduce ? "none" : "translateX(-2%)" }}
-                animate={{ opacity: 1, transform: "translateX(0%)" }}
-                exit={{ opacity: 0, transform: reduce ? "none" : "translateX(-2%)" }}
-                transition={{ duration: 0.45, ease: EASE_OUT }}
-              >
-                <KrakountScene locale={locale} parallax={depth.parallaxTransform} />
-              </motion.div>
-            ) : (
-              <motion.div
-                key="desktop"
-                className="absolute inset-0"
-                initial={{ opacity: 0, transform: reduce ? "none" : "translateX(2%)" }}
-                animate={{ opacity: 1, transform: "translateX(0%)" }}
-                exit={{ opacity: 0, transform: reduce ? "none" : "translateX(2%)" }}
-                transition={{ duration: 0.45, ease: EASE_OUT }}
-              >
-                <DesktopScene locale={locale} />
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-      </motion.div>
-    </div>
-  );
-}
-
-function KrakountScene({
-  locale,
-  parallax,
-}: {
-  locale: Locale;
-  parallax: ReturnType<typeof usePointerDepth>["parallaxTransform"];
-}) {
-  const shot = ASSETS.krakount.shots.receipt;
-  const pop = ASSETS.krakount.pops.share;
-  const balance = ASSETS.krakount.pops.balance;
-
-  return (
-    <div className="relative h-full w-full bg-[#0E0F13]">
-      {/* Phone */}
-      <div className="absolute left-1/2 top-[6%] h-[100%] -translate-x-[62%]">
-        <div className="h-full rounded-[30px] border border-[#26272F] bg-[#17181E] p-[5px] shadow-[0_30px_60px_-30px_rgba(0,0,0,0.9)]">
-          <img
-            src={shot.src}
-            alt={shot.alt[locale]}
-            width={shot.width}
-            height={shot.height}
-            className="h-full w-auto rounded-[25px] object-cover object-top"
-            draggable={false}
-          />
-        </div>
-      </div>
-
-      {/* Floating proof cards, nudged by the pointer for depth */}
-      <motion.div style={{ transform: parallax }} className="absolute right-[5%] top-[12%] w-[34%]">
-        <img
-          src={balance.src}
-          alt={balance.alt[locale]}
-          width={balance.width}
-          height={balance.height}
-          className="h-auto w-full rounded-xl border border-[#26272F] shadow-[0_24px_48px_-20px_rgba(0,0,0,0.9)]"
-          draggable={false}
-        />
-      </motion.div>
-      <motion.div style={{ transform: parallax }} className="absolute bottom-[10%] right-[9%] w-[38%]">
-        <img
-          src={pop.src}
-          alt={pop.alt[locale]}
-          width={pop.width}
-          height={pop.height}
-          className="h-auto w-full rounded-xl border border-[#26272F] shadow-[0_24px_48px_-20px_rgba(0,0,0,0.9)]"
-          draggable={false}
-        />
-      </motion.div>
-
-      {/* Bottom fade so the phone settles into the frame */}
-      <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 h-[22%] bg-gradient-to-t from-[#0C0E12] to-transparent" />
-    </div>
-  );
-}
-
-function DesktopScene({ locale }: { locale: Locale }) {
-  const reduce = useReducedMotion();
-  const desktop = ASSETS.systems.celestial;
-  const facts: { k: string; v: Record<Locale, string> }[] = [
-    { k: "Gargantua", v: { en: "GLSL shader reacting to PipeWire", es: "Shader GLSL reactivo a PipeWire" } },
-    { k: "Laura", v: { en: "Local voice AI on RTX 4050", es: "IA de voz local en RTX 4050" } },
-    { k: "Cuerpo", v: { en: "My watch data as a planet", es: "Los datos de mi reloj como planeta" } },
-  ];
-
-  return (
-    <div className="flex h-full w-full flex-col bg-[#090A0D]">
-      <div className="relative aspect-video w-full overflow-hidden">
-        <motion.img
-          src={desktop.src}
-          alt={desktop.alt[locale]}
-          width={desktop.width}
-          height={desktop.height}
-          className="h-full w-full object-cover"
-          initial={{ transform: reduce ? "scale(1)" : "scale(1.06)" }}
-          animate={{ transform: "scale(1)" }}
-          transition={{ duration: 1.2, ease: EASE_OUT }}
-          draggable={false}
-        />
-      </div>
-      <div className="flex flex-1 items-stretch border-t border-[#232732]">
-        <dl className="grid flex-1 grid-cols-3 divide-x divide-[#232732]">
-          {facts.map((fact) => (
-            <div key={fact.k} className="flex flex-col justify-center gap-1 px-3 sm:px-4">
-              <dt className="font-mono text-[10.5px] text-[#10B981]">{fact.k}</dt>
-              <dd className="text-[11.5px] leading-snug text-[#8E95A5] sm:text-[12.5px]">{fact.v[locale]}</dd>
-            </div>
-          ))}
-        </dl>
-        <a
-          href="#desktop"
-          className="group hidden items-center gap-1.5 border-l border-[#232732] px-4 text-[12.5px] font-medium text-[#ECEEF2] transition-colors duration-150 hover:bg-[#111318] sm:flex"
-        >
-          {locale === "es" ? "Explorar" : "Explore"}
-          <ArrowDown size={13} className="cta-arrow cta-arrow-down" aria-hidden="true" />
-        </a>
-      </div>
-    </div>
   );
 }
