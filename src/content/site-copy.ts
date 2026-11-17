@@ -72,30 +72,22 @@ export const WARI = {
     es: "El dinero y los planes del grupo, en una sola app.",
   },
   lead: {
-    en: "Wari splits group expenses, reads supermarket receipts product by product and keeps the trip in the same place. It's my product: I design it, build it and run it, and it's in beta now, growing a little at a time on its way to Google Play and the App Store.",
-    es: "Wari reparte los gastos del grupo, lee los tickets del súper producto a producto y guarda el viaje en el mismo sitio. Es mi producto: lo diseño, lo programo y lo mantengo, y ahora está en beta, creciendo poco a poco camino de Google Play y la App Store.",
+    en: "Wari splits group expenses, reads supermarket receipts product by product and keeps the trip in the same place. It also does the boring part by itself: your card payments turn into expenses, and paying back takes one tap. It's my product: I design it, build it and run it, and it's in beta now on its way to Google Play and the App Store.",
+    es: "Wari reparte los gastos del grupo, lee los tickets del súper producto a producto y guarda el viaje en el mismo sitio. Y hace sola la parte aburrida: tus pagos con tarjeta se convierten en gastos y devolver el dinero es un toque. Es mi producto: lo diseño, lo programo y lo mantengo, y ahora está en beta camino de Google Play y la App Store.",
   },
   status: { en: "In beta", es: "En beta" },
   statusNext: { en: "Next: Google Play and the App Store", es: "Lo siguiente: Google Play y App Store" },
   name: {
-    en: "The name comes from 割り勘 (warikan), Japanese for splitting the bill evenly. It started in Kraków under another name, Krakount.",
-    es: "El nombre viene de 割り勘 (warikan), pagar a partes iguales en japonés. Empezó en Cracovia con otro nombre, Krakount.",
+    en: "The name comes from 割り勘 (warikan), Japanese for splitting the bill evenly.",
+    es: "El nombre viene de 割り勘 (warikan), pagar a partes iguales en japonés.",
   },
-  stats: [
-    { value: "32", valueEs: "32", label: { en: "currencies, exact to the cent", es: "monedas, exactas al céntimo" } },
-    {
-      value: "2,700+",
-      valueEs: "2.700",
-      preEs: "más de",
-      label: { en: "automated tests", es: "tests automáticos" },
-    },
-    {
-      value: "80+",
-      valueEs: "80",
-      preEs: "más de",
-      label: { en: "database migrations", es: "migraciones de base de datos" },
-    },
-  ] satisfies { value: string; valueEs: string; preEs?: string; label: LocalizedText }[],
+  /** Three things Wari does without being asked (each one is a chapter of the story below). */
+  auto: [
+    { en: "Card payments become expenses", es: "Los pagos con tarjeta se vuelven gastos" },
+    { en: "A Bizum received settles the debt", es: "Un Bizum recibido salda la deuda" },
+    { en: "Revolut opens with the amount typed", es: "Revolut se abre con el importe puesto" },
+  ] satisfies LocalizedText[],
+  autoLabel: { en: "What it does by itself", es: "Lo que hace sola" },
   cta: { en: "Open the Wari website", es: "Abrir la web de Wari" },
   caption: { en: "Real screens from the beta, with demo data", es: "Pantallas reales de la beta, con datos de demo" },
   storyLabel: { en: "How Wari works", es: "Cómo funciona Wari" },
@@ -110,6 +102,14 @@ export const WARI = {
       },
     },
     {
+      id: "captura",
+      title: { en: "Pay with your card. The expense writes itself.", es: "Pagas con tarjeta. El gasto se apunta solo." },
+      body: {
+        en: "Wari Captura, a tiny Android app I wrote in Kotlin, reads the payment notifications from Revolut and Google Wallet. The payment shows up in Wari with the amount and the shop filled in and the group suggested; two alerts for the same payment merge into one. It's optional, and it only listens to the apps you pick.",
+        es: "Wari Captura, una app pequeña de Android que escribí en Kotlin, lee los avisos de pago de Revolut y Google Wallet. El pago aparece en Wari con el importe y la tienda puestos y el grupo sugerido; dos avisos del mismo pago se juntan en uno. Es opcional y solo escucha las apps que tú eliges.",
+      },
+    },
+    {
       id: "ticket",
       title: { en: "The receipt, product by product.", es: "El ticket, producto a producto." },
       body: {
@@ -118,11 +118,11 @@ export const WARI = {
       },
     },
     {
-      id: "gasto",
-      title: { en: "Any currency, exact to the cent.", es: "Cualquier moneda, exacta al céntimo." },
+      id: "pagar",
+      title: { en: "Settle up in one tap.", es: "Saldar, en un toque." },
       body: {
-        en: "Type 36 in euros and it already shows the złoty. Amounts are stored as integer cents in their own currency, so nothing drifts when the rate moves.",
-        es: "Escribes 36 en euros y ya ves los złotys. Los importes se guardan en céntimos enteros en su moneda, así que nada se descuadra cuando cambia el tipo.",
+        en: "Tap what you owe and Wari opens Revolut with the amount, the currency and a note already filled in; for Bizum it copies the number. When a friend's Bizum reaches you, the debt settles by itself. A reminder goes out at most once a day, and if you both switch it on, debts across groups offset themselves every week or month.",
+        es: "Tocas lo que debes y Wari abre Revolut con el importe, la moneda y un concepto ya puestos; para Bizum copia el número. Cuando te llega el Bizum de un amigo, la deuda se salda sola. Un recordatorio sale como mucho una vez al día y, si los dos lo activáis, las deudas entre grupos se compensan solas cada semana o cada mes.",
       },
     },
     {

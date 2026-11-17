@@ -62,13 +62,22 @@ export const WARI_STORY_SHOTS: Record<string, WariShot> = {
       es: "Wari repartiendo un ticket del súper producto a producto",
     },
   },
-  gasto: {
-    src: "/media/wari/wari-gasto-nuevo-light.webp",
+  captura: {
+    src: "/media/wari/wari-captura-pago-light.webp",
     width: 780,
     height: 1688,
     alt: {
-      en: "New expense in Wari: 36 euros with the equivalent in złoty, who paid and who it is split between",
-      es: "Gasto nuevo en Wari: 36 euros con su equivalencia en złotys, quién pagó y entre quiénes se reparte",
+      en: "A card payment captured by Wari: 5.32 euros at a shop, two alerts merged into one, and the trip group suggested",
+      es: "Un pago con tarjeta capturado por Wari: 5,32 euros en una tienda, dos avisos juntados en uno y el grupo del viaje sugerido",
+    },
+  },
+  pagar: {
+    src: "/media/wari/wari-pagar-light.webp",
+    width: 780,
+    height: 1688,
+    alt: {
+      en: "Wari pay sheet: you owe 14.04 euros, with buttons to pay with Revolut or Bizum and to mark it as paid",
+      es: "Hoja de pago de Wari: debes 14,04 euros, con botones para pagar con Revolut o Bizum y para marcarlo como pagado",
     },
   },
   viaje: {

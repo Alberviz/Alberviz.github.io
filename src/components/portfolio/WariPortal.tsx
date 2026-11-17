@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion, useScroll, useTransform } from "motion/react";
-import { ArrowUpRight } from "@phosphor-icons/react";
+import { ArrowUpRight, Lightning } from "@phosphor-icons/react";
 import { useLocale } from "@/lib/i18n-context";
 import { WARI } from "@/content/site-copy";
 import { WARI_URL } from "@/content/links";
@@ -150,23 +150,21 @@ export function WariPortal() {
             {WARI.statusNext[locale]}
           </p>
 
-          <dl className="mt-9 grid max-w-md grid-cols-3 gap-x-4 border-t border-[color:var(--wari-ink)]/15 pt-6">
-            {WARI.stats.map((stat) => (
-              <div key={stat.value}>
-                <dt className="font-wari-display text-[1.9rem] font-semibold leading-none tracking-[-0.03em] tabular-nums sm:text-[2.2rem]">
-                  <span className="mb-1.5 block h-[13px] font-wari text-[12.5px] font-normal leading-none tracking-normal text-[color:var(--wari-ink-2)]">
-                    {locale === "es" ? stat.preEs : ""}
+          <div className="mt-9 max-w-md border-t border-[color:var(--wari-ink)]/15 pt-6">
+            <p className="font-wari-display text-[15px] font-semibold tracking-[-0.01em]">{WARI.autoLabel[locale]}</p>
+            <ul className="mt-3 space-y-2">
+              {WARI.auto.map((item) => (
+                <li key={item.en} className="flex items-center gap-2.5 text-[14.5px] text-[color:var(--wari-ink-2)]">
+                  <span aria-hidden="true" className="grid size-5 shrink-0 place-items-center rounded-full bg-[color:var(--wari-action)]">
+                    <Lightning size={11} weight="fill" className="text-[color:var(--wari-on-action)]" />
                   </span>
-                  {locale === "es" ? stat.valueEs : stat.value}
-                </dt>
-                <dd className="mt-2 text-[12.5px] leading-snug text-[color:var(--wari-ink-2)]">
-                  {stat.label[locale]}
-                </dd>
-              </div>
-            ))}
-          </dl>
+                  {item[locale]}
+                </li>
+              ))}
+            </ul>
+          </div>
 
-          <p className="mt-8 max-w-[44ch] text-[13.5px] leading-relaxed text-[color:var(--wari-ink-2)]">
+          <p className="mt-6 max-w-[44ch] text-[13.5px] leading-relaxed text-[color:var(--wari-ink-2)]">
             {WARI.name[locale]}
           </p>
 
