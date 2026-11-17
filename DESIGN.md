@@ -35,14 +35,18 @@ El acento se reserva para el CTA primario, el foco, el elemento activo y detalle
 - Botones, filtros y chips: píldora (`999px`). Medios y marcos: `20px`.
 - Iconos: Phosphor, trazo uniforme.
 - Secciones separadas por `border-t border-line` y el espaciado `--spacing-section`; cabecera de sección = titular display a la izquierda y entradilla a la derecha.
-- Eyebrows: máximo 3 en toda la página (hoy 0). Las etiquetas de columna son titulares, no eyebrows.
+- Eyebrows: máximo 3 en toda la página y ya están todos usados: "01 · Mi producto, en beta" (Wari), "02 · Autoalojado, en uso diario" (Olimpo) y "HackYeah 2026 · 24 horas" (MyCrohnie). Las etiquetas de columna son titulares, no eyebrows.
+- Composición distinta por sección: hero a sangre con índice de casos; Wari en niebla con láminas e historia con móvil fijo; Olimpo como cielo profundo con nebulosa, ventana y móvil superpuestos en profundidad; Sistemas como mapa orbital; Trabajo como tarjeta de hackathon con horizonte cálido y un laboratorio compacto; contacto con un horizonte de acreción.
+- Textura: `.grain` (ruido SVG estático, nunca fijo) solo en Olimpo y en el pie.
 - Una sola etiqueta de contacto: "Contacto" en nav y pie.
 
 ## 4. Momentos firma
 
 1. **Hero:** Gargantua en WebGL en vivo (renderer en `desktop/live/gargantua-renderer.ts`), con poster como LCP y fallback para reduced motion, sin WebGL y móviles flojos. Se pausa fuera de viewport.
 2. **Sistemas:** mapa orbital. La Raspberry Pi 5 es la estrella y cada sistema es un planeta (un `<button>` real) en su órbita. Hover, foco o toque abren su ficha. Las órbitas se escriben al DOM desde un único `requestAnimationFrame` (sin estado por fotograma) y se paran con reduced motion, fuera de viewport, con el ratón encima, con foco dentro y unos segundos tras un toque.
-3. **Proyectos:** índice tipográfico. Una única tarjeta flotante sigue al puntero con springs de `useMotionValue` (solo puntero fino); en móvil hay una miniatura en línea.
+3. **Olimpo:** recreación a tamaño fijo (1200x740 escritorio, 390x844 móvil) escalada con `ScaledStage` (solo `transform`). Datos inventados; Marcellus (`--font-olimpo`) solo dentro de la recreación. En pantallas estrechas un control segmentado elige Móvil o Escritorio.
+4. **Warp:** el shader GLSL real del portal (`olimpo/warp-shaders.ts`) en un lienzo WebGL1, DPR limitado a 1,5, pausado fuera de pantalla; los archivos vuelan al agujero con transform y opacidad. Reduced motion: un fotograma quieto y fundidos. Sin WebGL: un agujero en CSS.
+5. **Wari:** historia con scroll. En ancho, móvil fijo que cambia de pantalla según el capítulo (IntersectionObserver); en estrecho, carrusel con scroll-snap nativo y puntos que lo siguen.
 
 ## 5. Movimiento
 
@@ -55,4 +59,10 @@ El acento se reserva para el CTA primario, el foco, el elemento activo y detalle
 
 ## 6. Accesibilidad y rendimiento
 
-Contraste AA en todo, foco visible con `--focus-ring`, objetivos táctiles de 40 px o más, sin scroll horizontal a 390 px, `min-h-[100dvh]` en el hero, CLS cercano a 0 (medios con dimensiones exactas), LCP con el poster del hero.
+Contraste AA en todo, foco visible con `--focus-ring`, objetivos táctiles de 40 px o más (44 en la barra del pulgar), sin scroll horizontal a 360 px, `min-h-[100dvh]` en el hero, CLS cercano a 0 (medios con dimensiones exactas), LCP con el poster del hero.
+
+## 7. Móvil
+
+- Navegación con el pulgar: barra flotante abajo (Wari, Olimpo, Trabajo, Contacto y "Más"), con `env(safe-area-inset-bottom)` y `viewport-fit=cover`. Se esconde mientras el hero ocupa la pantalla.
+- "Más" abre una hoja inferior (curva drawer, 320 ms de entrada, bloqueo de scroll, Escape, foco atrapado y devuelto) con todas las secciones, el idioma y la búsqueda.
+- Nada depende del hover: los planetas tienen además una fila de chips, la historia de Wari es un carrusel con puntos pulsables y Warp se lanza con un botón.

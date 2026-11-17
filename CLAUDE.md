@@ -1,7 +1,9 @@
 # CLAUDE.md: guía del portfolio de Alberto Vizcaíno Ponte
 
 Portfolio estático (`/`) de Alberto en `https://alberviz.github.io`, rediseñado en noviembre de 2026 con el lenguaje
-"precisión cósmica": espacio profundo, un único acento ámbar y un agujero negro real calculado en WebGL. El repo es
+"precisión cósmica": espacio profundo, un único acento ámbar y un agujero negro real calculado en WebGL. La segunda
+vuelta (rama `rediseno/nivel-2`) añade jerarquía en tres niveles: casos estrella (Wari y Olimpo con Warp), trabajo
+notable (MyCrohnie y su hackathon, el escritorio Linux, los sistemas) y laboratorio. El repo es
 **público**: nada de datos privados en código, copy, comentarios ni commits.
 
 ## 1. Leer primero
@@ -11,15 +13,17 @@ Portfolio estático (`/`) de Alberto en `https://alberviz.github.io`, rediseñad
 
 ## 2. Estructura de `/`
 
-Orden en `src/app/page.tsx`: Nav, Hero, Wari, Sistemas, Escritorio, Proyectos, Trayectoria, Pie (con `CommandPalette`).
+Orden en `src/app/page.tsx`: Nav, Hero, Wari, Olimpo, Sistemas, Escritorio, Proyectos, Trayectoria, Pie (con `CommandPalette`).
 
 | Sección | Id | Componente |
 | --- | --- | --- |
-| Hero (Gargantua WebGL en vivo, poster como LCP) | `#hero` | `HeroSection` + `desktop/live/gargantua-*` |
-| Wari (portal en niebla azul, única ruptura de tema) | `#wari` | `WariPortal` |
-| Sistemas (mapa orbital interactivo) | `#sistemas` | `SystemsSection` |
+| Nav (barra arriba; en móvil, barra del pulgar abajo + hoja con todo) | - | `PortfolioNavbar` |
+| Hero (Gargantua WebGL en vivo, poster como LCP, índice de los dos casos) | `#hero` | `HeroSection` + `desktop/live/gargantua-*` |
+| Caso 01 · Wari (portal en niebla azul, única ruptura de tema, historia con scroll) | `#wari` | `WariPortal` |
+| Caso 02 · Olimpo (recreación con datos inventados) y Warp (portal GLSL jugable) | `#olimpo`, `#warp` | `OlimpoSection`, `olimpo/*` |
+| Sistemas (mapa orbital: lo que corre detrás de Olimpo) | `#sistemas` | `SystemsSection` |
 | Escritorio (LinuxRicing: explorador + hardware) | `#escritorio` | `DesktopSection`, `desktop/DesktopExplorer`, `desktop/live/*` |
-| Proyectos (índice tipográfico con reveal) | `#proyectos` | `ProjectsSection` |
+| Trabajo (MyCrohnie contado por su hackathon, laboratorio y una mención) | `#proyectos` | `ProjectsSection` |
 | Trayectoria | `#trayectoria` | `BackgroundSection` |
 | Contacto y pie | `#contacto` | `PortfolioFooter` |
 
@@ -29,14 +33,17 @@ Orden en `src/app/page.tsx`: Nav, Hero, Wari, Sistemas, Escritorio, Proyectos, T
 
 Todo el copy es bilingüe (`en` por defecto, `es`) y se elige con `useLocale()` de `src/lib/i18n-context.tsx`.
 
-- `site-copy.ts`: nav, hero, portal de Wari, contacto.
-- `systems.ts`: planetas del mapa orbital (Olimpo, Patrimonio, Aurora, Salud, Laura).
+- `site-copy.ts`: nav, hero, portal de Wari (con los capítulos de la historia), contacto.
+- `olimpo.ts`: caso Olimpo, sus pilares y cifras, los datos INVENTADOS de la recreación y Warp.
+- `systems.ts`: planetas del mapa orbital (Patrimonio, Aurora, Salud, Laura).
 - `desktop.ts`: momentos del escritorio y piezas de hardware.
-- `projects.ts`: índice de proyectos (enlaces solo si están verificados como públicos).
+- `projects.ts`: MyCrohnie (destacado), laboratorio y menciones (enlaces solo si están verificados como públicos).
 - `portfolio-data.ts`: perfil, experiencia, estudios y reconocimientos.
 - `links.ts`, `assets.ts`, `wari-shots.ts`: enlaces públicos, medios con dimensiones exactas, capturas de Wari.
 
 Una cifra solo se publica si está verificada contra el código o la configuración del proyecto. Si no, se quita.
+Wari es el producto de Alberto, en beta camino de Google Play y la App Store: nunca "la app de mis amigos" ni "ya en
+las tiendas". Olimpo nunca se enseña con datos reales: solo la recreación de `olimpo/Firmamento` y `olimpo/SkyPhone`.
 
 ## 4. Reglas duras
 
@@ -51,8 +58,8 @@ Una cifra solo se publica si está verificada contra el código o la configuraci
    - Anima `transform`, `opacity` y `clip-path`. Nunca `transition: all`, `ease-in` ni `scale(0)`.
    - Hover tras `@media (hover: hover) and (pointer: fine)` y `useReducedMotion()` en todo lo que se mueve.
    - La paleta de comandos (`⌘K`) abre y cierra sin animación (0 ms).
-   - Máximo 3 eyebrows en toda la página (hoy hay 0).
-4. **Verificación visual:** capturas desde el build estático (`out/`), nunca desde `pnpm dev`, a 1280x800 y 390x844. Sin scroll horizontal a 390.
+   - Máximo 3 eyebrows en toda la página (hoy hay 3: Wari, Olimpo y MyCrohnie).
+4. **Verificación visual:** capturas desde el build estático (`out/`), nunca desde `pnpm dev`, a 1280x800, 390x844 y 360x780. Sin scroll horizontal a 360.
 
 ## 5. Comandos
 

@@ -17,13 +17,17 @@ Escanean rápido (15-30 s). En dos scrolls tienen que ver rigor matemático y el
 
 ## Product Purpose
 
-Demostrar con artefactos reales que Alberto (Doble Grado en Matemáticas e Ingeniería Informática, Universidad de Murcia; Erasmus+ en AGH Kraków 2026-2027) construye sistemas enteros: de la demostración al driver USB, de la app que su grupo usa a diario a la IA que corre en su propia Raspberry Pi.
+Demostrar con artefactos reales que Alberto (Doble Grado en Matemáticas e Ingeniería Informática, Universidad de Murcia; Erasmus+ en AGH Kraków 2026-2027) construye sistemas enteros: de la demostración al driver USB, de su propio producto en beta (Wari) al sistema operativo de su vida (Olimpo) que corre en su Raspberry Pi.
 
 ## Positioning
 
-Una sola página (`/`), modo `Experience`, con ocho secciones: Nav, Hero (agujero negro Gargantua en vivo), Wari (la app que mantiene y usan sus amigos), Sistemas (mapa orbital de su infraestructura personal), Escritorio (Linux hecho a medida), Proyectos (índice tipográfico), Trayectoria y Contacto.
+Una sola página (`/`), modo `Experience`, con jerarquía en tres niveles:
 
-Wari es el producto principal. Antes se llamaba Krakount; la ruta `/krakount` es un stub que apunta a la web de Wari. El nombre viene de 割り勘 (warikan).
+1. **Casos estrella:** Wari (su producto, en beta camino de Google Play y la App Store; nunca "ya en las tiendas" ni "la app de mis amigos") y Olimpo con Warp (el sistema operativo de su vida, autoalojado en la Raspberry Pi 5).
+2. **Trabajo notable:** Sistemas (lo que corre detrás de Olimpo: Patrimonio, Aurora, Salud, Laura), Escritorio Linux y MyCrohnie contado a través de HackYeah 2026 (24 horas).
+3. **Laboratorio:** Barber Bot, CloShare y el vault de la universidad, compactos. Choppy solo como mención de una línea; gts2-mando solo como una línea en la fila de hardware.
+
+Secciones: Nav, Hero, Wari, Olimpo (con Warp), Sistemas, Escritorio, Trabajo, Trayectoria y Contacto. Antes Wari se llamaba Krakount; la ruta `/krakount` es un stub que apunta a la web de Wari. El nombre viene de 割り勘 (warikan).
 
 ## Voice
 
@@ -32,7 +36,7 @@ Primera persona, directo, humano, sin humo. Se explica qué hace cada cosa y qu�
 ## Hard Content & Privacy Constraints
 
 1. **Negocio personal:** se describe solo como *personal product-selling business* / *negocio personal de venta de productos*, sin marca ni detalles comerciales.
-2. **Nada privado:** ni IPs, puertos, rutas de API, URLs de red privada ni apps personales no listadas. Sin nombres reales de amigos o terceros.
+2. **Nada privado:** ni IPs, puertos, rutas de API, URLs de red privada, nombres de la tailnet ni políticas de seguridad explotables (umbrales de bloqueo, límites). Sin nombres reales de amigos o terceros. Olimpo solo se muestra recreado con datos inventados.
 3. **Fuera del portfolio:** auditorías de hardware ajeno, proyectos personales de pareja, servidores de juego y repos de terceros.
 4. **Enlaces:** solo los verificados como públicos. Un repo privado no se enlaza.
 5. **Contacto y CV públicos:** `albvizpon@gmail.com`, `https://github.com/Alberviz`, LinkedIn y el CV en `/cv/`.
