@@ -28,11 +28,11 @@ export const HERO_VARIANTS: Record<
     place: (w, h) => ({ cx: 0.75 * w, cy: 0.46 * h, shadow: 0.165 * h, margins: WIDE_MARGINS }),
   },
   tall: {
-    aspect: 9 / 16,
-    maxWidth: 720,
+    aspect: 3 / 4,
+    maxWidth: 900,
     minWidth: 540,
     poster: "/media/hero/gargantua-tall.webp",
-    place: (w, h) => ({ cx: 0.55 * w, cy: 0.27 * h, shadow: 0.19 * w, margins: TALL_MARGINS }),
+    place: (w, h) => ({ cx: 0.55 * w, cy: 0.3 * h, shadow: 0.19 * w, margins: TALL_MARGINS }),
   },
 };
 

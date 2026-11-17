@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant wide (@media (min-aspect-ratio: 5/4));
+
 @theme {
   --font-display: var(--f-display), "Bricolage Grotesque", sans-serif;
   --font-sans: var(--f-sans), "Geist", system-ui, sans-serif;
@@ -326,6 +328,14 @@ html {
   height: 100%;
   object-fit: cover;
   object-position: center;
+}
+
+/* Tall frame on a squarer viewport crops vertically: keep the black hole (top) in view */
+@media (max-aspect-ratio: 1249/1000) {
+  .hero-poster,
+  .hero-canvas {
+    object-position: center top;
+  }
 }
 
 .hero-canvas {

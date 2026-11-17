@@ -118,7 +118,7 @@ export function HeroSection() {
         if (last) {
           const dt = now - last;
           counted += 1;
-          if (counted > 8 && dt > 0 && dt < 500) slow += dt;
+          if (counted > 8 && dt > 0) slow += Math.min(dt, 500);
           if (counted === 8 + GUARD_FRAMES && slow / GUARD_FRAMES > GUARD_MAX_AVG_MS) {
             frozen = true;
             setState("frozen");
@@ -167,7 +167,7 @@ export function HeroSection() {
     py.set(((e.clientY - r.top) / r.height - 0.5) * 2);
   };
 
-  const live = state === "live" || state === "frozen";
+  const live = state === "live";
 
   return (
     <section
@@ -197,7 +197,7 @@ export function HeroSection() {
         ref={stageRef}
         aria-hidden="true"
         className="hero-stage absolute inset-0 -z-10"
-        style={reduce || !fine ? undefined : { x: tx, y: ty, scale: 1.03 }}
+        style={{ x: tx, y: ty, scale: 1.03 }}
       >
         <picture>
           <source media={WIDE_QUERY} srcSet={HERO_VARIANTS.wide.poster} />
@@ -205,8 +205,8 @@ export function HeroSection() {
           <img
             src={HERO_VARIANTS.tall.poster}
             alt=""
-            width={720}
-            height={1280}
+            width={900}
+            height={1200}
             fetchPriority="high"
             decoding="async"
             className="hero-poster"
@@ -217,8 +217,8 @@ export function HeroSection() {
       {/* Veil: guarantees text contrast on the left and melts the stage into the page below */}
       <div aria-hidden="true" className="hero-veil pointer-events-none absolute inset-0 -z-10" />
 
-      <div className="relative mx-auto flex w-full max-w-7xl flex-1 flex-col justify-end px-5 pb-14 pt-24 sm:px-8 lg:justify-center lg:pb-16 lg:pt-24">
-        <div className="max-w-[40rem] lg:max-w-[36rem] xl:max-w-[40rem]">
+      <div className="relative mx-auto flex w-full max-w-7xl flex-1 flex-col justify-end px-5 pb-14 pt-24 sm:px-8 wide:justify-center wide:pb-16 wide:pt-24">
+        <div className="max-w-[40rem] wide:max-w-[36rem] xl:wide:max-w-[40rem]">
           <h1
             className="hero-rise font-display text-balance text-[clamp(2.4rem,5.2vw,4.5rem)] font-semibold leading-[0.98] tracking-[-0.035em] text-ink"
             style={{ ["--d" as string]: "60ms", fontVariationSettings: '"opsz" 96' }}
@@ -251,7 +251,7 @@ export function HeroSection() {
         </div>
 
         <p
-          className="hero-rise absolute bottom-5 left-5 right-5 flex items-center gap-2 font-mono text-[11px] leading-snug text-muted sm:left-8 sm:right-8 lg:left-auto lg:max-w-[36ch] lg:justify-end lg:text-right"
+          className="hero-rise absolute bottom-5 left-5 right-5 flex items-center gap-2 font-mono text-[11px] leading-snug text-muted sm:left-8 sm:right-8 wide:left-auto wide:max-w-[36ch] wide:justify-end wide:text-right"
           style={{ ["--d" as string]: "420ms" }}
         >
           <span

@@ -38,9 +38,9 @@ function WariMark({ className }: { className?: string }) {
 
 /** Phone slots: x/y in % of the stage, rotation in degrees, depth for scroll parallax. */
 const SLOTS = [
-  { left: "2%", top: "14%", rot: -7, depth: -26, z: 1, w: 0.82 },
-  { left: "31%", top: "0%", rot: 0, depth: -52, z: 3, w: 1 },
-  { left: "60%", top: "17%", rot: 7, depth: -14, z: 2, w: 0.82 },
+  { left: "0%", top: "14%", rot: -7, depth: -26, z: 1, w: 0.82 },
+  { left: "30%", top: "0%", rot: 0, depth: -52, z: 3, w: 1 },
+  { left: "61%", top: "17%", rot: 7, depth: -14, z: 2, w: 0.82 },
 ] as const;
 
 function Phone({
@@ -140,7 +140,7 @@ export function WariPortal() {
             {WARI.stats.map((stat) => (
               <div key={stat.value}>
                 <dt className="font-wari-display text-[1.9rem] font-semibold leading-none tracking-[-0.03em] tabular-nums sm:text-[2.2rem]">
-                  {stat.value}
+                  {locale === "es" ? stat.valueEs : stat.value}
                 </dt>
                 <dd className="mt-2 text-[12.5px] leading-snug text-[color:var(--wari-ink-2)]">
                   {stat.label[locale]}
