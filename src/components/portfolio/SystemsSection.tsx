@@ -20,7 +20,7 @@ import { revealProps, useReducedMotionSafe } from "@/lib/motion";
  */
 
 type Layout = "wide" | "tall";
-const BOX = { wide: { w: 210, h: 52, W: 1200, H: 600 }, tall: { w: 172, h: 50, W: 390, H: 820 } } as const;
+const BOX = { wide: { w: 210, h: 52, W: 1200, H: 600 }, tall: { w: 172, h: 50, W: 390, H: 880 } } as const;
 
 const byId = Object.fromEntries(FLOW_NODES.map((n) => [n.id, n])) as Record<string, FlowNode>;
 
