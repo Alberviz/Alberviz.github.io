@@ -24,7 +24,7 @@ const PALETTES: Palette[] = [
   { name: "Gargantua", wallpaper: ["#1B1F26", "#C9D2DA"], primary: [0xbc, 0xc8, 0xd1], secondary: [0x8d, 0x9c, 0xab], tertiary: [0xd0, 0xc2, 0xd2] },
   { name: "Icy", wallpaper: ["#0B1730", "#7FB4FF"], primary: [0x7f, 0xb4, 0xff], secondary: [0x4f, 0x7c, 0xff], tertiary: [0xb8, 0xe0, 0xff] },
   { name: "Ember", wallpaper: ["#2A120C", "#F7B999"], primary: [0xf7, 0xb9, 0x99], secondary: [0xf2, 0x6d, 0x4f], tertiary: [0xef, 0xd9, 0x94] },
-  { name: "Aurora", wallpaper: ["#06201A", "#5CE1A6"], primary: [0x5c, 0xe1, 0xa6], secondary: [0x10, 0xb9, 0x81], tertiary: [0xa7, 0xf3, 0xd0] },
+  { name: "Dusk", wallpaper: ["#1A1030", "#C7A8FF"], primary: [0xc7, 0xa8, 0xff], secondary: [0x8b, 0x6c, 0xf0], tertiary: [0xf0, 0xb4, 0xe0] },
 ];
 
 /** Propagation order down the chain, in seconds after the palette changes. */
@@ -83,8 +83,8 @@ export function RgbRig() {
     { dev: "Akko 5075B Plus", via: "hidraw · Feature 0x07", bytes: akkoPacket(pal.primary), delay: DELAY.keyboard },
     { dev: "MCHOSE K7 base", via: "SET_REPORT 0x11 · XOR FF", bytes: mchosePacket(pal.primary), delay: DELAY.mouse },
     { dev: "RAM x2", via: "OpenRGB SDK · Direct", bytes: `5 LEDs · #${pal.primary.map(hex).join("")} -> #${pal.tertiary.map(hex).join("")}`, delay: DELAY.ram },
-    { dev: "ARGB fans", via: "OpenRGB SDK · Aura", bytes: "2 x 60 LEDs · palette gradient", delay: DELAY.fans },
-    { dev: "Magic Home", via: "flux_led · TCP :5577", bytes: `#${pal.secondary.map(hex).join("")}`, delay: DELAY.strip },
+    { dev: "ARGB fans", via: "OpenRGB SDK · Aura", bytes: "palette gradient", delay: DELAY.fans },
+    { dev: "LED strip", via: "LED strip · TCP socket", bytes: `#${pal.secondary.map(hex).join("")}`, delay: DELAY.strip },
   ];
 
   return (
@@ -117,7 +117,7 @@ export function RgbRig() {
           </g>
         ))}
         <text x="150" y="122" className="font-mono" fontSize="17" fill="#7B8190" letterSpacing="2">
-          MAGIC HOME STRIP
+          LED STRIP
         </text>
 
         {/* Wallpaper monitor and Matugen */}
@@ -244,8 +244,8 @@ export function RgbRig() {
       </svg>
 
       {/* Palette picker: real buttons, auto cycle stops once you choose */}
-      <div className="absolute bottom-3 left-3 flex items-center gap-1.5 rounded-full border border-[#1F232D] bg-[#07080B]/85 p-1 backdrop-blur-md">
-        <span className="hidden px-2 font-mono text-[10.5px] text-[#7B8190] sm:inline">
+      <div className="absolute bottom-3 left-3 flex items-center gap-1.5 rounded-full border border-line bg-bg/85 p-1 backdrop-blur-md">
+        <span className="hidden px-2 font-mono text-[10.5px] text-muted sm:inline">
           {locale === "es" ? "Fondo" : "Wallpaper"}
         </span>
         {PALETTES.map((p, i) => (
@@ -259,7 +259,7 @@ export function RgbRig() {
             aria-pressed={i === active}
             aria-label={`${locale === "es" ? "Aplicar fondo" : "Apply wallpaper"} ${p.name}`}
             className={`flex items-center gap-1.5 rounded-full px-2 py-1 font-mono text-[10.5px] transition-colors duration-150 press-scale ${
-              i === active ? "bg-[#151820] text-[#ECEDF0]" : "text-[#8A8F9C] hover:text-[#ECEDF0]"
+              i === active ? "bg-elevated text-ink" : "text-muted hover:text-ink"
             }`}
           >
             <span aria-hidden="true" className="h-2.5 w-2.5 rounded-full" style={{ background: css(p.primary) }} />

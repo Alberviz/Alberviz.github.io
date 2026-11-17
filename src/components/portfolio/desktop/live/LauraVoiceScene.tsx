@@ -118,8 +118,8 @@ const SCENARIOS: Scenario[] = [
       es: "Laura, mírame los correos importantes",
     },
     her: {
-      en: "You have 2 important emails: university enrollment confirmation and a Hetzner invoice.",
-      es: "Tienes 2 correos: confirmación de matrícula y factura mensual de Hetzner.",
+      en: "You have 2 important emails: university enrollment confirmation and a hosting invoice.",
+      es: "Tienes 2 correos: confirmación de matrícula y factura del hosting.",
     },
     label: {
       listen: { en: "Listening", es: "Escuchando" },
@@ -472,7 +472,7 @@ export function LauraVoiceScene() {
           <circle
             r={step === "speak" ? 175 : 145}
             fill="url(#laura-scene-corona)"
-            className="transition-all duration-300"
+            className="transition-opacity duration-300"
             style={{
               animation: "laura-stellar-breathe 2.4s ease-in-out infinite alternate",
             }}
@@ -594,8 +594,8 @@ export function LauraVoiceScene() {
                 }}
                 className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 font-mono text-[11px] transition-colors ${
                   active
-                    ? "bg-[#F2B36F] text-[#1A1208] font-semibold"
-                    : "text-[#B4BAC6] hover:text-white"
+                    ? "bg-accent text-on-accent font-semibold"
+                    : "text-ink/80 hover:text-white"
                 }`}
               >
                 <Icon size={12} weight={active ? "bold" : "regular"} />
@@ -619,7 +619,7 @@ export function LauraVoiceScene() {
                 className={`rounded-full px-2 py-0.5 font-mono text-[10.5px] transition-colors ${
                   step === st
                     ? "bg-white/20 text-white font-medium"
-                    : "text-[#8A8F9C] hover:text-white"
+                    : "text-muted hover:text-white"
                 }`}
               >
                 {st === "listen"
@@ -636,7 +636,7 @@ export function LauraVoiceScene() {
           <button
             type="button"
             onClick={handleReplay}
-            className="inline-flex items-center gap-1.5 rounded-full border border-[#F2B36F]/40 bg-[#0F1016]/85 px-3 py-1 font-mono text-[11px] font-medium text-[#F2B36F] backdrop-blur-md hover:border-[#F2B36F] press-scale"
+            className="inline-flex items-center gap-1.5 rounded-full border border-accent/40 bg-[#0F1016]/85 px-3 py-1 font-mono text-[11px] font-medium text-accent backdrop-blur-md hover:border-accent press-scale"
             title="SUPER+A"
           >
             <Command size={12} weight="bold" />
@@ -649,7 +649,7 @@ export function LauraVoiceScene() {
       {/* Floating Subtitle Pill (Laura UI from LauraOverlay.qml) */}
       <div className="pointer-events-none absolute bottom-8 left-1/2 z-20 w-[92%] max-w-[620px] -translate-x-1/2">
         <div
-          className="relative overflow-hidden rounded-[22px] border border-white/12 bg-[#14121F]/90 p-4 shadow-[0_20px_50px_rgba(0,0,0,0.7)] backdrop-blur-xl transition-all duration-300"
+          className="relative overflow-hidden rounded-[22px] border border-white/12 bg-[#14121F]/90 p-4 shadow-[0_20px_50px_rgba(0,0,0,0.7)] backdrop-blur-xl transition-opacity duration-300"
           style={{
             boxShadow: `0 0 40px -10px ${pillColor}22, 0 20px 50px rgba(0,0,0,0.8)`,
           }}
