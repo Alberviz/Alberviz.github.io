@@ -706,9 +706,23 @@ html {
   }
 }
 
+/* No empty screen after the collapse: #casos already rises over the pinned
+ * starfield from about 62% of the track, while the shockwave sweeps it. */
+.hero-track[data-plunge="1"] + #casos {
+  margin-top: -38vh;
+}
+@media (min-width: 768px) {
+  .hero-track[data-plunge="1"] + #casos {
+    margin-top: -46vh;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .hero-track[data-plunge="1"] {
     height: auto;
+  }
+  .hero-track[data-plunge="1"] + #casos {
+    margin-top: 0;
   }
   .hero-track[data-plunge="1"] .hero-pin {
     position: relative;

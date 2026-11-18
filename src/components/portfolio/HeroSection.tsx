@@ -12,6 +12,7 @@ import { HERO } from "@/content/site-copy";
 import { HERO_BG, HERO_PALETTE, HERO_VARIANTS, WIDE_QUERY } from "./hero/hero-layout";
 import type { HeroVariant } from "./hero/hero-layout";
 import type { Camera } from "./desktop/live/gargantua-renderer";
+import { singularity } from "./hero/singularity";
 
 /**
  * Hero state, exposed as `data-state` for tests:
@@ -34,16 +35,18 @@ const smooth = (a: number, b: number, x: number) => {
 
 /**
  * Timeline of the hero track (0 = top, 1 = the hero has scrolled away):
- *   0.04 - 0.62  the hole feeds: every piece of text spirals into it, one after
+ *   0.04 - 0.58  the hole feeds: every piece of text spirals into it, one after
  *                another, like a file dropped into a Warp portal, while the disk
  *                spins up and the hole swells a little;
- *   0.56 - 0.80  the hole collapses into a point, burning brighter as it shrinks;
- *   0.78 - 0.96  the point lets go a shockwave and the stars dim into the page.
- * No black screen: the page below starts on the same starfield.
+ *   0.52 - 0.74  the hole collapses into a point, burning brighter as it shrinks;
+ *   0.70 - 0.90  the point lets go a shockwave and the stars dim;
+ *   0.62 - 1     #casos already rises over the pinned starfield (negative margin in
+ *                globals.css) and its heading comes out of the collapse point
+ *                (`hero/singularity.ts`), so there is never an empty screen.
  */
-const FEED_END = 0.6;
-const COLLAPSE = [0.56, 0.8] as const;
-const WAVE = [0.77, 0.97] as const;
+const FEED_END = 0.56;
+const COLLAPSE = [0.52, 0.74] as const;
+const WAVE = [0.7, 0.9] as const;
 
 function cameraAt(p: number, wide: boolean): Camera {
   const feed = smooth(0, FEED_END, p);
@@ -55,15 +58,15 @@ function cameraAt(p: number, wide: boolean): Camera {
     roll: -0.14 * feed,
     lens: smooth(0.04, 0.5, p) * Math.min(1, zoom),
     streak: 0.45 * smooth(0.3, COLLAPSE[0], p) * (1 - collapse),
-    fall: 0.5 * smooth(0.82, 1, p),
+    fall: 0.55 * smooth(0.74, 0.95, p),
     spin: 1 + 6 * feed + 8 * collapse,
-    flare: smooth(0.5, 0.74, p) * (1 - smooth(0.8, 0.9, p)),
+    flare: smooth(0.46, 0.7, p) * (1 - smooth(0.74, 0.84, p)),
   };
 }
 
 /** Where each piece of text falls in, in order: the footnote first, the headline last. */
-const SWALLOW_STEP = 0.05;
-const SWALLOW_LEN = 0.3;
+const SWALLOW_STEP = 0.045;
+const SWALLOW_LEN = 0.28;
 
 /** Rotate v by a radians. */
 const rot = (x: number, y: number, a: number) => [x * Math.cos(a) - y * Math.sin(a), x * Math.sin(a) + y * Math.cos(a)];
@@ -142,8 +145,8 @@ export function HeroSection() {
   const frozenZoom = useTransform(scrollYProgress, (v) => 1 + (wide ? 0.55 : 0.4) * smooth(0, FEED_END, v));
   const frozenOpacity = useTransform(scrollYProgress, (v) => 1 - smooth(COLLAPSE[0], COLLAPSE[1], v));
   const waveScale = useTransform(scrollYProgress, (v) => 0.02 + 0.98 * smooth(WAVE[0], WAVE[1], v));
-  const waveOpacity = useTransform(scrollYProgress, (v) => smooth(WAVE[0], WAVE[0] + 0.03, v) * (1 - smooth(0.84, WAVE[1], v)));
-  const flashOpacity = useTransform(scrollYProgress, (v) => smooth(0.7, 0.79, v) * (1 - smooth(0.8, 0.92, v)));
+  const waveOpacity = useTransform(scrollYProgress, (v) => smooth(WAVE[0], WAVE[0] + 0.03, v) * (1 - smooth(0.78, WAVE[1], v)));
+  const flashOpacity = useTransform(scrollYProgress, (v) => smooth(0.64, 0.73, v) * (1 - smooth(0.74, 0.86, v)));
 
   // Geometry of the swallow: where the hole sits on screen and where each piece of text starts.
   const pinRef = useRef<HTMLDivElement>(null);
@@ -161,6 +164,10 @@ export function HeroSection() {
         items[el.dataset.fall as string] = centreWithin(el, pin);
       });
       geoRef.current = { hole, items };
+      const track = pin.parentElement;
+      singularity.x = hole.x;
+      singularity.y = hole.y;
+      singularity.travel = track ? Math.max(0, track.offsetHeight - pin.clientHeight) : 0;
       setHolePt(hole);
       // Re-apply the current frame with the new geometry.
       scrollYProgress.set(scrollYProgress.get());
@@ -306,6 +313,13 @@ export function HeroSection() {
   const plunge = state !== "poster";
   const frozen = state === "frozen";
   const still = !!reduce || !plunge;
+
+  useEffect(() => {
+    singularity.on = !still;
+    return () => {
+      singularity.on = false;
+    };
+  }, [still]);
 
   return (
     <section

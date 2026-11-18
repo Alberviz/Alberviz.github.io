@@ -1,7 +1,8 @@
 "use client";
 
-import React from "react";
-import {motion} from "motion/react";
+import React, { useRef } from "react";
+import { motion, useScroll, useTransform } from "motion/react";
+import type { MotionValue } from "motion/react";
 import { ArrowUpRight, FilePdf, GithubLogo } from "@phosphor-icons/react";
 import { useLocale } from "@/lib/i18n-context";
 import { LAB, LAB_NAMES_ES, MENTIONS, MYCROHNIE, WORK_UI } from "@/content/projects";
@@ -87,17 +88,8 @@ export function ProjectsSection() {
               </h3>
               <p className="mt-5 max-w-[46ch] text-pretty text-[15.5px] leading-relaxed text-muted">{M.lead[locale]}</p>
 
-              {/* 24 hours, three marks */}
-              <ol className="relative mt-8 grid grid-cols-3 gap-3">
-                <span aria-hidden="true" className="absolute left-[6px] right-[calc(33%-6px)] top-[5px] h-px bg-gradient-to-r from-accent via-accent/60 to-accent" />
-                {M.timeline.map((step) => (
-                  <li key={step.t.en} className="relative pt-6">
-                    <span aria-hidden="true" className="absolute left-0 top-0 h-[11px] w-[11px] rounded-full border-2 border-accent bg-bg" />
-                    <p className="font-mono text-[12px] tabular-nums text-ink">{step.t[locale]}</p>
-                    <p className="mt-1 text-[12.5px] leading-snug text-muted">{step.label[locale]}</p>
-                  </li>
-                ))}
-              </ol>
+              {/* 24 hours, three marks: the line is drawn by the scroll and each mark lights up as it is reached */}
+              <HackTimeline steps={M.timeline} locale={locale} reduce={reduce} />
 
               <dl className="mt-8 grid gap-4 sm:grid-cols-3">
                 {M.points.map((pt) => (
@@ -167,5 +159,39 @@ export function ProjectsSection() {
         </div>
       </div>
     </section>
+  );
+}
+
+type Step = (typeof MYCROHNIE.timeline)[number];
+
+function HackTimeline({ steps, locale, reduce }: { steps: readonly Step[]; locale: "en" | "es"; reduce: boolean | null }) {
+  const ref = useRef<HTMLOListElement>(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start 0.9", "start 0.45"] });
+  const drawn = useTransform(scrollYProgress, (v) => (reduce ? 1 : Math.min(1, Math.max(0, v))));
+  return (
+    <ol ref={ref} className="relative mt-8 grid grid-cols-3 gap-3">
+      <span aria-hidden="true" className="absolute left-[6px] right-[calc(33%-6px)] top-[5px] h-px bg-line" />
+      <motion.span
+        aria-hidden="true"
+        className="absolute left-[6px] right-[calc(33%-6px)] top-[5px] h-px origin-left bg-gradient-to-r from-accent via-accent/60 to-accent"
+        style={{ scaleX: drawn }}
+      />
+      {steps.map((step, i) => (
+        <HackMark key={step.t.en} step={step} at={i / Math.max(1, steps.length - 1)} drawn={drawn} locale={locale} />
+      ))}
+    </ol>
+  );
+}
+
+function HackMark({ step, at, drawn, locale }: { step: Step; at: number; drawn: MotionValue<number>; locale: "en" | "es" }) {
+  const lit = useTransform(drawn, (v) => (v >= at - 0.001 ? 1 : 0.35));
+  const fill = useTransform(drawn, (v) => (v >= at - 0.001 ? 1 : 0));
+  return (
+    <motion.li className="relative pt-6 transition-opacity duration-300 ease-[cubic-bezier(0.23,1,0.32,1)]" style={{ opacity: lit }}>
+      <span aria-hidden="true" className="absolute left-0 top-0 h-[11px] w-[11px] rounded-full border-2 border-accent bg-bg" />
+      <motion.span aria-hidden="true" className="absolute left-[3px] top-[3px] h-[5px] w-[5px] rounded-full bg-accent transition-opacity duration-300" style={{ opacity: fill }} />
+      <p className="font-mono text-[12px] tabular-nums text-ink">{step.t[locale]}</p>
+      <p className="mt-1 text-[12.5px] leading-snug text-muted">{step.label[locale]}</p>
+    </motion.li>
   );
 }

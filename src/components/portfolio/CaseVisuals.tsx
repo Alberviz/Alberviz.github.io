@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import { useInView } from "motion/react";
+import { motion, useInView, useMotionValue, useTransform } from "motion/react";
+import type { MotionValue } from "motion/react";
 import { Folder } from "@phosphor-icons/react";
 import type { Locale } from "@/lib/i18n-context";
 import { WARI_SHOTS } from "@/content/wari-shots";
@@ -25,23 +26,31 @@ import type { WarpEngine } from "./olimpo/warp-engine";
 
 /* ---------- Wari: real screens from the beta, in the fog ---------- */
 
-export function WariVisual({ locale }: { locale: Locale }) {
+export function WariVisual({ locale, split }: { locale: Locale; split?: MotionValue<number> }) {
   const front = WARI_SHOTS[0];
   const back = WARI_SHOTS[1];
+  // Warikan: on the home the two screens arrive as one and split apart as you scroll in,
+  // like a bill being divided. `split` is 0 (one phone) to 1 (two, at rest).
+  const fallback = useMotionValue(1);
+  const s = split ?? fallback;
+  const backX = useTransform(s, (v) => `${(79 * (1 - v)).toFixed(2)}%`);
+  const backRot = useTransform(s, (v) => -6 * v + 4 * (1 - v));
+  const backY = useTransform(s, (v) => `${(-14 * (1 - v)).toFixed(2)}%`);
+  const frontRot = useTransform(s, (v) => 4 + 3 * (1 - v) * v * 4);
   return (
     <div className="case-wari-visual relative h-full w-full" aria-hidden="false">
-      <div className="absolute left-[14%] top-[13%] w-[38%] rotate-[-6deg] sm:left-[18%]">
+      <motion.div className="absolute left-[14%] top-[13%] w-[38%] sm:left-[18%]" style={{ x: backX, y: backY, rotate: backRot }}>
         <div className="wari-phone">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={back.src} width={back.width} height={back.height} alt={back.alt[locale]} loading="lazy" decoding="async" draggable={false} className="block h-auto w-full rounded-[1.6rem]" />
         </div>
-      </div>
-      <div className="absolute left-[44%] top-[5%] w-[42%] rotate-[4deg] sm:left-[46%]">
+      </motion.div>
+      <motion.div className="absolute left-[44%] top-[5%] w-[42%] sm:left-[46%]" style={{ rotate: frontRot }}>
         <div className="wari-phone">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={front.src} width={front.width} height={front.height} alt={front.alt[locale]} loading="lazy" decoding="async" draggable={false} className="block h-auto w-full rounded-[1.6rem]" />
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }
