@@ -498,18 +498,47 @@ html {
 }
 
 /* ---------------------------------------------------------------------
- * Hero case index: two flagship cases as tappable rows.
+ * Hero case index: the four cases as glass tiles (2x2 on phones, rows above).
+ * Each tile falls into the black hole on its own, so none of them clips.
  * ------------------------------------------------------------------- */
 .hero-case {
-  transition: background-color 180ms var(--ease-out);
+  transition: background-color 180ms var(--ease-out), border-color 180ms var(--ease-out);
 }
 @media (hover: hover) and (pointer: fine) {
   .hero-case:hover {
-    background-color: rgb(236 237 240 / 0.05);
+    background-color: rgb(21 24 32 / 0.78);
+    border-color: rgb(242 179 111 / 0.35);
   }
 }
 .hero-case:active {
-  background-color: rgb(236 237 240 / 0.07);
+  background-color: rgb(21 24 32 / 0.85);
+  border-color: rgb(242 179 111 / 0.45);
+}
+
+/* The collapse: a warm flash where the hole was, then one shockwave ring.
+ * Both are sized once and only scaled / faded (composited). */
+.hero-flash {
+  width: 90vmax;
+  height: 90vmax;
+  border-radius: 50%;
+  background: radial-gradient(circle closest-side, rgb(255 236 210 / 0.95) 0%, rgb(242 179 111 / 0.55) 14%, rgb(242 179 111 / 0.12) 42%, transparent 100%);
+  opacity: 0;
+}
+.hero-wave {
+  width: 260vmax;
+  height: 260vmax;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle closest-side,
+    transparent 0%,
+    transparent 84%,
+    rgb(242 179 111 / 0.08) 92%,
+    rgb(255 220 180 / 0.55) 97.5%,
+    rgb(255 244 228 / 0.9) 98.6%,
+    transparent 100%
+  );
+  opacity: 0;
+  will-change: transform, opacity;
 }
 
 /* Static film grain for layered sections (not fixed: no per-frame cost) */
@@ -657,11 +686,11 @@ html {
 
 /* ---------------------------------------------------------------------
  * Hero fall: the hero is a scroll track; its first screen stays pinned while
- * the camera falls into the black hole (HeroSection). Phones get a shorter
- * track; reduced motion, no WebGL2 or a weak device get a plain hero.
+ * the black hole swallows the text and collapses (HeroSection). Phones get a
+ * shorter track; reduced motion, no WebGL2 or a weak device get a plain hero.
  * ------------------------------------------------------------------- */
 .hero-track[data-plunge="1"] {
-  height: 150vh;
+  height: 200vh;
 }
 
 .hero-track[data-plunge="1"] .hero-pin {
@@ -673,7 +702,7 @@ html {
 
 @media (min-width: 768px) {
   .hero-track[data-plunge="1"] {
-    height: 180vh;
+    height: 220vh;
   }
 }
 
@@ -1216,4 +1245,35 @@ html {
     height: max(100%, 44px);
     transform: translate(-50%, -50%);
   }
+}
+
+/* ---------------------------------------------------------------------
+ * Page changes as a Warp jump (WarpTransition): a black hole opens under the
+ * finger, swallows the page, and closes at the centre over the new one.
+ * Three stacked disks animated by clip-path only: glow, bright rim, the hole.
+ * ------------------------------------------------------------------- */
+.warp-veil {
+  position: fixed;
+  inset: 0;
+  z-index: 95;
+  pointer-events: none;
+  visibility: hidden;
+}
+.warp-veil[data-on="1"] {
+  visibility: visible;
+  pointer-events: auto;
+}
+.warp-veil > div {
+  position: absolute;
+  inset: 0;
+  clip-path: circle(0px at 50% 50%);
+}
+.warp-veil-glow {
+  background: rgb(242 179 111 / 0.22);
+}
+.warp-veil-rim {
+  background: rgb(255 226 190);
+}
+.warp-veil-hole {
+  background: var(--bg);
 }

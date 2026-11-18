@@ -30,7 +30,9 @@ const HOME_TRACKED = ["proyectos", "trayectoria", "contacto"];
 function useHeroVisible(page: PageId) {
   const [visible, setVisible] = useState(false);
   useEffect(() => {
-    const el = document.getElementById("hero");
+    // The hero is a long scroll track; its pinned first screen is what fills the viewport.
+    const hero = document.getElementById("hero");
+    const el = hero?.querySelector<HTMLElement>(".hero-pin") ?? hero;
     setVisible(!!el);
     if (!el) return;
     const io = new IntersectionObserver(([e]) => setVisible(e.intersectionRatio > 0.55), { threshold: [0, 0.55, 1] });

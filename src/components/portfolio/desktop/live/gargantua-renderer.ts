@@ -96,6 +96,8 @@ export interface Camera {
   fall: number;
   /** Multiplier on the disk's flow speed. */
   spin: number;
+  /** 0-1: the disk burns brighter and the point it collapses into glows. */
+  flare?: number;
 }
 
 const CAMERA_REST: Camera = { zoom: 1, roll: 0, pan: 0, lens: 0, streak: 0, fall: 0, spin: 1 };
@@ -480,6 +482,12 @@ export class GargantuaRenderer {
         lensR: this.bh.R * 1.6,
         streak: camera.streak,
         fall: camera.fall,
+        flare: camera.flare ?? 0,
+        flareColor: [
+          this.palette.onPrimaryContainer[0] / 255,
+          this.palette.onPrimaryContainer[1] / 255,
+          this.palette.onPrimaryContainer[2] / 255,
+        ],
       },
       { bhTex: T.comp.tex[0] }
     );

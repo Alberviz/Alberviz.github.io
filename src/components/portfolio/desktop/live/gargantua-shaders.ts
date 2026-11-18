@@ -554,7 +554,7 @@ void main(){
  * rest at 0 the pass is the original one. `zoom` scales the hole around its
  * centre, which travels to `camTarget`; the stars zoom less (parallax), get
  * bent by the hole (`lensAmt`) and streak radially (`streak`); `fall` darkens
- * everything toward the horizon.
+ * everything; `flare` brightens the disk and lights the point it collapses into.
  */
 export const PRESENT_FRAG = `${PRE}
 uniform sampler2D bhTex;
@@ -574,6 +574,8 @@ uniform float lensAmt;
 uniform float lensR;
 uniform float streak;
 uniform float fall;
+uniform float flare;
+uniform vec3 flareColor;
 float h12(vec2 p){ vec3 p3 = fract(vec3(p.xyx) * 0.1031); p3 += dot(p3, p3.yzx + 33.33); return fract((p3.x + p3.y) * p3.z); }
 float stars(vec2 frag, float cell, float density, float seed){
     vec2 g = frag / cell;
@@ -618,7 +620,10 @@ void main(){
         for (int k = 1; k < 6; k++) b += hole(bhC + rel * (1.0 - 0.016 * streak * (float(k) - j)));
         b *= 1.0 / 6.0;
     }
-    vec3 col = b.rgb + bg * (1.0 - b.a);
+    // Collapse: the disk burns brighter as it shrinks, and the point it leaves glows.
+    b.rgb *= 1.0 + 2.2 * flare;
+    float pd = length(d) / max(lensR, 1.0);
+    vec3 col = b.rgb + bg * (1.0 - b.a) + flareColor * flare * (exp(-pd * 9.0) * 1.6 + exp(-pd * 2.2) * 0.35);
     fragColor = vec4(col * (1.0 - fall), 1.0);
 }
 `;

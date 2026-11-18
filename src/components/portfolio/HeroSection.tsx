@@ -33,22 +33,87 @@ const smooth = (a: number, b: number, x: number) => {
 };
 
 /**
- * The fall, as a pure function of the scroll progress through the pinned hero
- * (0 = top, 1 = past the horizon). The camera zooms in exponentially, drifts the
- * hole to the centre, rolls, lets the hole bend the stars, spins the disk up and
- * finally fades to black, which is where Wari's dawn begins.
+ * Timeline of the hero track (0 = top, 1 = the hero has scrolled away):
+ *   0.04 - 0.62  the hole feeds: every piece of text spirals into it, one after
+ *                another, like a file dropped into a Warp portal, while the disk
+ *                spins up and the hole swells a little;
+ *   0.56 - 0.80  the hole collapses into a point, burning brighter as it shrinks;
+ *   0.78 - 0.96  the point lets go a shockwave and the stars dim into the page.
+ * No black screen: the page below starts on the same starfield.
  */
+const FEED_END = 0.6;
+const COLLAPSE = [0.56, 0.8] as const;
+const WAVE = [0.77, 0.97] as const;
+
 function cameraAt(p: number, wide: boolean): Camera {
-  const zMax = wide ? 9 : 7.5;
+  const feed = smooth(0, FEED_END, p);
+  const collapse = smooth(COLLAPSE[0], COLLAPSE[1], p);
+  const zoom = (1 + (wide ? 0.55 : 0.4) * feed) * Math.pow(1 - collapse, 2.4) + 0.0005;
   return {
-    zoom: Math.exp(Math.log(zMax) * Math.pow(clamp01(p), 1.7)),
-    pan: smooth(0.04, 0.72, p),
-    roll: -0.24 * smooth(0.1, 1, p),
-    lens: smooth(0.04, 0.45, p),
-    streak: smooth(0.12, 0.7, p),
-    fall: smooth(0.86, 0.995, p),
-    spin: 1 + 6 * p * p,
+    zoom,
+    pan: 0,
+    roll: -0.14 * feed,
+    lens: smooth(0.04, 0.5, p) * Math.min(1, zoom),
+    streak: 0.45 * smooth(0.3, COLLAPSE[0], p) * (1 - collapse),
+    fall: 0.5 * smooth(0.82, 1, p),
+    spin: 1 + 6 * feed + 8 * collapse,
+    flare: smooth(0.5, 0.74, p) * (1 - smooth(0.8, 0.9, p)),
   };
+}
+
+/** Where each piece of text falls in, in order: the footnote first, the headline last. */
+const SWALLOW_STEP = 0.05;
+const SWALLOW_LEN = 0.3;
+
+/** Rotate v by a radians. */
+const rot = (x: number, y: number, a: number) => [x * Math.cos(a) - y * Math.sin(a), x * Math.sin(a) + y * Math.cos(a)];
+
+/**
+ * One piece of text being swallowed: it spirals toward the hole's centre,
+ * shrinks and fades as it crosses the photon ring. Pure function of the track.
+ */
+function swallowStyle(p: number, order: number, from: { x: number; y: number }, hole: { x: number; y: number }) {
+  const a = 0.04 + order * SWALLOW_STEP;
+  const t = clamp01((p - a) / SWALLOW_LEN);
+  // Gravity: slow at first, faster as it gets close.
+  const k = t * t * (2.2 - 1.2 * t);
+  const vx = from.x - hole.x;
+  const vy = from.y - hole.y;
+  const turn = -1.5 * k;
+  const r = Math.pow(1 - k, 1.4);
+  const [rx, ry] = rot(vx, vy, turn);
+  const dx = rx * r - vx;
+  const dy = ry * r - vy;
+  const scale = Math.max(0.04, 1 - 0.96 * k);
+  return {
+    transform: k === 0 ? "none" : `translate3d(${dx.toFixed(1)}px, ${dy.toFixed(1)}px, 0) rotate(${(turn * 40).toFixed(1)}deg) scale(${scale.toFixed(3)})`,
+    opacity: 1 - smooth(0.62, 0.96, k),
+  };
+}
+
+/** Offset of an element's centre inside an ancestor, ignoring transforms. */
+function centreWithin(el: HTMLElement, root: HTMLElement) {
+  let x = el.offsetWidth / 2;
+  let y = el.offsetHeight / 2;
+  let node: HTMLElement | null = el;
+  while (node && node !== root) {
+    x += node.offsetLeft;
+    y += node.offsetTop;
+    node = node.offsetParent as HTMLElement | null;
+  }
+  return { x, y };
+}
+
+/** Screen position of the hole inside the pinned stage (object-fit: cover, like the poster). */
+function holeOnStage(stageW: number, stageH: number, variant: HeroVariant) {
+  const cfg = HERO_VARIANTS[variant];
+  const w = 1000;
+  const h = w / cfg.aspect;
+  const at = cfg.place(w, h);
+  const s = Math.max(stageW / w, stageH / h);
+  const ox = (stageW - w * s) / 2;
+  const oy = variant === "tall" ? 0 : (stageH - h * s) / 2;
+  return { x: ox + at.cx * s, y: oy + at.cy * s };
 }
 
 function weakDevice() {
@@ -71,12 +136,46 @@ export function HeroSection() {
 
   // Function transforms on purpose: Motion would hand range-mapped opacity to a native
   // ScrollTimeline, which measures the whole page instead of this track.
-  const textOpacity = useTransform(scrollYProgress, (v) => 1 - clamp01(v / 0.28));
-  const textY = useTransform(scrollYProgress, (v) => -64 * clamp01(v / 0.28));
-  const textEvents = useTransform(scrollYProgress, (v) => (v > 0.22 ? "none" : "auto"));
+  const textEvents = useTransform(scrollYProgress, (v) => (v > 0.06 ? "none" : "auto"));
   const veilOpacity = useTransform(scrollYProgress, (v) => 1 - 0.75 * clamp01(v / 0.4));
-  const horizon = useTransform(scrollYProgress, (v) => smooth(0.8, 0.97, v));
-  const cssZoom = useTransform(scrollYProgress, (v) => Math.exp(Math.log(wide ? 9 : 7.5) * Math.pow(v, 1.7)));
+  // Frozen canvas: no collapse in CSS (the frame's edges would show); it swells and fades instead.
+  const frozenZoom = useTransform(scrollYProgress, (v) => 1 + (wide ? 0.55 : 0.4) * smooth(0, FEED_END, v));
+  const frozenOpacity = useTransform(scrollYProgress, (v) => 1 - smooth(COLLAPSE[0], COLLAPSE[1], v));
+  const waveScale = useTransform(scrollYProgress, (v) => 0.02 + 0.98 * smooth(WAVE[0], WAVE[1], v));
+  const waveOpacity = useTransform(scrollYProgress, (v) => smooth(WAVE[0], WAVE[0] + 0.03, v) * (1 - smooth(0.84, WAVE[1], v)));
+  const flashOpacity = useTransform(scrollYProgress, (v) => smooth(0.7, 0.79, v) * (1 - smooth(0.8, 0.92, v)));
+
+  // Geometry of the swallow: where the hole sits on screen and where each piece of text starts.
+  const pinRef = useRef<HTMLDivElement>(null);
+  const geoRef = useRef<FallGeometry>({ hole: null, items: {} });
+  const [holePt, setHolePt] = useState<{ x: number; y: number } | null>(null);
+
+  useEffect(() => {
+    const pin = pinRef.current;
+    if (!pin) return;
+    const measure = () => {
+      const variant: HeroVariant = window.matchMedia(WIDE_QUERY).matches ? "wide" : "tall";
+      const hole = holeOnStage(pin.clientWidth, pin.clientHeight, variant);
+      const items: Record<string, { x: number; y: number }> = {};
+      pin.querySelectorAll<HTMLElement>("[data-fall]").forEach((el) => {
+        items[el.dataset.fall as string] = centreWithin(el, pin);
+      });
+      geoRef.current = { hole, items };
+      setHolePt(hole);
+      // Re-apply the current frame with the new geometry.
+      scrollYProgress.set(scrollYProgress.get());
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(pin);
+    pin.querySelectorAll<HTMLElement>("[data-fall]").forEach((el) => ro.observe(el));
+    return () => ro.disconnect();
+  }, [scrollYProgress]);
+
+  const fall = { progress: scrollYProgress, geo: geoRef, off: !!reduce || state === "poster" };
+  const h1Fall = useFall(fall, "h1", 6);
+  const subFall = useFall(fall, "sub", 5);
+  const legendFall = useFall(fall, "legend", 0);
 
   useEffect(() => {
     const stage = stageRef.current;
@@ -152,7 +251,7 @@ export function HeroSection() {
           return;
         }
         const p = progressRef.current.get();
-        // Past the horizon the frame is black: nothing to draw.
+        // Past the end the frame barely changes: nothing to draw.
         if (p >= 0.995 && lastP >= 0.995) return;
         // 30 fps while still; full rate while the scroll is moving the camera.
         const moving = Math.abs(p - lastP) > 0.0005;
@@ -227,13 +326,17 @@ export function HeroSection() {
         fetchPriority="high"
       />
 
-      <div className="hero-pin flex min-h-[100dvh] flex-col overflow-hidden">
+      <div ref={pinRef} className="hero-pin flex min-h-[100dvh] flex-col overflow-hidden">
         {/* Stage: poster is the LCP and the fallback; the canvas fades in over it */}
         <motion.div
           ref={stageRef}
           aria-hidden="true"
           className="hero-stage absolute inset-0 -z-10"
-          style={frozen && !still ? { scale: cssZoom, transformOrigin: wide ? "75% 46%" : "55% 30%" } : undefined}
+          style={
+            frozen && !still
+              ? { scale: frozenZoom, opacity: frozenOpacity, transformOrigin: holePt ? `${holePt.x}px ${holePt.y}px` : wide ? "75% 46%" : "55% 30%" }
+              : undefined
+          }
         >
           <picture>
             <source media={WIDE_QUERY} srcSet={HERO_VARIANTS.wide.poster} />
@@ -257,69 +360,123 @@ export function HeroSection() {
           style={still ? undefined : { opacity: veilOpacity }}
         />
 
-        {/* The horizon: past it everything is black, and Wari's dawn starts right below */}
-        {!still && (
-          <motion.div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 bg-bg" style={{ opacity: horizon }} />
+        {/* The collapse: a flash where the hole was, then a shockwave that sweeps the screen */}
+        {!still && holePt && (
+          <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+            <motion.div
+              className="hero-flash absolute"
+              style={{ left: holePt.x, top: holePt.y, x: "-50%", y: "-50%", opacity: flashOpacity }}
+            />
+            <motion.div
+              className="hero-wave absolute"
+              style={{ left: holePt.x, top: holePt.y, x: "-50%", y: "-50%", scale: waveScale, opacity: waveOpacity }}
+            />
+          </div>
         )}
 
         <motion.div
           className="relative mx-auto flex w-full max-w-7xl flex-1 flex-col justify-end px-5 pb-16 pt-24 sm:px-8 wide:justify-center wide:pb-20 wide:pt-24"
-          style={still ? undefined : { opacity: textOpacity, y: textY, pointerEvents: textEvents }}
+          style={still ? undefined : { pointerEvents: textEvents }}
         >
           <div className="max-w-[40rem] wide:max-w-[36rem] xl:wide:max-w-[40rem]">
-            <h1
-              className="hero-rise font-display text-balance text-[clamp(1.95rem,5.2vw+0.6rem,4.5rem)] [text-shadow:0_2px_28px_rgb(7_8_11/0.85)] font-semibold leading-[0.98] tracking-[-0.035em] text-ink"
-              style={{ ["--d" as string]: "60ms", fontVariationSettings: '"opsz" 96' }}
-            >
-              {HERO.headline[locale]}
-            </h1>
+            <motion.div data-fall="h1" style={h1Fall}>
+              <h1
+                className="hero-rise font-display text-balance text-[clamp(1.95rem,5.2vw+0.6rem,4.5rem)] [text-shadow:0_2px_28px_rgb(7_8_11/0.85)] font-semibold leading-[0.98] tracking-[-0.035em] text-ink"
+                style={{ ["--d" as string]: "60ms", fontVariationSettings: '"opsz" 96' }}
+              >
+                {HERO.headline[locale]}
+              </h1>
+            </motion.div>
 
-            <p
-              className="hero-rise mt-6 max-w-[38ch] text-pretty text-[1.0625rem] leading-relaxed text-muted sm:text-lg"
-              style={{ ["--d" as string]: "160ms" }}
-            >
-              {HERO.sub[locale]}
-            </p>
+            <motion.div data-fall="sub" style={subFall}>
+              <p
+                className="hero-rise mt-5 max-w-[38ch] text-pretty text-[1rem] leading-relaxed text-muted sm:mt-6 sm:text-lg"
+                style={{ ["--d" as string]: "160ms" }}
+              >
+                {HERO.sub[locale]}
+              </p>
+            </motion.div>
 
             <nav
               aria-label={HERO.casesLabel[locale]}
-              className="hero-rise mt-9 max-w-[34rem]"
+              className="hero-rise mt-7 max-w-[34rem] sm:mt-9"
               style={{ ["--d" as string]: "260ms" }}
             >
-              <ul className="hero-cases overflow-hidden rounded-[20px] border border-ink/12 bg-bg/45 backdrop-blur-md">
-                {HERO.cases.map((c) => (
-                  <li key={c.id} className="border-b border-ink/10 last:border-b-0">
-                    <Link
-                      href={`/${c.id}/`}
-                      className="hero-case group grid min-h-[4.25rem] grid-cols-[2.25rem_minmax(0,1fr)_1.25rem] items-center gap-x-3 px-4 py-3.5 sm:px-5"
-                    >
-                      <span className="font-mono text-[11.5px] tabular-nums text-accent">{c.n}</span>
-                      <span className="min-w-0">
-                        <span className="block font-display text-[1.15rem] font-semibold leading-tight tracking-[-0.02em] text-ink">
-                          {c.name}
-                        </span>
-                        <span className="mt-0.5 block text-pretty text-[13.5px] leading-snug text-muted">{c.line[locale]}</span>
-                      </span>
-                      <ArrowRight size={16} weight="bold" className="cta-arrow text-ink/70" aria-hidden="true" />
-                    </Link>
-                  </li>
+              <ul className="grid grid-cols-2 gap-2 sm:grid-cols-1 sm:gap-1.5">
+                {HERO.cases.map((c, i) => (
+                  <HeroCase key={c.id} c={c} order={HERO.cases.length - i} fall={fall} locale={locale} />
                 ))}
               </ul>
             </nav>
           </div>
 
-          <p
-            className="hero-rise absolute bottom-5 left-5 right-5 flex items-center gap-2 font-mono text-[11px] leading-snug text-muted sm:left-8 sm:right-8 wide:left-auto wide:max-w-[36ch] wide:justify-end wide:text-right"
-            style={{ ["--d" as string]: "420ms" }}
+          <motion.div
+            data-fall="legend"
+            style={legendFall}
+            className="absolute bottom-5 left-5 right-5 sm:left-8 sm:right-8 wide:left-auto wide:max-w-[36ch]"
           >
-            <span
-              aria-hidden="true"
-              className={`h-1.5 w-1.5 shrink-0 rounded-full ${live ? "bg-accent status-breath" : "bg-muted/50"}`}
-            />
-            <span>{live ? HERO.legendLive[locale] : HERO.legendStill[locale]}</span>
-          </p>
+            <p
+              className="hero-rise flex items-center gap-2 font-mono text-[11px] leading-snug text-muted wide:justify-end wide:text-right"
+              style={{ ["--d" as string]: "420ms" }}
+            >
+              <span
+                aria-hidden="true"
+                className={`h-1.5 w-1.5 shrink-0 rounded-full ${live ? "bg-accent status-breath" : "bg-muted/50"}`}
+              />
+              <span>{live ? HERO.legendLive[locale] : HERO.legendStill[locale]}</span>
+            </p>
+          </motion.div>
         </motion.div>
       </div>
     </section>
+  );
+}
+
+interface FallGeometry {
+  hole: { x: number; y: number } | null;
+  items: Record<string, { x: number; y: number }>;
+}
+
+interface FallSource {
+  progress: MotionValue<number>;
+  geo: React.RefObject<FallGeometry>;
+  off: boolean;
+}
+
+/** Motion style for one piece of text that the hole swallows (none when the hero is still). */
+function useFall({ progress, geo, off }: FallSource, key: string, order: number) {
+  const transform = useTransform(progress, (v) => {
+    const g = geo.current;
+    const from = g?.items[key];
+    return off || !g?.hole || !from ? "none" : swallowStyle(v, order, from, g.hole).transform;
+  });
+  const opacity = useTransform(progress, (v) => {
+    const g = geo.current;
+    const from = g?.items[key];
+    return off || !g?.hole || !from ? 1 : swallowStyle(v, order, from, g.hole).opacity;
+  });
+  return { transform, opacity };
+}
+
+type HeroCaseCopy = (typeof HERO.cases)[number];
+
+function HeroCase({ c, order, fall, locale }: { c: HeroCaseCopy; order: number; fall: FallSource; locale: "en" | "es" }) {
+  const style = useFall(fall, c.id, order);
+  return (
+    <motion.li data-fall={c.id} style={style} className="min-w-0">
+      <Link
+        href={`/${c.id}/`}
+        className="hero-case group flex h-full min-h-[4.25rem] items-center gap-3 rounded-[16px] border border-ink/12 bg-bg/55 px-3.5 py-3 backdrop-blur-md sm:grid sm:grid-cols-[2.25rem_minmax(0,1fr)_1.25rem] sm:gap-x-3 sm:rounded-[18px] sm:px-5 sm:py-3.5"
+      >
+        <span className="font-mono text-[11.5px] tabular-nums text-accent">{c.n}</span>
+        <span className="min-w-0 flex-1">
+          <span className="block font-display text-[1.05rem] font-semibold leading-tight tracking-[-0.02em] text-ink sm:text-[1.15rem]">
+            {c.name}
+          </span>
+          <span className="mt-0.5 hidden text-pretty text-[13.5px] leading-snug text-muted sm:block">{c.line[locale]}</span>
+        </span>
+        <ArrowRight size={16} weight="bold" className="cta-arrow hidden text-ink/70 sm:block" aria-hidden="true" />
+      </Link>
+    </motion.li>
   );
 }

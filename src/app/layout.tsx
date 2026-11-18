@@ -12,6 +12,7 @@ import { SITE_URL } from "@/content/links";
 import { PortfolioNavbar } from "@/components/portfolio/PortfolioNavbar";
 import { PortfolioFooter } from "@/components/portfolio/PortfolioFooter";
 import { CommandPalette } from "@/components/portfolio/CommandPalette";
+import { WarpTransition } from "@/components/portfolio/WarpTransition";
 import "./globals.css";
 
 const fontDisplay = Bricolage_Grotesque({
@@ -136,6 +137,7 @@ export default function RootLayout({
             <main className="flex w-full flex-1 flex-col">{children}</main>
             <PortfolioFooter />
             <CommandPalette />
+            <WarpTransition />
           </div>
         </LanguageProvider>
       </body>
