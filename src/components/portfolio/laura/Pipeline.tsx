@@ -5,14 +5,15 @@ import { motion, useScroll, useTransform } from "motion/react";
 import type { MotionValue } from "motion/react";
 import type { Locale } from "@/lib/i18n-context";
 import { PIPE_DETAILS, PIPE_STAGES, PIPE_UI, VRAM } from "@/content/laura";
+import { Detail as Fold } from "../Detail";
 import { EASE_OUT, revealProps } from "@/lib/motion";
 
 /**
- * How she works inside. Four stages joined by a line that the scroll fills, then
- * the small decisions that make it feel instant, each with a tiny diagram: the
- * prefill bars (0.05 s with a stable prefix against 2.98 s without), the model
- * loading while I speak, sentences streaming, shortcuts that skip the model,
- * barge-in and the VRAM budget.
+ * How she works inside, in two layers. Up front: four stages joined by a line that
+ * the scroll fills, and what I measured (the proof). Behind one tap, open on a wide
+ * screen: the small decisions that make it feel instant, each with a tiny diagram
+ * (the prefill bars, the model loading while I speak, sentences streaming, shortcuts
+ * that skip the model, barge-in), the latency and the VRAM budget.
  */
 
 const clamp = (x: number) => Math.min(1, Math.max(0, x));
@@ -65,7 +66,7 @@ function Bar({ w, delay, tone, reduce, label }: { w: string; delay: number; tone
   );
 }
 
-function Detail({ title, body, className, children, reduce, delay = 0 }: { title: string; body: string; className: string; children: React.ReactNode; reduce: boolean | null; delay?: number }) {
+function Trick({ title, body, className, children, reduce, delay = 0 }: { title: string; body: string; className: string; children: React.ReactNode; reduce: boolean | null; delay?: number }) {
   return (
     <motion.div {...revealProps(reduce, delay)} className={`laura-group pt-6 ${className}`}>
       <h4 className="font-display text-[1.3rem] font-semibold leading-tight tracking-[-0.02em] text-ink">{title}</h4>
@@ -117,16 +118,33 @@ export function Pipeline({ locale, reduce }: { locale: Locale; reduce: boolean |
         </ol>
       </div>
 
-      <motion.p {...revealProps(reduce)} className="mt-14 font-mono text-[12px] tabular-nums text-muted">
-        {locale === "es"
-          ? "0,65 s de mediana hasta su primera respuesta, 1,33 s en el percentil 95, 0,69 s de mediana para la respuesta entera."
-          : "0.65 s median to her first response, 1.33 s at the 95th percentile, 0.69 s median for the whole answer."}
-      </motion.p>
+      {/* What I measured: the proof, up front */}
+      <motion.div {...revealProps(reduce)} className="mt-12 grid gap-8 border-t border-line pt-8 lg:mt-16 lg:grid-cols-12 lg:gap-12 lg:pt-10">
+        <div className="lg:col-span-7">
+          <h4 className="font-display text-[1.3rem] font-semibold leading-tight tracking-[-0.02em] text-ink">{D.eval.title[locale]}</h4>
+          <p className="mt-2.5 max-w-[56ch] text-pretty text-[14.5px] leading-relaxed text-muted">{D.eval.body[locale]}</p>
+        </div>
+        <dl className="grid grid-cols-3 gap-4 lg:col-span-5">
+          {[
+            { v: "81%", l: locale === "es" ? "herramienta" : "tool" },
+            { v: "93%", l: locale === "es" ? "argumentos" : "arguments" },
+            { v: "0 / 18", l: locale === "es" ? "falsos disparos" : "false triggers" },
+          ].map((x) => (
+            <div key={x.v}>
+              <dt className="font-display text-[1.9rem] font-semibold leading-none tracking-[-0.035em] tabular-nums text-ink">{x.v}</dt>
+              <dd className="mt-2 text-[12.5px] text-muted">{x.l}</dd>
+            </div>
+          ))}
+        </dl>
+      </motion.div>
 
-      <h4 className="mt-20 font-display text-[1.6rem] font-semibold tracking-[-0.025em] text-ink">{PIPE_UI.details[locale]}</h4>
-      <div className="mt-8 grid gap-x-12 gap-y-14 lg:grid-cols-12">
+      {/* The details that make it fast: behind one tap */}
+      <Fold className="mt-10 lg:mt-14" label={PIPE_UI.detailOpen[locale]} closeLabel={PIPE_UI.detailClose[locale]}>
+        <p className="font-mono text-[12px] tabular-nums text-muted">{PIPE_UI.latency[locale]}</p>
+        <h4 className="mt-8 font-display text-[1.6rem] font-semibold tracking-[-0.025em] text-ink">{PIPE_UI.details[locale]}</h4>
+        <div className="mt-8 grid gap-x-12 gap-y-12 lg:grid-cols-12 lg:gap-y-14">
         {/* Stable prefix */}
-        <Detail className="lg:col-span-7" reduce={reduce} title={D.cache.title[locale]} body={D.cache.body[locale]}>
+        <Trick className="lg:col-span-7" reduce={reduce} title={D.cache.title[locale]} body={D.cache.body[locale]}>
           <div className="space-y-5">
             <div>
               <div className="flex items-baseline justify-between font-mono text-[11.5px] text-muted">
@@ -147,10 +165,10 @@ export function Pipeline({ locale, reduce }: { locale: Locale; reduce: boolean |
               </div>
             </div>
           </div>
-        </Detail>
+        </Trick>
 
         {/* Sentence by sentence */}
-        <Detail className="lg:col-span-5" reduce={reduce} delay={0.05} title={D.streaming.title[locale]} body={D.streaming.body[locale]}>
+        <Trick className="lg:col-span-5" reduce={reduce} delay={0.05} title={D.streaming.title[locale]} body={D.streaming.body[locale]}>
           <div className="space-y-3 font-mono text-[10.5px] text-muted" aria-hidden="true">
             {[
               { name: locale === "es" ? "el modelo escribe" : "model writes", shift: 0, tone: "dim" as const },
@@ -174,10 +192,10 @@ export function Pipeline({ locale, reduce }: { locale: Locale; reduce: boolean |
               </div>
             ))}
           </div>
-        </Detail>
+        </Trick>
 
         {/* Warm up while I talk */}
-        <Detail className="lg:col-span-5" reduce={reduce} title={D.warm.title[locale]} body={D.warm.body[locale]}>
+        <Trick className="lg:col-span-5" reduce={reduce} title={D.warm.title[locale]} body={D.warm.body[locale]}>
           <div className="space-y-3 font-mono text-[10.5px] text-muted" aria-hidden="true">
             {[
               { name: D.warm.me[locale], l: "0%", w: "46%", tone: "mute" as const, d: 0.1 },
@@ -199,10 +217,10 @@ export function Pipeline({ locale, reduce }: { locale: Locale; reduce: boolean |
               </div>
             ))}
           </div>
-        </Detail>
+        </Trick>
 
         {/* Shortcuts */}
-        <Detail className="lg:col-span-7" reduce={reduce} delay={0.05} title={D.shortcuts.title[locale]} body={D.shortcuts.body[locale]}>
+        <Trick className="lg:col-span-7" reduce={reduce} delay={0.05} title={D.shortcuts.title[locale]} body={D.shortcuts.body[locale]}>
           <ul className="flex flex-wrap gap-2" aria-label={D.shortcuts.note[locale]}>
             {D.shortcuts.samples.map((s) => (
               <li key={s.en} className="inline-flex items-center gap-2 rounded-full border border-line py-1.5 pl-3.5 pr-1.5 text-[13px] text-ink">
@@ -211,10 +229,10 @@ export function Pipeline({ locale, reduce }: { locale: Locale; reduce: boolean |
               </li>
             ))}
           </ul>
-        </Detail>
+        </Trick>
 
         {/* Barge-in */}
-        <Detail className="lg:col-span-6" reduce={reduce} title={D.bargein.title[locale]} body={D.bargein.body[locale]}>
+        <Trick className="lg:col-span-6" reduce={reduce} title={D.bargein.title[locale]} body={D.bargein.body[locale]}>
           <div aria-hidden="true">
             <div className="relative flex h-[56px] items-center gap-[3px]">
               {Array.from({ length: 36 }, (_, i) => {
@@ -239,23 +257,12 @@ export function Pipeline({ locale, reduce }: { locale: Locale; reduce: boolean |
               <span className="text-accent">{D.bargein.me[locale]}</span>
             </div>
           </div>
-        </Detail>
+        </Trick>
 
-        {/* Measured, and the VRAM budget */}
-        <Detail className="lg:col-span-6" reduce={reduce} delay={0.05} title={D.eval.title[locale]} body={D.eval.body[locale]}>
-          <dl className="grid grid-cols-3 gap-4">
-            {[
-              { v: "81%", l: locale === "es" ? "herramienta" : "tool" },
-              { v: "93%", l: locale === "es" ? "argumentos" : "arguments" },
-              { v: "0 / 18", l: locale === "es" ? "falsos disparos" : "false triggers" },
-            ].map((x) => (
-              <div key={x.v}>
-                <dt className="font-display text-[1.9rem] font-semibold leading-none tracking-[-0.035em] tabular-nums text-ink">{x.v}</dt>
-                <dd className="mt-2 text-[12.5px] text-muted">{x.l}</dd>
-              </div>
-            ))}
-          </dl>
-          <div className="mt-7">
+
+        </div>
+        <div className="mt-12 lg:mt-14">
+          <div>
             <p className="font-mono text-[11px] text-muted">{PIPE_UI.vram[locale]}</p>
             <div className="mt-2.5 flex h-3 overflow-hidden rounded-full bg-white/[0.05]" role="img" aria-label={VRAM.map((s) => `${s.label[locale]} ${s.gb} GB`).join(", ")}>
               {VRAM.map((s, i) => (
@@ -279,8 +286,8 @@ export function Pipeline({ locale, reduce }: { locale: Locale; reduce: boolean |
               ))}
             </ul>
           </div>
-        </Detail>
-      </div>
+        </div>
+      </Fold>
     </div>
   );
 }

@@ -2,8 +2,9 @@
 
 import React from "react";
 import { motion } from "motion/react";
+import { ArrowUpRight, GithubLogo } from "@phosphor-icons/react";
 import { useLocale } from "@/lib/i18n-context";
-import { DEMO_UI, LAURA_HEAD } from "@/content/laura";
+import { DEMO_UI, LAURA_HEAD, LAURA_URL } from "@/content/laura";
 import { revealProps, useReducedMotionSafe } from "@/lib/motion";
 import { HoloDemo } from "./laura/HoloDemo";
 import { Capabilities } from "./laura/Capabilities";
@@ -65,16 +66,26 @@ export function LauraSection() {
           <div className="space-y-4 lg:col-span-5">
             <p className="max-w-[48ch] text-pretty text-[16px] leading-relaxed text-muted">{LAURA_HEAD.lead[locale]}</p>
             <p className="max-w-[48ch] border-l border-accent/60 pl-4 text-pretty text-[14.5px] leading-relaxed text-ink/85">{LAURA_HEAD.note[locale]}</p>
+            <a
+              href={LAURA_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="press-scale inline-flex min-h-11 items-center gap-2 rounded-full border border-line px-3.5 py-2 text-[13px] text-ink transition-colors duration-150 hover:border-ink/30 hover:bg-surface"
+            >
+              <GithubLogo size={14} aria-hidden="true" />
+              {LAURA_HEAD.repo[locale]}
+              <ArrowUpRight size={12} className="text-muted" aria-hidden="true" />
+            </a>
           </div>
         </motion.div>
 
         {/* The verified numbers */}
-        <dl className="mt-16 grid grid-cols-2 border-y border-line lg:mt-20 lg:grid-cols-4">
+        <dl className="mt-12 grid max-w-3xl grid-cols-2 border-y border-line lg:mt-16">
           {LAURA_HEAD.facts.map((f, i) => (
             <motion.div
               key={f.value}
               {...revealProps(reduce, i * 0.05)}
-              className={`px-1 py-7 sm:px-6 lg:py-9 ${i % 2 === 1 ? "border-l border-line" : ""} ${i >= 2 ? "border-t border-line lg:border-t-0" : ""} ${i === 2 ? "lg:border-l" : ""} lg:first:pl-0`}
+              className={`px-1 py-6 sm:px-6 lg:py-8 ${i === 1 ? "border-l border-line" : ""} first:pl-0`}
             >
               <dt className="font-display text-[clamp(2.2rem,4.6vw,3.8rem)] font-semibold leading-none tracking-[-0.04em] tabular-nums text-ink">
                 {locale === "es" ? f.valueEs : f.value}
@@ -85,7 +96,7 @@ export function LauraSection() {
         </dl>
 
         {/* The holograms */}
-        <div id="laura-demo" className="mt-24 scroll-mt-20 lg:mt-32">
+        <div id="laura-demo" className="mt-16 scroll-mt-20 lg:mt-28">
           <div className="grid gap-6 lg:grid-cols-12 lg:items-end">
             <motion.h3
               {...revealProps(reduce)}
@@ -103,17 +114,17 @@ export function LauraSection() {
           </motion.div>
         </div>
 
-        <div className="mt-24 lg:mt-36">
+        <div className="mt-16 lg:mt-32">
           <Capabilities locale={locale} reduce={reduce} />
         </div>
 
-        <div className="mt-24 border-t border-line pt-20 lg:mt-32 lg:pt-24">
+        <div className="mt-16 border-t border-line pt-14 lg:mt-28 lg:pt-20">
           <Pipeline locale={locale} reduce={reduce} />
         </div>
       </div>
 
-      <div className="mt-24 border-t border-line bg-[#080a0e] lg:mt-32">
-        <div className="mx-auto max-w-7xl px-5 py-[var(--spacing-section)] sm:px-8">
+      <div className="mt-16 border-t border-line bg-[#080a0e] lg:mt-28">
+        <div className="mx-auto max-w-7xl px-5 py-14 sm:px-8 lg:py-[var(--spacing-section)]">
           <SafetyNet locale={locale} reduce={reduce} />
         </div>
       </div>

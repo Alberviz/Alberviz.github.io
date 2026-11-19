@@ -19,8 +19,8 @@ export const LAURA_HEAD = {
     es: "Le hablo a mi ordenador y hace el trabajo.",
   },
   lead: {
-    en: "Laura lives on my laptop and runs the whole computer by voice: windows, files, calendar, music, the TV, the lights, even other coding agents. Listening, thinking and speaking all happen on one 6 GB laptop GPU, so what I say never leaves the machine.",
-    es: "Laura vive en mi portátil y controla el ordenador entero con la voz: ventanas, archivos, calendario, música, la tele, las luces e incluso otros agentes de código. Escuchar, pensar y hablar pasa todo en una GPU de portátil de 6 GB, así que lo que digo no sale de la máquina.",
+    en: "Laura lives on my laptop and runs the whole computer by voice: windows, files, calendar, music, the TV, the lights, even other coding agents. Listening, thinking and speaking all happen on the laptop itself, so what I say never leaves the machine.",
+    es: "Laura vive en mi portátil y controla el ordenador entero con la voz: ventanas, archivos, calendario, música, la tele, las luces e incluso otros agentes de código. Escuchar, pensar y hablar pasa todo en el propio portátil, así que lo que digo no sale de la máquina.",
   },
   note: {
     en: "I wanted an assistant I could trust with my files. So she can do a lot, and she cannot do anything destructive until I say yes.",
@@ -36,16 +36,6 @@ export const LAURA_HEAD = {
       value: "0.65 s",
       valueEs: "0,65 s",
       label: { en: "median time to her first response", es: "de mediana hasta su primera respuesta" },
-    },
-    {
-      value: "81%",
-      valueEs: "81%",
-      label: { en: "right tool picked, over 185 test phrases", es: "de acierto eligiendo herramienta, en 185 frases de prueba" },
-    },
-    {
-      value: "6 GB",
-      valueEs: "6 GB",
-      label: { en: "of laptop GPU (an RTX 4050) run all of it", es: "de GPU de portátil (una RTX 4050) lo ejecutan todo" },
     },
   ] satisfies { value: string; valueEs: string; label: T }[],
   repo: { en: "Laura lives in LinuxRicing on GitHub", es: "Laura vive en LinuxRicing, en GitHub" },
@@ -68,8 +58,8 @@ export interface DemoCommand {
 export const DEMO_UI = {
   heading: { en: "Ask her for something.", es: "Pídele algo." },
   lead: {
-    en: "When an answer is something I should see, Laura draws it as holograms floating over my desktop. This is a recreation in your browser: the files and the agenda are invented, the timings are the real ones from my shell.",
-    es: "Cuando la respuesta es algo que debo ver, Laura lo dibuja como hologramas que flotan sobre mi escritorio. Esto es una recreación en tu navegador: los archivos y la agenda son inventados, los tiempos son los reales de mi shell.",
+    en: "When an answer is something I should see, Laura draws it as holograms floating over my desktop. This one runs in your browser.",
+    es: "Cuando la respuesta es algo que debo ver, Laura lo dibuja como hologramas que flotan sobre mi escritorio. Esta corre en tu navegador.",
   },
   pick: { en: "Pick what to say", es: "Elige qué decirle" },
   idle: { en: "Say \"Laura\" and ask", es: "Di \"Laura\" y pregunta" },
@@ -80,8 +70,8 @@ export const DEMO_UI = {
     speaking: { en: "Speaking", es: "Hablando" },
   },
   caption: {
-    en: "Recreation with invented data. Timings from the real shell: 110, 180, 280, 420, 520, 330 and 620 ms, 85 ms between panels, 26 ms between rows.",
-    es: "Recreación con datos inventados. Tiempos de la shell real: 110, 180, 280, 420, 520, 330 y 620 ms, 85 ms entre paneles y 26 ms entre filas.",
+    en: "A recreation: the files and the agenda are invented, the timings are the real ones from my shell.",
+    es: "Una recreación: los archivos y la agenda son inventados, los tiempos son los reales de mi shell.",
   },
   hintRows: {
     en: "Click a row, or press its number, to open it",
@@ -274,13 +264,15 @@ export interface Group {
 export const CAPS_UI = {
   heading: { en: "Everything she can do.", es: "Todo lo que puede hacer." },
   lead: {
-    en: "Sixty-seven tools in eight families. I never learn their names: I say what I want, the model picks the tool and fills in the arguments.",
-    es: "Sesenta y siete herramientas en ocho familias. Nunca me aprendo sus nombres: digo lo que quiero, el modelo elige la herramienta y rellena los argumentos.",
+    en: "Eight families of tools. I never learn their names: I say what I want, the model picks the tool and fills in the arguments.",
+    es: "Ocho familias de herramientas. Nunca me aprendo sus nombres: digo lo que quiero, el modelo elige la herramienta y rellena los argumentos.",
   },
   say: { en: "I say", es: "Yo digo" },
   toolsWord: { en: "tools", es: "herramientas" },
   toolWord: { en: "tool", es: "herramienta" },
   total: { en: "67 in total", es: "67 en total" },
+  detailOpen: { en: "See every tool", es: "Ver todas las herramientas" },
+  detailClose: { en: "Hide the tool list", es: "Ocultar la lista de herramientas" },
 } satisfies Record<string, T>;
 
 export const GROUPS: Group[] = [
@@ -294,7 +286,7 @@ export const GROUPS: Group[] = [
     quote: { en: "What does it say on my screen?", es: "¿Qué pone en mi pantalla?" },
     verbs: [
       { en: "Read the screen with OCR: the active window, everything or a selection", es: "Leer la pantalla con OCR: la ventana activa, todo o una selección" },
-      { en: "Run shell commands, classified first: blocked, direct, or ask me", es: "Ejecutar comandos de shell, clasificados antes: bloqueado, directo o preguntarme" },
+      { en: "Run shell commands", es: "Ejecutar comandos de shell" },
       { en: "Open apps, web pages and searches", es: "Abrir apps, páginas web y búsquedas" },
       { en: "Screenshot, lock the session, copy, read and paste the clipboard", es: "Captura, bloquear la sesión, copiar, leer y pegar el portapapeles" },
       { en: "List open windows and workspaces", es: "Listar ventanas y espacios de trabajo abiertos" },
@@ -307,8 +299,8 @@ export const GROUPS: Group[] = [
     id: "files",
     title: { en: "Files and folders", es: "Archivos y carpetas" },
     pitch: {
-      en: "She shows, searches, tidies and cleans. She asks before touching anything.",
-      es: "Enseña, busca, ordena y limpia. Pregunta antes de tocar nada.",
+      en: "She shows, searches, tidies and cleans.",
+      es: "Enseña, busca, ordena y limpia.",
     },
     quote: { en: "Find the duplicates and delete them.", es: "Busca los duplicados y bórralos." },
     verbs: [
@@ -417,9 +409,6 @@ export const GROUPS: Group[] = [
     },
     quote: { en: "Ask Claude to refactor that module.", es: "Dile a Claude que refactorice ese módulo." },
     verbs: [
-      { en: "Hand a code change to Gemini or Claude Code, only after I say yes", es: "Pasar un cambio de código a Gemini o Claude Code, solo después de decir yo que sí" },
-      { en: "Start a long research in the background and file it as a note", es: "Lanzar una investigación larga en segundo plano y guardarla como nota" },
-      { en: "Ask Aurora, the agent on my Raspberry Pi, for something", es: "Pedirle algo a Aurora, el agente de mi Raspberry Pi" },
       { en: "Check on running jobs, and tell me what finished while I was away", es: "Ver cómo van los trabajos y contarme qué terminó mientras no estaba" },
     ],
     tools: ["escalar_a_gemini", "escalar_a_claude", "investigar", "pedir_a_aurora"],
@@ -434,10 +423,16 @@ export const GROUPS: Group[] = [
 export const PIPE_UI = {
   heading: { en: "From my voice to her answer, on one GPU.", es: "De mi voz a su respuesta, en una sola GPU." },
   lead: {
-    en: "Four stages, none of them in the cloud. The tricks that make it feel instant are small and boring, which is the point.",
-    es: "Cuatro etapas, ninguna en la nube. Los trucos que hacen que parezca instantáneo son pequeños y aburridos, que es lo que quería.",
+    en: "Four stages. The tricks that make it feel instant are small and boring, which is the point.",
+    es: "Cuatro etapas. Los trucos que hacen que parezca instantáneo son pequeños y aburridos, que es lo que quería.",
   },
   details: { en: "The details that make it fast", es: "Los detalles que la hacen rápida" },
+  detailOpen: { en: "See what makes it fast", es: "Ver lo que la hace rápida" },
+  detailClose: { en: "Hide the details", es: "Ocultar los detalles" },
+  latency: {
+    en: "0.65 s median to her first response, 1.33 s at the 95th percentile, 0.69 s median for the whole answer.",
+    es: "0,65 s de mediana hasta su primera respuesta, 1,33 s en el percentil 95, 0,69 s de mediana para la respuesta entera.",
+  },
   vram: { en: "VRAM budget on the 6 GB card", es: "Presupuesto de VRAM en la tarjeta de 6 GB" },
 } satisfies Record<string, T>;
 
@@ -553,8 +548,8 @@ export const VRAM = [
 export const SAFE_UI = {
   heading: { en: "She asks first.", es: "Pregunta antes." },
   lead: {
-    en: "An assistant that can move my files has to be boring about permission. The model never runs anything destructive on its own: it proposes a plan, I see it, and only a yes carries it out.",
-    es: "Un asistente que puede mover mis archivos tiene que ser aburrido con los permisos. El modelo nunca ejecuta nada destructivo por su cuenta: propone un plan, yo lo veo y solo un sí lo lleva a cabo.",
+    en: "An assistant that can move my files has to be boring about permission: she proposes a plan, I see it, and only a yes carries it out.",
+    es: "Un asistente que puede mover mis archivos tiene que ser aburrido con los permisos: propone un plan, yo lo veo y solo un sí lo lleva a cabo.",
   },
   flow: { en: "The life of a plan", es: "La vida de un plan" },
   lanes: { en: "Shell commands are classified first", es: "Los comandos de shell se clasifican antes" },
@@ -567,48 +562,18 @@ export const SAFE_UI = {
 export const SAFE_FLOW = [
   { id: "plan", name: { en: "Plan", es: "Plan" }, body: { en: "An immutable list of what would change", es: "Una lista inmutable de lo que cambiaría" } },
   { id: "ask", name: { en: "Ask", es: "Pregunta" }, body: { en: "A hologram and a spoken question", es: "Un holograma y una pregunta en voz alta" } },
-  { id: "yes", name: { en: "Yes", es: "Sí" }, body: { en: "By voice or by button, within 60 s", es: "Por voz o por botón, en 60 s" } },
-  { id: "trash", name: { en: "Trash", es: "Papelera" }, body: { en: "Never rm, always the system trash", es: "Nunca rm, siempre la papelera del sistema" } },
-  { id: "journal", name: { en: "Journal", es: "Diario" }, body: { en: "Every operation written down, so undo works", es: "Cada operación anotada, para que deshacer funcione" } },
+  { id: "yes", name: { en: "Yes", es: "Sí" }, body: { en: "By voice or by button. Silence is a no: after 60 s the plan is dropped", es: "Por voz o por botón. El silencio es un no: a los 60 s el plan se descarta" } },
+  { id: "trash", name: { en: "Trash", es: "Papelera" }, body: { en: "Never rm: she cannot delete for good, only send to the system trash", es: "Nunca rm: no sabe borrar del todo, solo manda a la papelera del sistema" } },
+  { id: "journal", name: { en: "Journal", es: "Diario" }, body: { en: "Every operation written down, so undo works even after a reboot", es: "Cada operación anotada, para que deshacer funcione incluso tras reiniciar" } },
 ] satisfies { id: string; name: T; body: T }[];
 
-export const SAFE_RULES = [
-  {
-    title: { en: "A yes, out loud or by button", es: "Un sí, en voz alta o con un botón" },
-    body: {
-      en: "She asks the question and shows the panel. I can say yes or press the button. Silence is a no: the plan is dropped after 60 seconds.",
-      es: "Hace la pregunta y enseña el panel. Puedo decir que sí o pulsar el botón. El silencio es un no: el plan se descarta a los 60 segundos.",
-    },
+export const SAFE_FENCE = {
+  title: { en: "A fence around where she can act", es: "Una valla alrededor de dónde puede actuar" },
+  body: {
+    en: "Only my usual folders: downloads, documents, desktop, pictures, videos, music and my projects. Hidden files, git folders and links pointing outside are out of bounds.",
+    es: "Solo mis carpetas de siempre: descargas, documentos, escritorio, imágenes, vídeos, música y mis proyectos. Los archivos ocultos, las carpetas git y los enlaces que apuntan fuera están vetados.",
   },
-  {
-    title: { en: "Never rm. Always the trash.", es: "Nunca rm. Siempre la papelera." },
-    body: {
-      en: "She does not know how to delete for good. Everything goes to the system trash, where I can still get it back.",
-      es: "No sabe borrar del todo. Todo va a la papelera del sistema, de donde aún puedo recuperarlo.",
-    },
-  },
-  {
-    title: { en: "A journal, and an undo that survives a reboot", es: "Un diario y un deshacer que sobrevive a un reinicio" },
-    body: {
-      en: "Each operation that works is appended to a log. Saying undo reads the last entry and puts things back, even after I restart the computer.",
-      es: "Cada operación que sale bien se añade a un registro. Decir deshaz lee la última entrada y lo devuelve todo a su sitio, incluso tras reiniciar el ordenador.",
-    },
-  },
-  {
-    title: { en: "A fence around where she can act", es: "Una valla alrededor de dónde puede actuar" },
-    body: {
-      en: "Only my usual folders: downloads, documents, desktop, pictures, videos, music and my projects. Hidden files, git folders and links pointing outside are out of bounds.",
-      es: "Solo mis carpetas de siempre: descargas, documentos, escritorio, imágenes, vídeos, música y mis proyectos. Los archivos ocultos, las carpetas git y los enlaces que apuntan fuera están vetados.",
-    },
-  },
-  {
-    title: { en: "Other agents ask too", es: "Los otros agentes también preguntan" },
-    body: {
-      en: "Handing a code change to Gemini or Claude Code needs the same explicit yes before anything with write access runs.",
-      es: "Pasar un cambio de código a Gemini o Claude Code necesita el mismo sí explícito antes de que corra nada con permiso de escritura.",
-    },
-  },
-] satisfies { title: T; body: T }[];
+} satisfies { title: T; body: T };
 
 export const SAFE_LANES = [
   {

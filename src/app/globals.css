@@ -1299,3 +1299,21 @@ html {
 .warp-veil-hole {
   background: var(--bg);
 }
+
+/* "See the detail" panels: a short fade in, none under reduced motion */
+.detail-in {
+  animation: detail-in 240ms var(--ease-out) both;
+}
+@keyframes detail-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .detail-in {
+    animation: none;
+  }
+}

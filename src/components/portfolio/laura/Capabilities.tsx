@@ -7,13 +7,14 @@ import type { Locale } from "@/lib/i18n-context";
 import { CAPS_UI, GROUPS } from "@/content/laura";
 import type { Group, GroupId } from "@/content/laura";
 import { revealProps } from "@/lib/motion";
+import { Detail } from "../Detail";
 
 /**
- * What she can do, as a map and not a grid of equal cards: eight families of
- * different weight, each with a sentence I would really say, the verbs it covers
- * and a hairline whose length is the share of the 67 tools. The first four get
- * more room; Warp has its own little black hole; delegation is drawn as the
- * hand-off it is.
+ * What she can do, in two layers. The summary is a map of eight families, each with
+ * one line (the first four get more room; Warp has its own little black hole;
+ * delegation is drawn as the hand-off it is). The full list of the 67 tools, with the
+ * sentence I would say and the verbs each covers, sits behind one tap and is open on
+ * a wide screen.
  */
 
 const ICONS: Record<GroupId, typeof Desktop> = {
@@ -28,21 +29,19 @@ const ICONS: Record<GroupId, typeof Desktop> = {
 };
 
 const SPAN: Record<GroupId, string> = {
-  system: "lg:col-span-7",
-  files: "lg:col-span-5",
-  agenda: "lg:col-span-5",
-  media: "lg:col-span-7",
+  system: "lg:col-span-3",
+  files: "lg:col-span-3",
+  agenda: "lg:col-span-3",
+  media: "lg:col-span-3",
   warp: "lg:col-span-4",
   lights: "lg:col-span-4",
   memory: "lg:col-span-4",
   agents: "lg:col-span-12",
 };
 
-const BIG: GroupId[] = ["system", "files", "agenda", "media"];
-
 function Hole() {
   return (
-    <svg viewBox="0 0 120 70" className="h-[70px] w-[120px] shrink-0" aria-hidden="true">
+    <svg viewBox="0 0 120 70" className="h-[44px] w-[75px] shrink-0 lg:h-[56px] lg:w-[96px]" aria-hidden="true">
       <defs>
         <radialGradient id="cap-hole" cx="50%" cy="50%" r="50%">
           <stop offset="0.5" stopColor="#000" />
@@ -59,61 +58,30 @@ function Hole() {
   );
 }
 
-function GroupBlock({ g, locale, index, reduce }: { g: Group; locale: Locale; index: number; reduce: boolean | null }) {
+function toolsLabel(g: Group, locale: Locale) {
+  return `${g.count} ${g.count === 1 ? CAPS_UI.toolWord[locale] : CAPS_UI.toolsWord[locale]}`;
+}
+
+/** The summary tile: icon, title, one line and how many tools. */
+function Tile({ g, locale, index, reduce }: { g: Group; locale: Locale; index: number; reduce: boolean | null }) {
   const Icon = ICONS[g.id];
-  const big = BIG.includes(g.id);
-  const share = Math.max(6, Math.round((g.count / 17) * 100));
   return (
-    <motion.article
-      {...revealProps(reduce, (index % 3) * 0.05)}
-      className={`laura-group pt-6 ${SPAN[g.id]}`}
-      aria-labelledby={`laura-g-${g.id}`}
-    >
-      <div className="flex items-start justify-between gap-4">
-        <div className="min-w-0">
-          <span className="grid size-9 place-items-center rounded-full border border-accent/30 text-accent" aria-hidden="true">
-            <Icon size={17} weight="duotone" />
-          </span>
-          <h3
-            id={`laura-g-${g.id}`}
-            className={`mt-5 font-display font-semibold leading-[1.05] tracking-[-0.03em] text-ink ${big ? "text-[clamp(1.7rem,2.9vw,2.4rem)]" : "text-[1.5rem]"}`}
-            style={{ fontVariationSettings: '"opsz" 60' }}
-          >
-            {g.title[locale]}
-          </h3>
-          <p className="mt-2.5 max-w-[44ch] text-pretty text-[14.5px] leading-relaxed text-muted">{g.pitch[locale]}</p>
-        </div>
+    <motion.article {...revealProps(reduce, (index % 4) * 0.04)} className={`laura-group pt-5 ${SPAN[g.id]}`} aria-labelledby={`laura-g-${g.id}`}>
+      <div className="flex items-start justify-between gap-3">
+        <span className="grid size-9 place-items-center rounded-full border border-accent/30 text-accent" aria-hidden="true">
+          <Icon size={17} weight="duotone" />
+        </span>
         {g.id === "warp" && <Hole />}
       </div>
-
-      <div className="mt-5 flex items-center gap-3" aria-hidden="true">
-        <span className="h-px bg-accent" style={{ width: `${share * 0.6}%`, minWidth: 14 }} />
-        <span className="font-mono text-[11px] tabular-nums text-muted">
-          {g.count} {g.count === 1 ? CAPS_UI.toolWord[locale] : CAPS_UI.toolsWord[locale]}
-        </span>
-      </div>
-
-      <blockquote className={`mt-6 border-l border-accent/60 pl-4 ${big ? "max-w-[34ch]" : ""}`}>
-        <p className={`text-pretty font-display font-medium leading-snug tracking-[-0.02em] text-ink ${big ? "text-[1.3rem]" : "text-[1.08rem]"}`}>
-          {locale === "es" ? `«${g.quote[locale]}»` : `“${g.quote[locale]}”`}
-        </p>
-      </blockquote>
-
-      <ul className={`mt-6 gap-x-8 gap-y-3 ${big ? "grid sm:grid-cols-2" : "space-y-3"}`}>
-        {g.verbs.map((v) => (
-          <li key={v.en} className="laura-verb grid grid-cols-[1.1rem_1fr] gap-x-1.5 text-pretty text-[14px] leading-relaxed text-ink/85">
-            <span>{v[locale]}</span>
-          </li>
-        ))}
-      </ul>
-
-      <p className="mt-6 flex flex-wrap gap-1.5" aria-hidden="true">
-        {g.tools.map((t) => (
-          <code key={t} className="rounded-full border border-line px-2.5 py-1 font-mono text-[11px] leading-none text-ink/70">
-            {t}
-          </code>
-        ))}
-      </p>
+      <h3
+        id={`laura-g-${g.id}`}
+        className="mt-4 font-display text-[1.12rem] font-semibold leading-[1.1] tracking-[-0.025em] text-ink lg:text-[1.35rem]"
+        style={{ fontVariationSettings: '"opsz" 60' }}
+      >
+        {g.title[locale]}
+      </h3>
+      <p className="mt-2 text-pretty text-[13.5px] leading-snug text-muted lg:text-[14.5px] lg:leading-relaxed">{g.pitch[locale]}</p>
+      <p className="mt-4 font-mono text-[11px] tabular-nums text-accent/90">{toolsLabel(g, locale)}</p>
     </motion.article>
   );
 }
@@ -127,11 +95,11 @@ function Handoff({ locale, reduce }: { locale: Locale; reduce: boolean | null })
     { name: locale === "es" ? "Investigación" : "Research", sub: locale === "es" ? "en segundo plano, queda como nota" : "in the background, filed as a note", gate: false },
   ];
   return (
-    <motion.ul {...revealProps(reduce, 0.05)} className="grid gap-px overflow-hidden rounded-[16px] border border-line bg-line sm:grid-cols-2 lg:grid-cols-4" aria-hidden="true">
+    <motion.ul {...revealProps(reduce, 0.05)} className="grid grid-cols-2 gap-px overflow-hidden rounded-[16px] border border-line bg-line lg:grid-cols-4">
       {nodes.map((n) => (
-        <li key={n.name} className="bg-bg px-5 py-5">
-          <p className="font-display text-[1.15rem] font-semibold tracking-[-0.02em] text-ink">{n.name}</p>
-          <p className="mt-1 text-[13px] leading-snug text-muted">{n.sub}</p>
+        <li key={n.name} className="bg-bg px-4 py-4 lg:px-5 lg:py-5">
+          <p className="font-display text-[1.05rem] font-semibold tracking-[-0.02em] text-ink lg:text-[1.15rem]">{n.name}</p>
+          <p className="mt-1 text-[12.5px] leading-snug text-muted lg:text-[13px]">{n.sub}</p>
           <p className={`mt-3 font-mono text-[10.5px] ${n.gate ? "text-accent" : "text-muted/70"}`}>{n.gate ? yes : locale === "es" ? "sin permiso extra" : "no extra gate"}</p>
         </li>
       ))}
@@ -139,11 +107,47 @@ function Handoff({ locale, reduce }: { locale: Locale; reduce: boolean | null })
   );
 }
 
+/** The full list: every family with the sentence I would say, its verbs and the tool names. */
+function ToolList({ locale }: { locale: Locale }) {
+  return (
+    <div className="grid gap-x-12 gap-y-10 lg:grid-cols-2">
+      {GROUPS.map((g) => (
+        <section key={g.id} className="laura-group pt-5" aria-label={g.title[locale]}>
+          <div className="flex items-baseline justify-between gap-4">
+            <h4 className="font-display text-[1.2rem] font-semibold leading-tight tracking-[-0.02em] text-ink">{g.title[locale]}</h4>
+            <span className="shrink-0 font-mono text-[11px] tabular-nums text-muted">{toolsLabel(g, locale)}</span>
+          </div>
+          <blockquote className="mt-4 border-l border-accent/60 pl-4">
+            <p className="text-pretty font-display text-[1.08rem] font-medium leading-snug tracking-[-0.02em] text-ink">
+              {locale === "es" ? `«${g.quote[locale]}»` : `“${g.quote[locale]}”`}
+            </p>
+          </blockquote>
+          <ul className="mt-5 space-y-2.5">
+            {g.verbs.map((v) => (
+              <li key={v.en} className="laura-verb grid grid-cols-[1.1rem_1fr] gap-x-1.5 text-pretty text-[14px] leading-relaxed text-ink/85">
+                <span>{v[locale]}</span>
+              </li>
+            ))}
+          </ul>
+          <p className="mt-5 flex flex-wrap gap-1.5" aria-hidden="true">
+            {g.tools.map((t) => (
+              <code key={t} className="rounded-full border border-line px-2.5 py-1 font-mono text-[11px] leading-none text-ink/70">
+                {t}
+              </code>
+            ))}
+          </p>
+        </section>
+      ))}
+    </div>
+  );
+}
+
 export function Capabilities({ locale, reduce }: { locale: Locale; reduce: boolean | null }) {
   const agents = GROUPS.find((g) => g.id === "agents")!;
+  const AgentsIcon = ICONS.agents;
   return (
     <div>
-      <div className="grid gap-6 lg:grid-cols-12 lg:items-end">
+      <div className="grid gap-4 lg:grid-cols-12 lg:items-end lg:gap-6">
         <motion.h3
           {...revealProps(reduce)}
           className="font-display text-balance text-[clamp(2rem,4vw,3.4rem)] font-semibold leading-[1.02] tracking-[-0.035em] text-ink lg:col-span-7"
@@ -156,54 +160,32 @@ export function Capabilities({ locale, reduce }: { locale: Locale; reduce: boole
         </motion.p>
       </div>
 
-      <div className="mt-12 grid gap-x-12 gap-y-14 lg:mt-16 lg:grid-cols-12">
+      <div className="mt-9 grid grid-cols-2 gap-x-5 gap-y-8 lg:mt-14 lg:grid-cols-12 lg:gap-x-10 lg:gap-y-12">
         {GROUPS.filter((g) => g.id !== "agents").map((g, i) => (
-          <GroupBlock key={g.id} g={g} locale={locale} index={i} reduce={reduce} />
+          <Tile key={g.id} g={g} locale={locale} index={i} reduce={reduce} />
         ))}
-        <div className={`laura-group pt-6 ${SPAN.agents}`}>
-          <div className="grid gap-10 lg:grid-cols-12 lg:gap-12">
-            <div className="lg:col-span-5">
-              <GroupInline g={agents} locale={locale} reduce={reduce} />
-            </div>
-            <div className="lg:col-span-7 lg:pt-14">
+        <div className={`laura-group col-span-2 pt-5 ${SPAN.agents}`}>
+          <div className="grid gap-6 lg:grid-cols-12 lg:gap-12">
+            <motion.div {...revealProps(reduce)} className="lg:col-span-5">
+              <span className="grid size-9 place-items-center rounded-full border border-accent/30 text-accent" aria-hidden="true">
+                <AgentsIcon size={17} weight="duotone" />
+              </span>
+              <h3 className="mt-4 font-display text-[1.12rem] font-semibold leading-[1.1] tracking-[-0.025em] text-ink lg:text-[1.35rem]" style={{ fontVariationSettings: '"opsz" 60' }}>
+                {agents.title[locale]}
+              </h3>
+              <p className="mt-2 max-w-[44ch] text-pretty text-[13.5px] leading-snug text-muted lg:text-[14.5px] lg:leading-relaxed">{agents.pitch[locale]}</p>
+              <p className="mt-4 font-mono text-[11px] tabular-nums text-accent/90">{toolsLabel(agents, locale)}</p>
+            </motion.div>
+            <div className="lg:col-span-7">
               <Handoff locale={locale} reduce={reduce} />
-              <ul className="mt-6 space-y-3">
-                {agents.verbs.map((v) => (
-                  <li key={v.en} className="laura-verb grid grid-cols-[1.1rem_1fr] gap-x-1.5 text-pretty text-[14px] leading-relaxed text-ink/85">
-                    <span>{v[locale]}</span>
-                  </li>
-                ))}
-              </ul>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  );
-}
 
-function GroupInline({ g, locale, reduce }: { g: Group; locale: Locale; reduce: boolean | null }) {
-  const Icon = ICONS[g.id];
-  return (
-    <motion.div {...revealProps(reduce)}>
-      <span className="grid size-9 place-items-center rounded-full border border-accent/30 text-accent" aria-hidden="true">
-        <Icon size={17} weight="duotone" />
-      </span>
-      <h3 className="mt-5 font-display text-[clamp(1.7rem,2.9vw,2.4rem)] font-semibold leading-[1.05] tracking-[-0.03em] text-ink" style={{ fontVariationSettings: '"opsz" 60' }}>
-        {g.title[locale]}
-      </h3>
-      <p className="mt-2.5 max-w-[44ch] text-pretty text-[14.5px] leading-relaxed text-muted">{g.pitch[locale]}</p>
-      <div className="mt-5 flex items-center gap-3" aria-hidden="true">
-        <span className="h-px w-[22%] bg-accent" />
-        <span className="font-mono text-[11px] tabular-nums text-muted">
-          {g.count} {CAPS_UI.toolsWord[locale]}
-        </span>
-      </div>
-      <blockquote className="mt-6 max-w-[34ch] border-l border-accent/60 pl-4">
-        <p className="text-pretty font-display text-[1.3rem] font-medium leading-snug tracking-[-0.02em] text-ink">
-          {locale === "es" ? `«${g.quote[locale]}»` : `“${g.quote[locale]}”`}
-        </p>
-      </blockquote>
-    </motion.div>
+      <Detail className="mt-12 lg:mt-16" label={CAPS_UI.detailOpen[locale]} closeLabel={CAPS_UI.detailClose[locale]}>
+        <ToolList locale={locale} />
+      </Detail>
+    </div>
   );
 }
