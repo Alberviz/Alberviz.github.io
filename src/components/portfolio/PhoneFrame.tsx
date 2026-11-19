@@ -9,7 +9,14 @@ import type { WariShot } from "@/content/wari-shots";
  * on top. The captures are taken with the safe areas of an installed iPhone (47 pt above, 34 pt below, 390x892, the
  * screen's own ratio), so the app already leaves room for all of it and the capture simply fills the screen.
  * Every measure is a percentage of the body, so it scales to any width (see `.wari-phone` in globals.css).
+ *
+ * In a tilted 3D scene pass `depth`: the body gets a real side, a stack of rounded slabs pushed back along Z
+ * (`--phone-t`, set by the scene in px, is the thickness), the drop shadow moves to the back and the side buttons
+ * stand on the side. Without `depth` the phone is a flat front view.
  */
+
+/** Slabs that build the side: enough that the edge reads as one solid band at the scene's angles. */
+const SLABS = 10;
 
 /** The capture itself, filling the screen. */
 export function ShotLayers({ shot, locale, loading = "lazy" }: { shot: WariShot; locale: Locale; loading?: "lazy" | "eager" }) {
@@ -57,6 +64,7 @@ export function PhoneFrame({
   locale,
   loading,
   children,
+  depth = false,
   className = "",
   style,
   ...rest
@@ -65,11 +73,24 @@ export function PhoneFrame({
   locale: Locale;
   loading?: "lazy" | "eager";
   children?: ReactNode;
+  /** A real side for a tilted 3D scene (the scene sets `--phone-t`). */
+  depth?: boolean;
   className?: string;
   style?: CSSProperties;
 } & React.HTMLAttributes<HTMLDivElement>) {
   return (
-    <div className={`wari-phone ${className}`} style={style} {...rest}>
+    <div className={`wari-phone ${depth ? "wari-phone-3d" : ""} ${className}`} style={style} {...rest}>
+      {depth
+        ? Array.from({ length: SLABS }, (_, i) => (
+            <span
+              key={i}
+              aria-hidden="true"
+              className="wari-slab"
+              style={{ ["--k" as string]: ((i + 1) / SLABS).toFixed(3) }}
+              data-back={i === SLABS - 1 ? "" : undefined}
+            />
+          ))
+        : null}
       <span aria-hidden="true" className="wari-btn wari-btn-a" />
       <span aria-hidden="true" className="wari-btn wari-btn-b" />
       <span aria-hidden="true" className="wari-btn wari-btn-c" />
@@ -78,6 +99,7 @@ export function PhoneFrame({
         <StatusBar />
         <span aria-hidden="true" className="wari-island" />
         <span aria-hidden="true" className="wari-home" />
+        <span aria-hidden="true" className="wari-glare" />
       </div>
     </div>
   );

@@ -45,6 +45,11 @@ const SLOTS = [
   { left: "61%", top: "17%", rot: 7, depth: -14, z: 2, w: 0.82 },
 ] as const;
 
+/** The phones are solid in the tilted scene: their stacking is real depth (px along Z), clear of each other's thickness. */
+const SLOT_Z = [0, 56, 26] as const;
+/** Thickness over the body's width (an iPhone is about 0.11; a touch less reads better at this size). */
+const THICKNESS = 0.085;
+
 function Phone({
   shot,
   slot,
@@ -69,10 +74,13 @@ function Phone({
         top: slot.top,
         zIndex: slot.z,
         width: `calc(var(--wari-phone) * ${slot.w})`,
+        ["--phone-t" as string]: `calc(var(--wari-phone) * ${slot.w * THICKNESS})`,
+        transformStyle: "preserve-3d",
+        z: SLOT_Z[index],
         y: reduce ? 0 : y,
       }}
     >
-      <PhoneFrame shot={shot} locale={locale} style={{ transform: `rotate(${slot.rot}deg)` }} data-index={index} />
+      <PhoneFrame shot={shot} locale={locale} depth style={{ transform: `rotate(${slot.rot}deg)` }} data-index={index} />
     </motion.div>
   );
 }
@@ -175,7 +183,10 @@ export function WariPortal() {
               className="wari-sheet absolute inset-x-[2%] top-[8%] h-[84%]"
               style={reduce ? undefined : { y: sheetY }}
             />
-            <div className="relative h-[calc(var(--wari-phone)*2.7)]" style={{ ["--wari-phone" as string]: "clamp(9.5rem, 26vw, 15.5rem)" }}>
+            <div
+              className="relative h-[calc(var(--wari-phone)*2.7)]"
+              style={{ ["--wari-phone" as string]: "clamp(9.5rem, 26vw, 15.5rem)", transformStyle: "preserve-3d", transform: "translateZ(36px)" }}
+            >
               {WARI_SHOTS.map((shot, i) => (
                 <Phone
                   key={shot.src}

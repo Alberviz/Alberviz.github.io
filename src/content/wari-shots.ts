@@ -67,8 +67,8 @@ export const WARI_STORY_SHOTS: Record<string, WariShot> = {
     width: 780,
     height: 1784,
     alt: {
-      en: "A card payment captured by Wari: 5.32 euros at a shop, two alerts merged into one, and the trip group suggested",
-      es: "Un pago con tarjeta capturado por Wari: 5,32 euros en una tienda, dos avisos juntados en uno y el grupo del viaje sugerido",
+      en: "A card payment captured by Wari: 5.30 euros at a shop, two alerts merged into one, and the trip group suggested",
+      es: "Un pago con tarjeta capturado por Wari: 5,30 euros en una tienda, dos avisos juntados en uno y el grupo del viaje sugerido",
     },
   },
   pagar: {
@@ -76,8 +76,8 @@ export const WARI_STORY_SHOTS: Record<string, WariShot> = {
     width: 780,
     height: 1784,
     alt: {
-      en: "Wari pay sheet: you owe 14.04 euros, with buttons to pay with Revolut or Bizum and to mark it as paid",
-      es: "Hoja de pago de Wari: debes 14,04 euros, con botones para pagar con Revolut o Bizum y para marcarlo como pagado",
+      en: "Wari pay sheet: you owe 14.12 euros, with buttons to pay with Revolut or Bizum and to mark it as paid",
+      es: "Hoja de pago de Wari: debes 14,12 euros, con botones para pagar con Revolut o Bizum y para marcarlo como pagado",
     },
   },
   viaje: {
