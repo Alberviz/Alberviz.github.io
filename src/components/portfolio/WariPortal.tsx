@@ -8,6 +8,7 @@ import { WARI } from "@/content/site-copy";
 import { WARI_URL } from "@/content/links";
 import { WARI_SHOTS, WARI_STORY_SHOTS } from "@/content/wari-shots";
 import { EASE_OUT, useReducedMotionSafe } from "@/lib/motion";
+import { PhoneFrame, ShotLayers } from "./PhoneFrame";
 
 /**
  * Wari portal: the one color block of the page. The deep-space page dissolves
@@ -71,23 +72,7 @@ function Phone({
         y: reduce ? 0 : y,
       }}
     >
-      <div
-        className="wari-phone"
-        style={{ transform: `rotate(${slot.rot}deg)` }}
-        data-index={index}
-      >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={shot.src}
-          width={shot.width}
-          height={shot.height}
-          alt={shot.alt[locale]}
-          loading="lazy"
-          decoding="async"
-          draggable={false}
-          className="block h-auto w-full"
-        />
-      </div>
+      <PhoneFrame shot={shot} locale={locale} style={{ transform: `rotate(${slot.rot}deg)` }} data-index={index} />
     </motion.div>
   );
 }
@@ -273,31 +258,24 @@ function WariStory({ locale, reduce }: { locale: "en" | "es"; reduce: boolean | 
       <div className="mt-10 hidden grid-cols-[minmax(0,5fr)_minmax(0,6fr)] gap-16 lg:grid">
         <div className="relative">
           <div className="sticky top-[calc(50vh-17rem)] mx-auto w-[16rem]">
-            <div className="wari-phone relative">
-              <div className="wari-screen relative aspect-[390/844] overflow-hidden bg-[#EEF2F8]">
-                <AnimatePresence initial={false}>
-                  {chapters.map((c, i) =>
-                    i === active ? (
-                      <motion.img
-                        key={c.id}
-                        src={WARI_STORY_SHOTS[c.id].src}
-                        width={780}
-                        height={1688}
-                        alt={WARI_STORY_SHOTS[c.id].alt[locale]}
-                        loading="lazy"
-                        decoding="async"
-                        draggable={false}
-                        className="absolute inset-0 h-full w-full"
-                        initial={{ opacity: 0, transform: reduce ? "none" : "translateY(10px)" }}
-                        animate={{ opacity: 1, transform: "translateY(0px)" }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.32, ease: EASE_OUT }}
-                      />
-                    ) : null
-                  )}
-                </AnimatePresence>
-              </div>
-            </div>
+            <PhoneFrame locale={locale}>
+              <AnimatePresence initial={false}>
+                {chapters.map((c, i) =>
+                  i === active ? (
+                    <motion.div
+                      key={c.id}
+                      className="absolute inset-0"
+                      initial={{ opacity: 0, transform: reduce ? "none" : "translateY(10px)" }}
+                      animate={{ opacity: 1, transform: "translateY(0px)" }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.32, ease: EASE_OUT }}
+                    >
+                      <ShotLayers shot={WARI_STORY_SHOTS[c.id]} locale={locale} />
+                    </motion.div>
+                  ) : null
+                )}
+              </AnimatePresence>
+            </PhoneFrame>
             <ol aria-hidden="true" className="mt-6 flex justify-center gap-2">
               {chapters.map((c, i) => (
                 <li
@@ -350,19 +328,7 @@ function WariStory({ locale, reduce }: { locale: "en" | "es"; reduce: boolean | 
               data-i={i}
               className="wari-sheet flex w-[84%] max-w-[22rem] shrink-0 snap-start flex-col p-5 sm:w-[46%]"
             >
-              <div className="wari-phone mx-auto w-[62%]">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={WARI_STORY_SHOTS[c.id].src}
-                  width={780}
-                  height={1688}
-                  alt={WARI_STORY_SHOTS[c.id].alt[locale]}
-                  loading="lazy"
-                  decoding="async"
-                  draggable={false}
-                  className="block h-auto w-full"
-                />
-              </div>
+              <PhoneFrame shot={WARI_STORY_SHOTS[c.id]} locale={locale} className="mx-auto w-[62%]" />
               <p className="mt-5 font-mono text-[11.5px] tabular-nums text-[color:var(--wari-ink-2)]">
                 0{i + 1} / 0{chapters.length}
               </p>

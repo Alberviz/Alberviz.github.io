@@ -12,6 +12,7 @@ import { ASSETS } from "@/content/assets";
 import { HERO } from "@/content/site-copy";
 import { useReducedMotionSafe } from "@/lib/motion";
 import { ScaledStage } from "./olimpo/ScaledStage";
+import { PhoneFrame } from "./PhoneFrame";
 import { Firmamento } from "./olimpo/Firmamento";
 import { HoloList } from "./laura/panels";
 import { LauraPill } from "./laura/LauraPill";
@@ -38,18 +39,13 @@ export function WariVisual({ locale, split }: { locale: Locale; split?: MotionVa
   const backY = useTransform(s, (v) => `${(-14 * (1 - v)).toFixed(2)}%`);
   const frontRot = useTransform(s, (v) => 4 + 3 * (1 - v) * v * 4);
   return (
-    <div className="case-wari-visual relative h-full w-full" aria-hidden="false">
-      <motion.div className="absolute left-[14%] top-[13%] w-[38%] sm:left-[18%]" style={{ x: backX, y: backY, rotate: backRot }}>
-        <div className="wari-phone">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={back.src} width={back.width} height={back.height} alt={back.alt[locale]} loading="lazy" decoding="async" draggable={false} className="block h-auto w-full" />
-        </div>
+    <div className="case-wari-visual relative h-full w-full [container-type:size]" aria-hidden="false">
+      {/* Each phone is sized by the height of the box (cqh), so it always fits whole: 0.452 is the body's width over its height. */}
+      <motion.div className="absolute left-[20%] top-[12%] w-[36cqh] sm:left-[24%]" style={{ x: backX, y: backY, rotate: backRot }}>
+        <PhoneFrame shot={back} locale={locale} />
       </motion.div>
-      <motion.div className="absolute left-[44%] top-[5%] w-[42%] sm:left-[46%]" style={{ rotate: frontRot }}>
-        <div className="wari-phone">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={front.src} width={front.width} height={front.height} alt={front.alt[locale]} loading="lazy" decoding="async" draggable={false} className="block h-auto w-full" />
-        </div>
+      <motion.div className="absolute left-[47%] top-[4%] w-[40cqh] sm:left-[49%]" style={{ rotate: frontRot }}>
+        <PhoneFrame shot={front} locale={locale} />
       </motion.div>
     </div>
   );
