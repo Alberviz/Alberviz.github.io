@@ -456,10 +456,10 @@ html {
     0 40px 80px -40px rgb(19 33 59 / 0.38);
 }
 
-/* An iPhone, as on the Wari landing (v2.1): body 310x686 with a titanium ring, side buttons
-   and a Dynamic Island over a 292x668 screen. Every measure is a percentage of the body, so
-   it scales to any width. The capture (390x844, nothing reserved for the status bar) sits
-   36px lower, under the island, and a blurred copy of its top fills the strip above it. */
+/* An iPhone, as on the Wari landing (v2.1): body 310x686 with a titanium ring, side buttons and a
+   292x668 screen with the Dynamic Island, the status bar and the home indicator on top. Every measure
+   is a percentage of the body, so it scales to any width. The capture (390x892, the screen's own
+   ratio) has the safe areas of an installed iPhone built in, so it simply fills the screen. */
 .wari-phone {
   position: relative;
   aspect-ratio: 310 / 686;
@@ -513,35 +513,68 @@ html {
   z-index: 5;
   pointer-events: none;
 }
-.wari-strip {
-  position: absolute;
-  left: -6.8%;
-  top: -4.5%;
-  width: 113.7%;
-  height: 18%;
-  overflow: hidden;
-  pointer-events: none;
-}
-.wari-strip img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: top;
-  filter: blur(10px);
-  filter: blur(4.8cqw);
-}
 .wari-shot {
   position: absolute;
-  left: 0;
-  top: 5.39%;
-  width: 100%;
-  height: 94.61%;
+  inset: 0;
 }
 .wari-shot img {
   display: block;
   width: 100%;
   height: 100%;
+}
+/* Status bar: level with the island, the clock on its left ear and the icons on its right one.
+   Sizes in cqw (the screen is the container), so 1cqw = 1% of the 292px screen. */
+.wari-status {
+  position: absolute;
+  top: 1.65%;
+  left: 0;
+  right: 0;
+  height: 4.19%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #0b1020;
+  z-index: 4;
+  pointer-events: none;
+}
+.wari-clock {
+  width: 33.6%;
+  padding-left: 0.7%;
+  text-align: center;
+  font-family: -apple-system, "SF Pro Text", Inter, system-ui, sans-serif;
+  font-size: 4.3cqw;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.01em;
+}
+.wari-icons {
+  width: 33.6%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.2cqw;
+  padding-right: 0.7%;
+}
+.wari-ico-signal {
+  width: 5.1cqw;
+}
+.wari-ico-wifi {
+  width: 4.6cqw;
+}
+.wari-ico-battery {
+  width: 7.5cqw;
+}
+.wari-home {
+  position: absolute;
+  bottom: 0.75%;
+  left: 32.9%;
+  width: 34.2%;
+  height: 0.54%;
+  border-radius: 999px;
+  background: #0b1020;
+  opacity: 0.88;
+  z-index: 4;
+  pointer-events: none;
 }
 
 /* ---------------------------------------------------------------------
