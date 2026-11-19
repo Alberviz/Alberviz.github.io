@@ -85,7 +85,7 @@ function Phone({
           loading="lazy"
           decoding="async"
           draggable={false}
-          className="block h-auto w-full rounded-[1.75rem]"
+          className="block h-auto w-full"
         />
       </div>
     </motion.div>
@@ -274,7 +274,7 @@ function WariStory({ locale, reduce }: { locale: "en" | "es"; reduce: boolean | 
         <div className="relative">
           <div className="sticky top-[calc(50vh-17rem)] mx-auto w-[16rem]">
             <div className="wari-phone relative">
-              <div className="relative aspect-[390/844] overflow-hidden rounded-[1.75rem] bg-[#EEF2F8]">
+              <div className="wari-screen relative aspect-[390/844] overflow-hidden bg-[#EEF2F8]">
                 <AnimatePresence initial={false}>
                   {chapters.map((c, i) =>
                     i === active ? (
@@ -360,7 +360,7 @@ function WariStory({ locale, reduce }: { locale: "en" | "es"; reduce: boolean | 
                   loading="lazy"
                   decoding="async"
                   draggable={false}
-                  className="block h-auto w-full rounded-[1.4rem]"
+                  className="block h-auto w-full"
                 />
               </div>
               <p className="mt-5 font-mono text-[11.5px] tabular-nums text-[color:var(--wari-ink-2)]">

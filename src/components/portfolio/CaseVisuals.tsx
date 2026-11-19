@@ -42,13 +42,13 @@ export function WariVisual({ locale, split }: { locale: Locale; split?: MotionVa
       <motion.div className="absolute left-[14%] top-[13%] w-[38%] sm:left-[18%]" style={{ x: backX, y: backY, rotate: backRot }}>
         <div className="wari-phone">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={back.src} width={back.width} height={back.height} alt={back.alt[locale]} loading="lazy" decoding="async" draggable={false} className="block h-auto w-full rounded-[1.6rem]" />
+          <img src={back.src} width={back.width} height={back.height} alt={back.alt[locale]} loading="lazy" decoding="async" draggable={false} className="block h-auto w-full" />
         </div>
       </motion.div>
       <motion.div className="absolute left-[44%] top-[5%] w-[42%] sm:left-[46%]" style={{ rotate: frontRot }}>
         <div className="wari-phone">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={front.src} width={front.width} height={front.height} alt={front.alt[locale]} loading="lazy" decoding="async" draggable={false} className="block h-auto w-full rounded-[1.6rem]" />
+          <img src={front.src} width={front.width} height={front.height} alt={front.alt[locale]} loading="lazy" decoding="async" draggable={false} className="block h-auto w-full" />
         </div>
       </motion.div>
     </div>
