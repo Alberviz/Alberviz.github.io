@@ -60,6 +60,8 @@ export const SYSTEMS_UI = {
     es: "Pasa por encima, enfoca o toca un nodo para seguir sus datos",
   },
   runsOn: { en: "Runs on", es: "Corre en" },
+  detailOpen: { en: "See the detail", es: "Ver el detalle" },
+  detailClose: { en: "Hide the detail", es: "Ocultar el detalle" },
   stack: { en: "Stack", es: "Stack" },
 } satisfies Record<string, LocalizedText | LocalizedText[]>;
 

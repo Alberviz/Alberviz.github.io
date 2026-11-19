@@ -21,7 +21,7 @@ export function NextCase({ from }: { from: CaseId }) {
   const i = CASES.findIndex((c) => c.id === from);
   const next: CasePage | undefined = CASES[i + 1];
   const to = (next?.id ?? "home") as CaseId | "home";
-  const aspect = to === "laura" ? "aspect-[5/4]" : to === "home" ? "aspect-[16/9]" : to === "escritorio" ? "aspect-[3/4] sm:aspect-[16/11]" : "aspect-[16/11]";
+  const aspect = to === "laura" ? "aspect-[5/4]" : to === "home" ? "aspect-[16/9]" : to === "escritorio" ? "aspect-[16/10] sm:aspect-[16/11]" : "aspect-[16/11]";
   const href = next?.path ?? "/";
   const kicker = next ? `${CASES_UI.next[locale]} · ${next.n}` : CASES_UI.backHome[locale];
   const name = next?.name ?? "Alberto Vizcaíno";

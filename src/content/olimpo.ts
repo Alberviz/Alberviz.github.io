@@ -150,6 +150,8 @@ export const WARP = {
     { k: ["Space"], label: { en: "with Super held, jumps to the next device's portal", es: "con Super pulsado, salta al portal del siguiente dispositivo" } },
     { k: ["Shift"], label: { en: "adds a device: the two portals merge into a bigger one", es: "suma un dispositivo: los dos portales se funden en uno más grande" } },
   ] satisfies { k: string[]; label: LocalizedText }[],
+  detailOpen: { en: "See the shortcuts and how it is made", es: "Ver los atajos y cómo está hecho" },
+  detailClose: { en: "Hide the shortcuts", es: "Ocultar los atajos" },
   keysNote: {
     en: "No menus and no device picker: the keyboard chooses the destination. Dropping a file between two portals merges them too, and it lands on both.",
     es: "Sin menús ni selector de dispositivos: el teclado elige el destino. Soltar un archivo entre dos portales también los funde, y llega a los dos.",

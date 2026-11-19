@@ -198,11 +198,11 @@ export function DesktopVisual({ locale, live = true }: { locale: Locale; live?: 
   const shot = ASSETS.systems.celestial;
   return (
     <div ref={ref} className="relative h-full w-full">
-      <div className="absolute inset-x-0 top-0 h-[52%] overflow-hidden rounded-[18px] border border-line sm:inset-y-[3%] sm:left-0 sm:right-[14%] sm:h-auto">
+      <div className={`absolute inset-x-0 top-0 overflow-hidden rounded-[18px] border border-line sm:inset-y-[3%] sm:left-0 sm:right-[14%] sm:h-auto ${live ? "h-[52%]" : "h-full"}`}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={shot.src} width={shot.width} height={shot.height} alt={shot.alt[locale]} loading="lazy" decoding="async" className="h-full w-full object-cover object-left" />
       </div>
-      <div className="case-decode absolute bottom-0 right-0 w-full origin-bottom-right sm:w-[min(100%,26rem)]">
+      <div className={`case-decode absolute bottom-0 right-0 w-full origin-bottom-right sm:w-[min(100%,26rem)] ${live ? "" : "hidden sm:block"}`}>
         <Decode active={live ? inView : true} locale={locale} still={!live || !!reduce} />
       </div>
     </div>

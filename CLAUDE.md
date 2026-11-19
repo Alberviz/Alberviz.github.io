@@ -26,6 +26,11 @@ el pie (`PortfolioFooter`, `#contacto`) y la paleta (`CommandPalette`). Así el 
 
 - Mapa del sitio, orden de los casos, metadatos, secciones por página y anclas viejas: `src/content/pages.ts`.
   Metadatos y OG de cada caso: `src/app/case-metadata.ts` (imágenes en `public/media/og/`, capturas de la cabecera de cada página a 1200x630).
+- Cada página de caso se lee en tres capas, para quien mira las imágenes, quien hojea los títulos y el técnico: lo
+  esencial y una línea por bloque a la vista, y el detalle completo tras `Detail` (`src/components/portfolio/Detail.tsx`).
+  `Detail` plega solo por debajo de 1024 px (con clase `max-lg:hidden`, no el atributo `hidden`, que Tailwind fuerza a
+  `display: none`); desde 1024 px el detalle se ve siempre y no hay botón. El texto de la tarjeta de la home (`lines` en
+  `pages.ts`) es un gancho, no una copia del arranque de la página.
 - Cada caso termina con `NextCase` (Wari → Olimpo → Laura → Escritorio → home), con un avance quieto (sin WebGL).
 - Anclas viejas (`/#wari`, `/#olimpo`, `/#warp`, `/#sistemas`, `/#laura`, `/#escritorio`): un script en línea de la home
   hace `location.replace` a su página antes de pintar.

@@ -4,6 +4,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import {motion, useMotionValueEvent, useScroll} from "motion/react";
 import { ArrowUpRight, GithubLogo } from "@phosphor-icons/react";
 import { useLocale } from "@/lib/i18n-context";
+import { Detail } from "./Detail";
 import { FLOW_EDGES, FLOW_NODES, SYSTEMS_UI, SYSTEM_PLANETS } from "@/content/systems";
 import type { FlowNode, SystemPlanet } from "@/content/systems";
 import { revealProps, useReducedMotionSafe } from "@/lib/motion";
@@ -303,35 +304,37 @@ export function SystemsSection() {
             <motion.li key={p.id} {...revealProps(reduce, (i % 2) * 0.06)} className="border-t border-line pt-6">
               <p className="font-display text-[1.45rem] font-semibold leading-tight tracking-[-0.02em] text-ink">{p.name[locale]}</p>
               <p className="mt-1 text-[14.5px] text-ink/80">{p.line[locale]}</p>
-              <p className="mt-4 max-w-[58ch] text-pretty text-[14.5px] leading-relaxed text-muted">{p.body[locale]}</p>
-              <dl className="mt-6 grid grid-cols-2 gap-6">
-                {p.facts.map((f) => (
-                  <Fact key={f.value} fact={f} locale={locale} />
+              <Detail className="mt-4" label={SYSTEMS_UI.detailOpen[locale]} closeLabel={SYSTEMS_UI.detailClose[locale]}>
+                <p className="max-w-[58ch] text-pretty text-[14.5px] leading-relaxed text-muted">{p.body[locale]}</p>
+                <dl className="mt-6 grid grid-cols-2 gap-6">
+                  {p.facts.map((f) => (
+                    <Fact key={f.value} fact={f} locale={locale} />
+                  ))}
+                </dl>
+                <p className="mt-5 font-mono text-[11.5px] text-muted">
+                  {SYSTEMS_UI.runsOn[locale]}: <span className="text-ink/80">{p.host[locale]}</span>
+                </p>
+                <ul className="mt-3 flex flex-wrap gap-1.5" aria-label={SYSTEMS_UI.stack[locale]}>
+                  {p.stack.map((s) => (
+                    <li key={s} className="rounded-full border border-line px-2.5 py-1 font-mono text-[11px] leading-none text-ink/75">
+                      {s}
+                    </li>
+                  ))}
+                </ul>
+                {p.links?.map((l) => (
+                  <a
+                    key={l.href}
+                    href={l.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="tap relative group press-scale mt-5 inline-flex items-center gap-2 text-[13.5px] font-medium text-accent"
+                  >
+                    {l.kind === "github" && <GithubLogo size={15} aria-hidden="true" />}
+                    <span className="link-rule">{l.label[locale]}</span>
+                    <ArrowUpRight size={12} className="cta-arrow cta-arrow-diag" aria-hidden="true" />
+                  </a>
                 ))}
-              </dl>
-              <p className="mt-5 font-mono text-[11.5px] text-muted">
-                {SYSTEMS_UI.runsOn[locale]}: <span className="text-ink/80">{p.host[locale]}</span>
-              </p>
-              <ul className="mt-3 flex flex-wrap gap-1.5" aria-label={SYSTEMS_UI.stack[locale]}>
-                {p.stack.map((s) => (
-                  <li key={s} className="rounded-full border border-line px-2.5 py-1 font-mono text-[11px] leading-none text-ink/75">
-                    {s}
-                  </li>
-                ))}
-              </ul>
-              {p.links?.map((l) => (
-                <a
-                  key={l.href}
-                  href={l.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="tap relative group press-scale mt-5 inline-flex items-center gap-2 text-[13.5px] font-medium text-accent"
-                >
-                  {l.kind === "github" && <GithubLogo size={15} aria-hidden="true" />}
-                  <span className="link-rule">{l.label[locale]}</span>
-                  <ArrowUpRight size={12} className="cta-arrow cta-arrow-diag" aria-hidden="true" />
-                </a>
-              ))}
+              </Detail>
             </motion.li>
           ))}
         </ul>

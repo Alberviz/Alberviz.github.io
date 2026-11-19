@@ -46,8 +46,8 @@ export const CASES: CasePage[] = [
       es: "El dinero y los planes del grupo, en una sola app.",
     },
     lines: {
-      en: "Splits group expenses, reads receipts product by product and keeps the trip in the same place. Card payments become expenses and paying back takes one tap. My product, in beta on its way to the stores.",
-      es: "Reparte los gastos del grupo, lee los tickets producto a producto y guarda el viaje en el mismo sitio. Los pagos con tarjeta se vuelven gastos y devolver el dinero es un toque. Mi producto, en beta camino de las tiendas.",
+      en: "Card payments become expenses and paying back takes one tap. My product, in beta on its way to the stores.",
+      es: "Los pagos con tarjeta se vuelven gastos y devolver el dinero es un toque. Mi producto, en beta camino de las tiendas.",
     },
     metaTitle: "Wari, group expenses and trips",
     metaDescription:
@@ -69,8 +69,8 @@ export const CASES: CasePage[] = [
       es: "El sistema operativo de mi vida.",
     },
     lines: {
-      en: "One app for my tasks, projects, health, money and the AI agents that work for me, on a Raspberry Pi 5 at home. Inside it, Warp sends files between devices through a black hole.",
-      es: "Una app para mis tareas, proyectos, salud, dinero y los agentes de IA que trabajan para mí, en una Raspberry Pi 5 en casa. Dentro, Warp manda archivos entre dispositivos a través de un agujero negro.",
+      en: "Inside it, Warp sends files between devices through a black hole you can play with.",
+      es: "Dentro, Warp manda archivos entre dispositivos a través de un agujero negro con el que puedes jugar.",
     },
     metaTitle: "Olimpo, the operating system of my life",
     metaDescription:
@@ -93,8 +93,8 @@ export const CASES: CasePage[] = [
       es: "Le hablo a mi ordenador y hace el trabajo.",
     },
     lines: {
-      en: "A voice assistant that runs the whole laptop: windows, files, calendar, the TV. Listening, thinking and speaking all happen on one laptop GPU, and nothing destructive happens until I say yes.",
-      es: "Un asistente de voz que controla el portátil entero: ventanas, archivos, calendario, la tele. Escuchar, pensar y hablar pasa en una GPU de portátil, y nada destructivo ocurre hasta que digo que sí.",
+      en: "A voice assistant that runs the whole laptop, and nothing destructive happens until I say yes.",
+      es: "Un asistente de voz que controla el portátil entero, y nada destructivo ocurre hasta que digo que sí.",
     },
     metaTitle: "Laura, my local voice assistant",
     metaDescription:
@@ -116,8 +116,8 @@ export const CASES: CasePage[] = [
       es: "El escritorio en el que trabajo, hasta los bytes USB.",
     },
     lines: {
-      en: "Arch Linux with Hyprland, shaders I wrote by hand, and drivers for gear that only came with Windows apps: I listened to their USB traffic and decoded the protocols byte by byte.",
-      es: "Arch Linux con Hyprland, shaders que escribí a mano y drivers para periféricos que solo traían apps de Windows: escuché su tráfico USB y decodifiqué los protocolos byte a byte.",
+      en: "I listened to the USB traffic of my keyboard, mouse and headset and decoded their protocols byte by byte.",
+      es: "Escuché el tráfico USB de mi teclado, ratón y cascos y decodifiqué sus protocolos byte a byte.",
     },
     metaTitle: "The Linux desktop and its drivers",
     metaDescription:
